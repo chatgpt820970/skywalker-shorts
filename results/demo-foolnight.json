@@ -1,23 +1,35 @@
 {
   "id": "demo-foolnight",
-  "status": "done",
-  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
-  "at": "2026-11-10 14:57 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42788948088",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempts failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [1920, 1080], 'letterbox_free': [1920, 1080], 'plate': [1080, 608], 'letterbox_rows_black': True, 'frame_corr_median': 0.831, 'edge_corr_median': 0.768, 'shift_px_median': 3.19, 'pairs': 6}; QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 8.62, 'reasons': ['near_black'], 'luma': 13.3}]}",
+  "at": "2026-11-10 16:02 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42794236637",
   "slot": "2026-11-10T14:00:00+05:30",
   "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
-  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-demo-foolnight",
-  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-demo-foolnight/render-demo-foolnight.mp4",
-  "qa": {
-    "no_crop": true,
-    "caption": true,
-    "audio": true,
-    "no_shake": true
-  },
-  "drop_t": 13.398,
-  "energy": true,
-  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
-  "music": "ncs_lavida.mp3",
-  "music_credit": "Song: Cryjaxx, MVRPHiN & Lucy Malfroy - LA VIDA!\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/LAVIDA\nWatch: http://ncs.lnk.to/LAVIDAAT/youtube",
-  "description_final": "The reason why Fool Night has everyone talking. Energy edit (beat cuts, ramp, drop flash + punch-in) from the official Netflix Anime Fool Night trailer.\nSource: official trailer (https://www.youtube.com/watch?v=2Qg_AfPF2sM).\n#edit #shorts #foolnight\n\nMusic:\nSong: Cryjaxx, MVRPHiN & Lucy Malfroy - LA VIDA!\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/LAVIDA\nWatch: http://ncs.lnk.to/LAVIDAAT/youtube"
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 17.76, 'reasons': ['near_black'], 'luma': 13.3}]}",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
+      "music": "ncs_montagemindia.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 17.76, 'reasons': ['near_black'], 'luma': 13.3}]}",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
+      "music": "ncs_montagemindia.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [1920, 1080], 'letterbox_free': [1920, 1080], 'plate': [1080, 608], 'letterbox_rows_black': True, 'frame_corr_median': 0.831, 'edge_corr_median': 0.768, 'shift_px_median': 3.19, 'pairs': 6}; QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 8.62, 'reasons': ['near_black'], 'luma': 13.3}]}",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
+      "music": "ncs_favela.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [1920, 1080], 'letterbox_free': [1920, 1080], 'plate': [1080, 608], 'letterbox_rows_black': True, 'frame_corr_median': 0.831, 'edge_corr_median': 0.768, 'shift_px_median': 3.19, 'pairs': 6}; QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 8.62, 'reasons': ['near_black'], 'luma': 13.3}]}"
 }
