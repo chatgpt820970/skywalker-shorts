@@ -1,35 +1,36 @@
 {
   "id": "20261110-1730-materialists",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempts failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 16.47, 'stabilized': True, 'shots': 8, 'limit_px': 6.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 25, 't_src': 53.6, 't_out': 22.05, 'reasons': ['near_black'], 'luma': 0.0}]}",
-  "at": "2026-11-10 15:57 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42794236637",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-10 16:17 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42800133633",
   "slot": "2026-11-10T17:30:00+05:30",
   "title": "The reason why Lucy couldn't do the math on love 💀 | The matchmaker meets her match | #edit",
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
       "attempt": 1,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 20.8, 'stabilized': True, 'shots': 8, 'limit_px': 4.0}",
+      "ok": true,
+      "error": null,
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/materialists_trailer_h264.mp4",
       "music": "ncs_fireflies.mp3"
-    },
-    {
-      "attempt": 2,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 29.8, 'stabilized': True, 'shots': 8, 'limit_px': 4.0}",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/materialists_trailer_h264.mp4",
-      "music": "ncs_fireflies.mp3"
-    },
-    {
-      "attempt": 3,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 16.47, 'stabilized': True, 'shots': 8, 'limit_px': 6.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 25, 't_src': 53.6, 't_out': 22.05, 'reasons': ['near_black'], 'luma': 0.0}]}",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/materialists_trailer_h264.mp4",
-      "music": "ncs_teamo.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 16.47, 'stabilized': True, 'shots': 8, 'limit_px': 6.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 25, 't_src': 53.6, 't_out': 22.05, 'reasons': ['near_black'], 'luma': 0.0}]}"
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261110-1730-materialists",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261110-1730-materialists/render-20261110-1730-materialists.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/materialists_trailer_h264.mp4",
+  "music": "ncs_fireflies.mp3",
+  "music_credit": "Song: Krezus & surreal_dvd - Fireflies\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/fireflies\nWatch: http://ncs.lnk.to/firefliesAT/youtube",
+  "description_final": "The reason why Lucy couldn't do the math on love. The matchmaker meets her match from the official Materialists trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=4A_kmjtsJ7c). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #materialists\n\nMusic:\nSong: Krezus & surreal_dvd - Fireflies\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/fireflies\nWatch: http://ncs.lnk.to/firefliesAT/youtube"
 }
