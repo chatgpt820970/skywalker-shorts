@@ -124,16 +124,32 @@ def even(n: int) -> int:
 # 1. Letterbox + mezzanine
 # ---------------------------------------------------------------------------
 def detect_letterbox(src: Path) -> tuple[int, int, int, int]:
-    """Return crop w:h:x:y that strips black bars only."""
-    # Sample several timestamps
+    """Return crop w:h:x:y that strips black bars only.
+
+    A row is letterbox only if it is black in every well-lit sample.
+    Title cards, fades, and dark shots must not shrink the picture:
+    we take the min top / max bottom content row, sampled across the
+    whole duration (not a median of a few early timestamps).
+    """
     probe = subprocess.check_output(
         ["ffprobe", "-v", "error", "-select_streams", "v:0",
-         "-show_entries", "stream=width,height", "-of", "csv=p=0", str(src)],
+         "-show_entries", "stream=width,height,duration", "-of", "csv=p=0", str(src)],
         text=True,
     ).strip()
-    sw, sh = [int(x) for x in probe.split(",")[:2]]
+    parts = probe.split(",")
+    sw, sh = int(parts[0]), int(parts[1])
+    try:
+        dur = float(parts[2]) if len(parts) > 2 else 0.0
+    except ValueError:
+        dur = 0.0
+    times = [2, 8, 16, 28, 40, 52]
+    if dur and dur > 8:
+        times += [max(0.5, dur * f) for f in (0.15, 0.3, 0.45, 0.6, 0.75, 0.9)]
+    times = sorted({round(float(t), 2) for t in times if t < max(dur - 0.25, 3)})
+    if not times:
+        times = [2.0]
     ys, ye = [], []
-    for t in (2, 8, 16, 28, 40, 52):
+    for t in times:
         tmp = WORK / f"_lb_{t}.png"
         subprocess.call(
             ["ffmpeg", "-y", "-ss", str(t), "-i", str(src), "-frames:v", "1",
@@ -144,6 +160,10 @@ def detect_letterbox(src: Path) -> tuple[int, int, int, int]:
             continue
         a = np.array(Image.open(tmp))
         lum = a.mean(axis=(1, 2)) if a.ndim == 3 else a.mean(axis=1)
+        # Skip fades / empty frames so they cannot vote for a crop.
+        if float(lum.mean()) < 8:
+            tmp.unlink(missing_ok=True)
+            continue
         rows = np.where(lum > 10)[0]
         if len(rows) >= 20:
             ys.append(int(rows[0]))
@@ -151,12 +171,16 @@ def detect_letterbox(src: Path) -> tuple[int, int, int, int]:
         tmp.unlink(missing_ok=True)
     if not ys:
         return sw, sh, 0, 0
-    y1 = even(int(np.median(ys)))
-    y2 = int(np.median(ye))
+    # Only bars present in ALL content samples are stripped.
+    y1 = even(min(ys))
+    y2 = int(max(ye))
     h = even(y2 - y1 + 1)
     # keep even-even for yuv420
     if y1 + h > sh:
         h = even(sh - y1)
+    # Pathological case (every sample was a mid-frame title card): keep full frame.
+    if h < sh * 0.5:
+        return sw, sh, 0, 0
     return sw, h, 0, y1
 
 
@@ -1985,14 +2009,28 @@ def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
          "-of", "csv=p=0", str(src)], text=True).strip().split(",")[:2]]
     ar_src, ar_plate = mw / mh, lay["plate_w"] / lay["plate_h"]
     geo_ok = (abs(ar_src - ar_plate) / ar_src < 0.01 and lay["plate_w"] == W)
-    # letterbox rows removed must be black only
+    # letterbox rows removed must be black on well-lit frames, not on one fade
     lb_ok = True
-    if crop[3] > 0:
-        f0 = _frame(src, min(10.0, ffprobe_dur(src) / 2))
-        if f0 is not None:
-            top = f0[: crop[3]].mean()
-            bot = f0[crop[3] + crop[1]:].mean() if crop[3] + crop[1] < f0.shape[0] else 0
-            lb_ok = top < 20 and bot < 20
+    crop_w, crop_h, crop_x, crop_y = [int(x) for x in crop]
+    if crop_y > 0 or crop_y + crop_h < sh:
+        dur_s = ffprobe_dur(src)
+        checked = 0
+        for frac in (0.2, 0.35, 0.5, 0.65, 0.8, 0.9):
+            t = max(0.3, min(max(dur_s - 0.3, 0.3), dur_s * frac)) if dur_s else 0.3
+            f0 = _frame(src, t)
+            if f0 is None or float(np.mean(f0)) < 8:
+                continue
+            checked += 1
+            if crop_y > 0 and float(np.mean(f0[:crop_y])) >= 16:
+                lb_ok = False
+                break
+            bot_y = crop_y + crop_h
+            if bot_y < f0.shape[0] and float(np.mean(f0[bot_y:])) >= 16:
+                lb_ok = False
+                break
+        if checked == 0:
+            # Could not confirm the bars are black; do not pass a crop.
+            lb_ok = False
     # 2. edge check: compare output plate vs source frame at matching times
     corrs, edges, shifts = [], [], []
     body = [it for it in edl if it.get("scene") != "end"]
