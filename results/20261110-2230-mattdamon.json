@@ -1,9 +1,9 @@
 {
   "id": "20261110-2230-mattdamon",
-  "status": "failed",
-  "detail": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 41.46, 'stabilized': True, 'shots': 8, 'limit_px': 6.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 3, 'flags': [{'scene': 29, 't_src': 62.43, 't_out': 0.21, 'reasons': ['near_black'], 'luma': 11.9}, {'scene': 5, 't_src': 17.48, 't_out': 8.55, 'reasons': ['graphic_blob', 'flat_card'], 'luma': 32.8}, {'scene': 8, 't_src': 21.76, 't_out': 11.82, 'reasons': ['near_black'], 'luma': 9.2}]}",
-  "at": "2026-11-10 16:40 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42800133633",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-10 18:03 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42815170140",
   "slot": "2026-11-10T22:30:00+05:30",
   "title": "The reason why Matt Damon's Odysseus will not be stopped 💀 | Ithaca's king comes home | #edit",
   "auto_retries": 1,
@@ -11,25 +11,26 @@
   "attempts": [
     {
       "attempt": 1,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [1920, 1080], 'letterbox_free': [1920, 804], 'plate': [1080, 452], 'letterbox_rows_black': True, 'frame_corr_median': 0.857, 'edge_corr_median': 0.865, 'shift_px_median': 3.65, 'pairs': 6}; QA no_shake failed: {'ok': False, 'jitter_px_median': 32.53, 'stabilized': True, 'shots': 8, 'limit_px': 4.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 4, 'flags': [{'scene': 29, 't_src': 62.43, 't_out': 0.36, 'reasons': ['near_black'], 'luma': 11.9}, {'scene': 5, 't_src': 17.48, 't_out': 4.36, 'reasons': ['graphic_blob', 'flat_card'], 'luma': 32.8}, {'scene': 48, 't_src': 87.9, 't_out': 9.76, 'reasons': ['near_black'], 'luma': 4.0}, {'scene': 8, 't_src': 21.76, 't_out': 12.09, 'reasons': ['near_black'], 'luma': 9.2}]}",
+      "ok": true,
+      "error": null,
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
       "music": "ncs_fellshortofhell.mp3"
-    },
-    {
-      "attempt": 2,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [1920, 1080], 'letterbox_free': [1920, 804], 'plate': [1080, 452], 'letterbox_rows_black': True, 'frame_corr_median': 0.857, 'edge_corr_median': 0.865, 'shift_px_median': 3.65, 'pairs': 6}; QA no_shake failed: {'ok': False, 'jitter_px_median': 32.53, 'stabilized': True, 'shots': 8, 'limit_px': 4.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 4, 'flags': [{'scene': 29, 't_src': 62.43, 't_out': 0.36, 'reasons': ['near_black'], 'luma': 11.9}, {'scene': 5, 't_src': 17.48, 't_out': 4.36, 'reasons': ['graphic_blob', 'flat_card'], 'luma': 32.8}, {'scene': 48, 't_src': 87.9, 't_out': 9.76, 'reasons': ['near_black'], 'luma': 4.0}, {'scene': 8, 't_src': 21.76, 't_out': 12.09, 'reasons': ['near_black'], 'luma': 9.2}]}",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
-      "music": "ncs_fellshortofhell.mp3"
-    },
-    {
-      "attempt": 3,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 41.46, 'stabilized': True, 'shots': 8, 'limit_px': 6.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 3, 'flags': [{'scene': 29, 't_src': 62.43, 't_out': 0.21, 'reasons': ['near_black'], 'luma': 11.9}, {'scene': 5, 't_src': 17.48, 't_out': 8.55, 'reasons': ['graphic_blob', 'flat_card'], 'luma': 32.8}, {'scene': 8, 't_src': 21.76, 't_out': 11.82, 'reasons': ['near_black'], 'luma': 9.2}]}",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
-      "music": "ncs_montagemindia.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 41.46, 'stabilized': True, 'shots': 8, 'limit_px': 6.0}; QA no_logo failed: {'ok': False, 'shots_flagged': 3, 'flags': [{'scene': 29, 't_src': 62.43, 't_out': 0.21, 'reasons': ['near_black'], 'luma': 11.9}, {'scene': 5, 't_src': 17.48, 't_out': 8.55, 'reasons': ['graphic_blob', 'flat_card'], 'luma': 32.8}, {'scene': 8, 't_src': 21.76, 't_out': 11.82, 'reasons': ['near_black'], 'luma': 9.2}]}"
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261110-2230-mattdamon",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261110-2230-mattdamon/render-20261110-2230-mattdamon.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
+  "music": "ncs_fellshortofhell.mp3",
+  "music_credit": "Song: THIRST - fellshortofhell\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/fellshortofhell\nWatch: http://ncs.lnk.to/fellshortofhellAT/youtube",
+  "description_final": "The reason why Matt Damon's Odysseus will not be stopped. Ithaca's king comes home from the official The Odyssey trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=f_bKjZeJBBI). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #mattdamon\n\nMusic:\nSong: THIRST - fellshortofhell\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/fellshortofhell\nWatch: http://ncs.lnk.to/fellshortofhellAT/youtube"
 }

@@ -1,9 +1,9 @@
 {
   "id": "demo-foolnight",
   "status": "failed",
-  "detail": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 4.86, 'reasons': ['near_black'], 'luma': 13.3}]}",
-  "at": "2026-11-10 16:43 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42800133633",
+  "detail": "pipeline/QA failed (exit 1): auto_qc: 9 frame(s) failed empty-dark/logo/text detectors; auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
+  "at": "2026-11-10 18:28 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42815170140",
   "slot": "2026-11-10T14:00:00+05:30",
   "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
   "auto_retries": 1,
@@ -12,24 +12,24 @@
     {
       "attempt": 1,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 17.76, 'reasons': ['near_black'], 'luma': 13.3}]}",
+      "error": "pipeline/QA failed (exit 1): auto_qc: 10 frame(s) failed empty-dark/logo/text detectors; auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
       "music": "ncs_montagemindia.mp3"
     },
     {
       "attempt": 2,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 17.76, 'reasons': ['near_black'], 'luma': 13.3}]}",
+      "error": "pipeline/QA failed (exit 1): auto_qc: 1 frame(s) failed empty-dark/logo/text detectors; auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
       "music": "ncs_montagemindia.mp3"
     },
     {
       "attempt": 3,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 4.86, 'reasons': ['near_black'], 'luma': 13.3}]}",
+      "error": "pipeline/QA failed (exit 1): auto_qc: 9 frame(s) failed empty-dark/logo/text detectors; auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4",
-      "music": "ncs_fellshortofhell.mp3"
+      "music": "ncs_favela.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 32, 't_src': 51.16, 't_out': 4.86, 'reasons': ['near_black'], 'luma': 13.3}]}"
+  "last_error": "pipeline/QA failed (exit 1): auto_qc: 9 frame(s) failed empty-dark/logo/text detectors; auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written"
 }
