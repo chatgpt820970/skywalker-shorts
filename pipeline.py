@@ -2081,8 +2081,17 @@ def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
         if not v.get("ok"):
             issues.append(f"QA {k} failed: {v}")
     rep_ = {"checks": checks, "issues": issues, "layout": lay}
+    def _py(o):
+        if isinstance(o, dict):
+            return {k: _py(v) for k, v in o.items()}
+        if isinstance(o, (list, tuple)):
+            return [_py(v) for v in o]
+        if isinstance(o, np.generic):
+            return o.item()
+        return o
+    rep_ = _py(rep_)
     (QA / "qa_extra.json").write_text(json.dumps(rep_, indent=2))
-    print("QA extra:", json.dumps(checks))
+    print("QA extra:", json.dumps(rep_["checks"]))
     return rep_
 
 
