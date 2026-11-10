@@ -120,7 +120,9 @@ def download_source(src, force_fallback=False):
     errors, used = [], None
     if not force_fallback and item.get("source_url"):
         for attempt in range(2):
+            ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
             r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
+                                "-4", "--user-agent", ua,
                                 "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
                                 "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
                                 item["source_url"]], capture_output=True, text=True)
@@ -132,7 +134,39 @@ def download_source(src, force_fallback=False):
     errors.extend(ferr)
     if used:
         return used, errors
+    # Optional last-resort: official/legal Pexels clip if a key is already in the env.
+    # Never required; never committed.
+    pex = _try_pexels(src)
+    if pex:
+        return pex, errors
     return None, errors
+
+
+def _try_pexels(dest):
+    key = os.environ.get("PEXELS_API_KEY")
+    q = (item.get("pexels_query") or "").strip()
+    if not key or not q:
+        return None
+    try:
+        import json as _json, urllib.parse, urllib.request
+        req = urllib.request.Request(
+            "https://api.pexels.com/videos/search?" + urllib.parse.urlencode({"query": q, "per_page": 5, "orientation": "landscape"}),
+            headers={"Authorization": key},
+        )
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = _json.loads(r.read().decode())
+        files = []
+        for v in data.get("videos") or []:
+            for f in v.get("video_files") or []:
+                if (f.get("file_type") or "").endswith("mp4") and (f.get("width") or 0) >= 1280:
+                    files.append(f["link"])
+        for url in files[:3]:
+            ok, _ = download_url(url, dest)
+            if ok:
+                return f"pexels:{q}"
+    except Exception as e:
+        print("pexels skipped:", e)
+    return None
 
 def publish(final, fw, fh, up, used, qa, credit, qa_obj):
     desc = item.get("description", "")
@@ -161,6 +195,9 @@ def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, excl
            "--target-dur", str(item.get("target_dur", 32)), "--qa-json", str(qa_json)]
     if item.get("words"):
         cmd += ["--words", item["words"]]
+    out_res = int(item.get("out_res") or os.environ.get("SKY_OUT_RES") or 2160)
+    if out_res in (1080, 2160):
+        cmd += ["--out-res", str(out_res)]
     if relax:
         cmd += ["--relax"]
     if alt_scenes:
@@ -186,6 +223,13 @@ def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, excl
 
 def upscale(src, out_1080, final):
     sw, sh = probe_wh(src)
+    out_res = int(item.get("out_res") or os.environ.get("SKY_OUT_RES") or 2160)
+    if out_res == 1080:
+        # Keep the 1080x1920 master as the published file (no 4K upscale).
+        import shutil
+        shutil.copy2(out_1080, final)
+        fw, fh = probe_wh(final)
+        return fw, fh, "1080x1920 (no upscale)"
     subprocess.check_call(["ffmpeg", "-y", "-i", str(out_1080), "-vf", "scale=2160:3840:flags=lanczos",
                            "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
                            "-c:a", "copy", "-movflags", "+faststart", str(final)])

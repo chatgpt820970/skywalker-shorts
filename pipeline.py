@@ -64,7 +64,7 @@ def _fonts_dir() -> Path:
 
 FONTS = _fonts_dir()
 W, H = 1080, 1920
-FPS = 24
+FPS = 30            # output / mux frame rate (auto_qc requires >= 30)
 # Caption-bar template: tight white hook bar directly above the
 # uncropped 1080-wide frame. Bar + frame are one block, centered
 # vertically on a black 1080x1920 canvas. Never crop the source.
@@ -76,12 +76,16 @@ BAR_H = 196
 ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
-TRAILER_OPEN_SKIP = 7.0   # skip first ~5-8s of long trailers (studio logos)
-TRAILER_END_SKIP = 10.0   # skip last ~10s (title / coming-soon / logo cards)
-MIN_TRAILER_FOR_WINDOW = 40.0
+# No fixed opening/ending time lock: the best story scenes may come from
+# anywhere in the trailer. Logo/title/dark/red cards are still rejected
+# by the detectors in scene_filter + classify_shot.
+TRAILER_OPEN_SKIP = 0.0
+TRAILER_END_SKIP = 0.0
+MIN_TRAILER_FOR_WINDOW = 10**9  # disabled
+OUT_RES = 2160            # 1080 or 2160 (4K upscale is the default)
 RELAX = False             # retry-tier 3: relax ONLY non-hard-rule thresholds
 ALT_SCENES = False        # retry-tier 3: alternate scene preference
-LOGO_REASONS = ("near_black", "centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card")
+LOGO_REASONS = ("near_black", "empty_dark", "centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card", "title_card", "title_logo", "text_overlay", "text_page", "date_card", "logo")
 ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
@@ -115,7 +119,12 @@ CAPTIONS = [
 
 
 def run(cmd, **kw):
-    subprocess.check_call(cmd, **kw)
+    """ffmpeg commands retry once with a safe filtergraph; other commands are plain."""
+    try:
+        import ffmpeg_util
+        return ffmpeg_util.run(cmd, **kw)
+    except Exception:
+        subprocess.check_call(cmd, **kw)
 
 
 def ffprobe_dur(path: Path) -> float:
@@ -301,9 +310,20 @@ def detect_scenes(mezz: Path) -> list[dict]:
 
 
 def _sample_frames(mezz: Path, start: float, dur: float, n: int = 6) -> list[np.ndarray]:
-    frames = []
     times = [start + dur * (i + 0.5) / n for i in range(n)]
     times = [min(t, start + max(dur - 1 / FPS, 0)) for t in times]
+    frames: list[np.ndarray] = []
+    cap = cv2.VideoCapture(str(mezz))
+    if cap.isOpened():
+        for t in times:
+            cap.set(cv2.CAP_PROP_POS_MSEC, max(0.0, float(t)) * 1000.0)
+            ok, fr = cap.read()
+            if ok and fr is not None:
+                frames.append(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB))
+        cap.release()
+        if frames:
+            return frames
+    # ffmpeg fallback
     for i, t in enumerate(times):
         p = WORK / f"_sf_{start:.3f}_{i}.jpg"
         subprocess.call(
@@ -429,40 +449,40 @@ def classify_shot(arr: np.ndarray) -> tuple[list[str], dict]:
 
 
 def _in_trailer_window(start: float, end: float, dur: float) -> str:
-    """Return a skip reason if this scene lives in the opening or end card window."""
-    if dur < MIN_TRAILER_FOR_WINDOW:
-        return ""
-    mid = 0.5 * (start + end)
-    if start < TRAILER_OPEN_SKIP and mid < TRAILER_OPEN_SKIP + 1.0:
-        return "open_window"
-    if start >= dur - TRAILER_END_SKIP or (end > dur - TRAILER_END_SKIP and (end - max(start, dur - TRAILER_END_SKIP)) >= 0.5 * (end - start)):
-        return "end_window"
+    """Time lock disabled: never skip a scene just because of where it sits."""
     return ""
 
 
 def _scene_card_reason(frames: list[np.ndarray], start: float, end: float, dur: float) -> str:
-    """Decide whether a scene is a logo/title/dark card. Any logo/title sample bans it;
-    near-black requires the mid frame or a majority (so a short fade does not kill a shot)."""
-    w = _in_trailer_window(start, end, dur)
-    if w:
-        return w
+    """Decide whether a scene is a logo/title/dark/red card. Any logo/title sample bans it;
+    near-black/dark requires the mid frame or a majority (so a short fade does not kill a shot)."""
     if not frames:
         return "no_frames"
     flags = []
+    try:
+        import scene_filter as _sf
+    except Exception:
+        _sf = None
     for fr in frames:
         reasons, _st = classify_shot(fr)
+        if _sf is not None:
+            try:
+                reasons = list(dict.fromkeys(reasons + _sf.detect_frame(fr)))
+            except Exception:
+                pass
         flags.append(reasons)
     mid = flags[len(flags) // 2]
-    hard = ("centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card")
+    # ANY sampled frame with typography / logo / empty-dark rejects the whole segment.
+    # Loose cinematic "dark" / "red_solid" are not hard rejects.
+    hard = ("centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card",
+            "title_card", "title_logo", "text_overlay", "text_page", "date_card",
+            "logo", "near_black", "empty_dark")
     if any(any(r in hard for r in rs) for rs in flags):
         # first matching reason
         for rs in flags:
             for r in rs:
                 if r in hard:
                     return r
-    black_hits = sum(1 for rs in flags if "near_black" in rs)
-    if "near_black" in mid or black_hits >= max(2, (len(flags) + 1) // 2):
-        return "near_black"
     return ""
 
 
@@ -483,7 +503,14 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
                      card_reason="too_short")
             out.append(s)
             continue
-        frames = _sample_frames(mezz, s["start"], s["dur"], n=5)
+        # Sample at >= 4 fps so short title flashes / black frames cannot slip between ticks.
+        try:
+            import scene_filter as _sf_fps
+            qc_fps = float(getattr(_sf_fps, "QC_FPS", 4.0))
+        except Exception:
+            qc_fps = 4.0
+        n_samp = max(5, int(round(float(s["dur"]) * qc_fps)) + 1)
+        frames = _sample_frames(mezz, s["start"], s["dur"], n=n_samp)
         # also pin the first and last instants so a short logo transition cannot be missed
         extra = _sample_frames(mezz, s["start"], min(0.12, max(s["dur"] * 0.15, 0.04)), n=1)
         extra += _sample_frames(mezz, max(s["start"], s["end"] - 0.08), 0.08, n=1)
@@ -508,29 +535,102 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
         reasons, st = classify_shot(mid)
         graphic = 1.0 if (card_reason or reasons) else 0.0
         contrast = float(mid.std())
-        spectacle = motion * 0.55 + contrast * 0.35 + (1.0 - skin) * 12 + (1.0 - black) * 8
+        # Best-scene extras: sharpness, visual interest, faces/characters, mid brightness.
+        mid_u8 = frames[len(frames) // 2]
+        try:
+            import scene_filter as _sf
+            sharp = _sf.sharpness(mid_u8)
+            interest = _sf.visual_interest(mid_u8)
+            faces = _sf.face_or_character_score(mid_u8, YUNET_MODEL if YUNET_MODEL.exists() else None)
+            bright = _sf.brightness_score(float(luma))
+        except Exception:
+            sharp = float(cv2.Laplacian(cv2.cvtColor(mid_u8, cv2.COLOR_RGB2GRAY), cv2.CV_64F).var()) if mid_u8.ndim == 3 else 0.0
+            interest = 0.0
+            faces = float(skin)
+            bright = max(0.0, 1.0 - abs(luma - 95) / 95.0)
+        spectacle = (
+            motion * 0.45
+            + min(sharp, 800.0) / 80.0 * 12.0
+            + interest * 0.30
+            + faces * 28.0
+            + bright * 18.0
+            + contrast * 0.25
+            + (1.0 - black) * 6.0
+            + (1.0 - skin) * 4.0
+        )
         skip = bool(card_reason)
         reason = card_reason
         if (not skip) and s["dur"] < 0.55:
             skip, reason = True, "too_short"
+        # Auto-shift +4.5s when a hard card might be followed by usable footage.
+        if skip and reason not in ("too_short", "no_frames"):
+            try:
+                import scene_filter as _sf
+                shifted = _sf.auto_shift(float(s["start"]), float(s["end"]), float(trailer_dur or 0))
+            except Exception:
+                shifted = None
+            if shifted:
+                s2, e2 = float(shifted[0]), float(shifted[1])
+                n2 = max(5, int(round(float(e2 - s2) * qc_fps)) + 1)
+                frames2 = _sample_frames(mezz, s2, e2 - s2, n=n2)
+                reason2 = _scene_card_reason(frames2, s2, e2, float(trailer_dur or 0)) if frames2 else "no_frames"
+                if not reason2 and frames2:
+                    print(f"  scene {s['id']:02d} auto-shift {s['start']:.2f}-{s['end']:.2f} -> {s2:.2f}-{e2:.2f}")
+                    s = dict(s)
+                    s["start"], s["end"], s["dur"] = s2, e2, round(e2 - s2, 3)
+                    s["shifted_from"] = True
+                    skip, reason, card_reason = False, "", ""
+                    mid2 = frames2[len(frames2) // 2]
+                    reasons, st = classify_shot(mid2)
+        if not skip:
+            # Trim a fade-from-black lead-in so the first visible frame is real footage.
+            try:
+                r0, _st0 = classify_shot(frames[0])
+                try:
+                    import scene_filter as _sf_lead
+                    r0 = list(dict.fromkeys(r0 + _sf_lead.detect_frame(frames[0])))
+                except Exception:
+                    pass
+                if "near_black" in r0 or "empty_dark" in r0:
+                    t0 = float(s["start"]) + 0.12
+                    end = float(s["end"])
+                    while t0 < end - 0.70:
+                        frs = _sample_frames(mezz, t0, 0.08, n=1)
+                        if not frs:
+                            break
+                        rr, _ = classify_shot(frs[0])
+                        try:
+                            rr = list(dict.fromkeys(rr + _sf_lead.detect_frame(frs[0])))
+                        except Exception:
+                            pass
+                        if "near_black" not in rr and "empty_dark" not in rr:
+                            s["start"] = round(t0, 3)
+                            s["dur"] = round(end - s["start"], 3)
+                            s["trimmed_lead"] = True
+                            break
+                        t0 += 0.12
+            except Exception:
+                pass
         score = 0.0 if skip else float(spectacle)
         s.update(
             score=float(score), skip=skip, reason=reason or "",
             motion=float(motion), luma=float(luma), black=float(black),
             spectacle=float(spectacle), skin=float(skin), graphic=float(graphic),
             card_reason=reason or "",
+            sharp=float(sharp), interest=float(interest), faces=float(faces),
+            bright=float(bright),
             uniq=int(st.get("uniq") or 0), textish=float(st.get("horiz") or 0),
             sat=float(st.get("sat") or 0), flatg=float(st.get("flatg") or 0),
         )
         out.append(s)
         print(
             f"  scene {s['id']:02d} {s['start']:6.2f}-{s['end']:6.2f} "
-            f"({s['dur']:.2f}s) mot={motion:5.1f} luma={luma:5.1f} "
-            f"skin={skin:.2f} spec={spectacle:6.1f} "
+            f"({s['dur']:.2f}s) mot={motion:5.1f} faces={faces:.2f} "
+            f"spec={spectacle:6.1f} "
             f"{'SKIP '+reason if skip else 'OK'}"
         )
     # Short scene sandwiched between two logo/title/dark cards is almost certainly a card transition
-    cardish = set(LOGO_REASONS + ("open_window", "end_window", "card_transition"))
+    cardish = set(LOGO_REASONS + ("card_transition",))
     for i, s in enumerate(out):
         if s.get("skip") or s["dur"] > 1.4:
             continue
@@ -558,6 +658,13 @@ def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, sa
     import hashlib
     cj = json.loads((AE / "music" / "credits.json").read_text())
     mood = PILLAR_MOOD.get((pillar or "movie").lower(), "movie")
+    blob = " ".join([
+        pillar or "", seed or "",
+        str(globals().get("HOOK_TEXT") or ""),
+    ]).lower()
+    # Thriller / horror (Fool Night etc.) -> dark / phonk / cinematic, never light pop
+    if any(k in blob for k in ("fool night", "foolnight", "horror", "thriller", "scary", "werwulf")):
+        mood = "anime" if mood in ("anime", "funny") else "movie"
     pool = [t for t in cj["tracks"] if t["pillar"] == mood and (AE / "music" / t["file"]).exists()]
     if not pool:
         pool = [t for t in cj["tracks"] if (AE / "music" / t["file"]).exists()]
@@ -673,9 +780,9 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
         drop_n = max(1, len(mot) // 3)
         prefer = set(id(s) for s in mot[drop_n:])
         usable = [s for s in usable if id(s) in prefer] or usable
-        usable_by_spec = sorted(usable, key=lambda s: (s.get("motion") or 0) * 0.5 + (s.get("spectacle") or 0), reverse=True)
+        usable_by_spec = sorted(usable, key=lambda s: (s.get("score") or 0, s.get("motion") or 0), reverse=True)
     else:
-        usable_by_spec = sorted(usable, key=lambda s: s["spectacle"], reverse=True)
+        usable_by_spec = sorted(usable, key=lambda s: (s.get("score") or s.get("spectacle") or 0), reverse=True)
 
     body = target - END_CARD
 
@@ -785,7 +892,9 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
     acc = 0.0
     for i, (vis, sc) in enumerate(slots):
         trans_out, td = "cut", 0.0
-        if i < len(slots) - 1:
+        # Whips/flashes are energy-edit only. Romance and other calm cuts must stay
+        # hard cuts so a transition is never mistaken for camera shake in QA.
+        if ENERGY and i < len(slots) - 1:
             nxt = slots[i + 1][1]
             room_a = sc["dur"] >= vis + 0.22
             room_b = nxt["dur"] >= slots[i + 1][0] + 0.22
@@ -2043,10 +2152,29 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
               f",drawbox=x=0:y=0:w=iw:h=ih:color=white@1.0:t=fill:enable='between(t,{D:.3f},{D + 0.05:.3f})'"
               f",drawbox=x=0:y=0:w=iw:h=ih:color=white@0.55:t=fill:enable='between(t,{D + 0.05:.3f},{D + 0.10:.3f})'"
               f",drawbox=x=0:y=0:w=iw:h=ih:color=white@0.25:t=fill:enable='between(t,{D + 0.10:.3f},{D + 0.15:.3f})'")
+    # Lower-third captions live in the black under the plate, never on the footage
+    # and never as a Skywalker watermark (watermark is forbidden).
+    ass_extra = ""
+    fontsdir = AE / "fonts"
+    try:
+        import captions as capmod
+        plate_bottom = int(lay["video_y"]) + int(ph)
+        caps = capmod.generate_lines(HOOK_TEXT, globals().get("DEPTH_WORDS") or "", float(dur))
+        ass_lt = WORK / "lowerthirds.ass"
+        capmod.write_ass(ass_lt, caps, plate_bottom=plate_bottom, font="Poppins")
+        layout["caption_y"] = capmod.caption_y(plate_bottom)
+        layout["captions"] = caps
+        (WORK / "layout.json").write_text(json.dumps(layout, default=str))
+        ass_esc = Path(ass_lt).as_posix().replace(':', r'\:')
+        fd_esc = Path(fontsdir).as_posix().replace(':', r'\:')
+        ass_extra = f",ass={ass_esc}:fontsdir={fd_esc}"
+        print(f"  lower-thirds {len(caps)} lines at Y={layout['caption_y']} (plate ends {plate_bottom})")
+    except Exception as e:
+        print(f"  lower-thirds skipped: {e}")
     vfilt = (
         f"[0:v]pad={W}:{H}:0:{lay['video_y']}:color=black[bg];"
         f"[2:v]format=rgb24[bar];"
-        f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto{fx},format=yuv420p[v]"
+        f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto{fx},format=yuv420p{ass_extra}[v]"
     )
     print(f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) + music…")
     cmd = [
@@ -2065,6 +2193,47 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
 # ---------------------------------------------------------------------------
 # 7. QA
 # ---------------------------------------------------------------------------
+def apply_qc_blacklist(scenes: list[dict], edl: list[dict], blacklist: list[dict]) -> int:
+    """Mark source scenes that landed on failing output frames so we can re-slice."""
+    ids = set()
+    for hit in blacklist or []:
+        t = float(hit.get("t") or 0)
+        for it in edl:
+            if it.get("scene") in (None, "end"):
+                continue
+            t0, t1 = float(it["t0"]), float(it["t1"])
+            if t0 - 0.08 <= t < t1 + 0.08:
+                ids.add(it["scene"])
+    marked = 0
+    for s in scenes:
+        if s.get("id") in ids and not s.get("skip"):
+            s["skip"] = True
+            s["reason"] = s["card_reason"] = "qc_blacklist"
+            s["score"] = 0
+            marked += 1
+            print(f"  QC blacklist scene {s['id']} {s['start']:.2f}-{s['end']:.2f}")
+    return marked
+
+
+def run_auto_qc(path: Path) -> dict:
+    """4fps QC: resolution, fps>=30, audio, zero logo/empty-dark/text frames, banner+captions."""
+    try:
+        import auto_qc
+        layout = {}
+        lp = WORK / "layout.json"
+        if lp.exists():
+            layout = json.loads(lp.read_text())
+        cap_y = int(layout.get("caption_y") or 1420)
+        report = auto_qc.check(path, layout=layout, caption_y=cap_y)
+        auto_qc.write_report(WORK / "auto_qc.json", report)
+        print("auto_qc:", "OK" if report.get("ok") else report.get("issues"),
+              f"blacklist={len(report.get('blacklist') or [])}")
+        return report
+    except Exception as e:
+        print(f"auto_qc skipped: {e}")
+        return {"ok": True, "issues": [], "blacklist": [], "skipped": str(e)}
+
+
 def qa(path: Path, edl: list[dict]) -> dict:
     QA.mkdir(parents=True, exist_ok=True)
     dur = ffprobe_dur(path)
@@ -2398,19 +2567,22 @@ def main():
                     help="Comma-separated music filenames to skip when --music auto")
     ap.add_argument("--music-salt", default="",
                     help="Salt the auto music picker (used on retry to get a different track)")
-    ap.add_argument("--open-skip", type=float, default=None,
-                    help="Override opening trailer skip seconds (default 7)")
-    ap.add_argument("--end-skip", type=float, default=None,
-                    help="Override ending trailer skip seconds (default 10)")
+    ap.add_argument("--open-skip", type=float, default=0.0,
+                    help="DEPRECATED: time lock is disabled (best-scene scoring is used instead)")
+    ap.add_argument("--end-skip", type=float, default=0.0,
+                    help="DEPRECATED: time lock is disabled (best-scene scoring is used instead)")
+    ap.add_argument("--out-res", type=int, default=None, choices=[1080, 2160],
+                    help="Output long-edge (1080 or 2160). Default 2160 (4K upscale in render_item).")
     args = ap.parse_args()
-    global END_STILL, ENERGY, RELAX, ALT_SCENES, TRAILER_OPEN_SKIP, TRAILER_END_SKIP
+    global END_STILL, ENERGY, RELAX, ALT_SCENES, TRAILER_OPEN_SKIP, TRAILER_END_SKIP, OUT_RES
     ENERGY = bool(args.energy or (args.pillar or "").lower() in ("anime", "movie"))
     RELAX = bool(args.relax)
     ALT_SCENES = bool(args.alt_scenes)
-    if args.open_skip is not None:
-        TRAILER_OPEN_SKIP = float(args.open_skip)
-    if args.end_skip is not None:
-        TRAILER_END_SKIP = float(args.end_skip)
+    # Time lock stays off regardless of leftover flag values.
+    TRAILER_OPEN_SKIP = 0.0
+    TRAILER_END_SKIP = 0.0
+    if args.out_res is not None:
+        OUT_RES = int(args.out_res)
     if args.pillar and args.music == "auto":
         excl = [x.strip() for x in (args.exclude_music or "").split(",") if x.strip()]
         tr = pick_music(args.pillar, args.item_id, exclude=excl, salt=args.music_salt or "")
@@ -2575,11 +2747,16 @@ def main():
     print("=== 1. Letterbox detect ===")
     crop = detect_letterbox(src)
     print("  crop w:h:x:y =", crop)
-    mezz = make_mezzanine(src, WORK / "mezzanine.mp4", crop)
-    if STABILIZE:
-        print("=== 1b. Stabilize ===")
-        mezz = stabilize(mezz, WORK / "mezzanine_stab.mp4", WORK / "transforms.trf")
-        print(f"  stabilized {mezz}")
+    stab_existing = WORK / "mezzanine_stab.mp4"
+    if os.environ.get("SKY_REUSE_MEZZ") and STABILIZE and stab_existing.exists() and stab_existing.stat().st_size > 1_000_000:
+        mezz = stab_existing
+        print(f"  reused stabilized mezzanine {mezz} ({mezz.stat().st_size} bytes)")
+    else:
+        mezz = make_mezzanine(src, WORK / "mezzanine.mp4", crop)
+        if STABILIZE:
+            print("=== 1b. Stabilize ===")
+            mezz = stabilize(mezz, WORK / "mezzanine_stab.mp4", WORK / "transforms.trf")
+            print(f"  stabilized {mezz}")
 
     print("=== 2. Scene detect + score ===")
     scored_path = WORK / "scenes_scored.json"
@@ -2653,6 +2830,52 @@ def main():
         ex = qa_extra(out, mezz, src, crop, edl)
         issues += ex["issues"]
         report["checks"] = ex["checks"]
+    # 1fps auto_qc: on detector failures, blacklist those scenes and re-slice (bounded)
+    qc = run_auto_qc(out)
+    report["auto_qc"] = {k: qc.get(k) for k in ("ok", "issues", "blacklist", "meta", "mean_volume_db",
+                                                 "banner_hits", "caption_hits", "checked") if k in qc}
+    for qc_i in range(2):
+        if qc.get("ok") or not qc.get("blacklist"):
+            break
+        marked = apply_qc_blacklist(scenes, edl, qc.get("blacklist") or [])
+        if marked <= 0:
+            print("  auto_qc blacklist could not map to scenes; stopping re-slice")
+            break
+        print(f"=== 8b. Re-slice after auto_qc ({qc_i + 1}), dropped {marked} scene(s) ===")
+        scored_path.write_text(json.dumps(scenes, indent=2, default=str))
+        try:
+            edl = plan_edit(scenes, music, TARGET_DUR)
+            edl = finalize_edl_for_template(edl, music, TARGET_DUR)
+            if ENERGY:
+                edl = apply_energy(edl, scenes, music)
+        except SystemExit as e:
+            print(f"  re-plan failed: {e}; keeping previous cut")
+            break
+        (WORK / "edl.json").write_text(json.dumps(edl, indent=2, default=str))
+        for pth in CLIPS.glob("clip_*.mp4"):
+            pth.unlink()
+        paths = render_all_clips(mezz, edl, crop[1])
+        silent = template_work() / "silent.mp4"
+        stitch(paths, edl, silent)
+        silent_dur = ffprobe_dur(silent)
+        if TEMPLATE == "depthtext":
+            silent = apply_depth_text(silent, edl, DEPTH_WORDS, template_work() / "silent_depth.mp4")
+            silent_dur = ffprobe_dur(silent)
+        ass = WORK / "captions.ass"
+        if OVERLAY_TEXT:
+            ass = write_ass(edl, silent_dur, ass)
+        mux_final(silent, music, ass, WORK / "grad.png", out, silent_dur, OVERLAY_TEXT)
+        report = qa(out, edl)
+        issues = list(report["issues"])
+        if TEMPLATE == "whitebar":
+            ex = qa_extra(out, mezz, src, crop, edl)
+            issues += ex["issues"]
+            report["checks"] = ex["checks"]
+        qc = run_auto_qc(out)
+        report["auto_qc"] = {k: qc.get(k) for k in ("ok", "issues", "blacklist", "meta", "mean_volume_db",
+                                                     "banner_hits", "caption_hits", "checked") if k in qc}
+    if not qc.get("ok"):
+        issues += [f"auto_qc: {x}" for x in (qc.get("issues") or [])]
     report["issues"] = issues
     report["drop_t"] = DROP_T
     report["energy"] = ENERGY

@@ -29,33 +29,29 @@
   "fallback_asset": "hungergames_trailer_h264.mp4"
  },
  {
-  "id": "20261111-1230-foolnight",
+  "id": "20261111-1230-peddi",
   "slot": "2026-11-11T12:30:00+05:30",
-  "pillar": "anime",
-  "source_url": "https://www.youtube.com/watch?v=2Qg_AfPF2sM",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4"
-  ],
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=noatJVfA22U",
+  "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why Fool Night has everyone talking",
-  "words": "FOOL NIGHT",
-  "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
-  "description": "The reason why Fool Night has everyone talking. The flower-tree transformation from the official Fool Night trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2Qg_AfPF2sM). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #foolnight",
+  "hook": "The reason why Peddi playground ka hero ban gaya",
+  "words": "PEDDI",
+  "title": "The reason why Peddi playground ka hero ban gaya 💀 | Ram Charan as the crossover athlete | #edit",
+  "description": "The reason why Peddi playground ka hero ban gaya. Ram Charan as the crossover athlete from the official Peddi trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=noatJVfA22U). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #peddi #ramcharan #janhvikapoor",
   "tags": [
-   "foolnight",
-   "netflixanime",
-   "anime",
-   "animeedit",
-   "newanime",
+   "peddi",
+   "ramcharan",
+   "janhvikapoor",
+   "bollywood",
+   "tollywood",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK",
-  "fallback_release": "sources",
-  "fallback_asset": "foolnight_trailer.mp4"
+  "market": "IN"
  },
  {
   "id": "20261111-1730-fockerinlaw",
@@ -83,28 +79,31 @@
   "market": "US/UK"
  },
  {
-  "id": "20261111-2230-johnnydepp",
+  "id": "20261111-2230-foolnight",
   "slot": "2026-11-11T22:30:00+05:30",
-  "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=l_Ozo1xUgbU",
-  "fallback_mp4": [],
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=p15JWZsi3Ao",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4"
+  ],
   "template": "whitebar",
-  "hook": "The reason why Johnny Depp's comeback hits different",
-  "words": "EBENEZER",
-  "title": "The reason why Johnny Depp's comeback hits different 💀 | Johnny Depp as Scrooge | #edit",
-  "description": "The reason why Johnny Depp's comeback hits different. Johnny Depp as Scrooge from the official Ebenezer trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=l_Ozo1xUgbU). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #johnnydepp",
+  "hook": "The reason why Fool Night has everyone talking",
+  "words": "FOOL NIGHT",
+  "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
+  "description": "The reason why Fool Night has everyone talking. The flower-tree transformation from the official Fool Night trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=p15JWZsi3Ao). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #foolnight #anime #animeedit",
   "tags": [
-   "johnnydepp",
-   "ebenezer",
-   "celebrity",
-   "hollywood",
-   "comeback",
+   "foolnight",
+   "anime",
+   "animeedit",
+   "netflixanime",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "foolnight_trailer.mp4"
  }
 ]

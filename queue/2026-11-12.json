@@ -25,29 +25,28 @@
   "market": "US/UK"
  },
  {
-  "id": "20261112-1230-blackclover",
+  "id": "20261112-1230-rajasaab",
   "slot": "2026-11-12T12:30:00+05:30",
-  "pillar": "anime",
-  "source_url": "https://www.youtube.com/watch?v=BwdMT-OiARI",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=wT4HcYAeV5U",
   "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why Asta never gives up",
-  "words": "BLACK CLOVER",
-  "title": "The reason why Asta never gives up 💀 | Asta's anti-magic returns | #edit",
-  "description": "The reason why Asta never gives up. Asta's anti-magic returns from the official Black Clover Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=BwdMT-OiARI). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #blackclover",
+  "hook": "The reason why Raja Saab sabko hypnotise kar deta hai",
+  "words": "RAJA SAAB",
+  "title": "The reason why Raja Saab sabko hypnotise kar deta hai 💀 | Prabhas as the exorcist | #edit",
+  "description": "The reason why Raja Saab sabko hypnotise kar deta hai. Prabhas as the exorcist from the official The RajaSaab trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=wT4HcYAeV5U). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #therajasaab #prabhas #tollywood",
   "tags": [
-   "blackclover",
-   "asta",
-   "blackcloverseason2",
-   "crunchyroll",
-   "animeedit",
+   "therajasaab",
+   "prabhas",
+   "tollywood",
+   "bollywood",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "IN"
  },
  {
   "id": "20261112-1730-therampartsofice",
@@ -75,28 +74,27 @@
   "market": "US/UK"
  },
  {
-  "id": "20261112-2230-robertdowneyjr",
+  "id": "20261112-2230-shahrukhkhan",
   "slot": "2026-11-12T22:30:00+05:30",
   "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=X1aFkAkFASk",
+  "source_url": "https://www.youtube.com/watch?v=COv52Qyctws",
   "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why Robert Downey Jr. came back as Doom",
-  "words": "AVENGERS DOOMSDAY",
-  "title": "The reason why Robert Downey Jr. came back as Doom 💀 | Robert Downey Jr. as Doctor Doom | #edit",
-  "description": "The reason why Robert Downey Jr. came back as Doom. Robert Downey Jr. as Doctor Doom from the official Avengers: Doomsday trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=X1aFkAkFASk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #robertdowneyjr",
+  "hook": "The reason why SRK ka Jawan still hits different",
+  "words": "JAWAN",
+  "title": "The reason why SRK ka Jawan still hits different 💀 | Shah Rukh Khan takes on the system | #edit",
+  "description": "The reason why SRK ka Jawan still hits different. Shah Rukh Khan takes on the system from the official Jawan trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=COv52Qyctws). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jawan #shahrukhkhan #srk",
   "tags": [
-   "robertdowneyjr",
-   "doctordoom",
-   "avengersdoomsday",
-   "marvel",
-   "celebrity",
+   "jawan",
+   "shahrukhkhan",
+   "srk",
+   "bollywood",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "IN"
  }
 ]

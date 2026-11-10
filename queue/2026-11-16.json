@@ -25,29 +25,28 @@
   "market": "US/UK"
  },
  {
-  "id": "20261116-1230-onepiece",
+  "id": "20261116-1230-housefull5",
   "slot": "2026-11-16T12:30:00+05:30",
-  "pillar": "anime",
-  "source_url": "https://www.youtube.com/watch?v=2QjJMT554Bc",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=xGQuT1wm2qk",
   "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why Egghead changes One Piece forever",
-  "words": "ONE PIECE",
-  "title": "The reason why Egghead changes One Piece forever 💀 | Luffy on Egghead Island | #edit",
-  "description": "The reason why Egghead changes One Piece forever. Luffy on Egghead Island from the official ONE PIECE Egghead Arc trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2QjJMT554Bc). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #onepiece",
+  "hook": "The reason why Housefull 5 mein chaos kabhi rukta nahi",
+  "words": "HOUSEFULL 5",
+  "title": "The reason why Housefull 5 mein chaos kabhi rukta nahi 💀 | The official Nadiadwala trailer | #edit",
+  "description": "The reason why Housefull 5 mein chaos kabhi rukta nahi. The official Nadiadwala comedy trailer from the official Housefull 5 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=xGQuT1wm2qk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #housefull5 #bollywood #comedy",
   "tags": [
-   "onepiece",
-   "egghead",
-   "luffy",
-   "onepieceanime",
-   "netflixanime",
+   "housefull5",
+   "bollywood",
+   "comedy",
+   "nadiadwala",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "IN"
  },
  {
   "id": "20261116-1730-wildhorsenine",
@@ -75,28 +74,27 @@
   "market": "US/UK"
  },
  {
-  "id": "20261116-2230-robertdeniro",
+  "id": "20261116-2230-alluarjun",
   "slot": "2026-11-16T22:30:00+05:30",
   "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=5jEeTPYVBsY",
+  "source_url": "https://www.youtube.com/watch?v=1kVK0MZlbI4",
   "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why De Niro and Stiller are still iconic",
-  "words": "FOCKER-IN-LAW",
-  "title": "The reason why De Niro and Stiller are still iconic 💀 | Robert De Niro vs Ben Stiller | #edit",
-  "description": "The reason why De Niro and Stiller are still iconic. Robert De Niro vs Ben Stiller from the official Focker-In-Law trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5jEeTPYVBsY). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #robertdeniro",
+  "hook": "The reason why Pushpa ka rule ruka hi nahi",
+  "words": "PUSHPA 2",
+  "title": "The reason why Pushpa ka rule ruka hi nahi 💀 | Allu Arjun as Pushpa Raj | #edit",
+  "description": "The reason why Pushpa ka rule ruka hi nahi. Allu Arjun as Pushpa Raj from the official Pushpa 2 The Rule trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=1kVK0MZlbI4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #pushpa2 #alluarjun #tollywood",
   "tags": [
-   "robertdeniro",
-   "benstiller",
-   "fockerinlaw",
-   "celebrity",
-   "comedy",
+   "pushpa2",
+   "alluarjun",
+   "tollywood",
+   "sukumar",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "IN"
  }
 ]

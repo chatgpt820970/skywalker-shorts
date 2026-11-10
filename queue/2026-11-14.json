@@ -25,29 +25,29 @@
   "market": "US/UK"
  },
  {
-  "id": "20261114-1230-steelballrun",
+  "id": "20261114-1230-kantara",
   "slot": "2026-11-14T12:30:00+05:30",
-  "pillar": "anime",
-  "source_url": "https://www.youtube.com/watch?v=43qoWFJbWF0",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=MTECjlKUgEE",
   "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why Johnny Joestar keeps riding",
-  "words": "STEEL BALL",
-  "title": "The reason why Johnny Joestar keeps riding 💀 | The race across America | #edit",
-  "description": "The reason why Johnny Joestar keeps riding. The race across America from the official STEEL BALL RUN JoJo's Bizarre Adventure trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=43qoWFJbWF0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #steelballrun",
+  "hook": "The reason why Kantara ka daiva sabko chhoo gaya",
+  "words": "KANTARA",
+  "title": "The reason why Kantara ka daiva sabko chhoo gaya 💀 | Rishab Shetty and the forest spirit | #edit",
+  "description": "The reason why Kantara ka daiva sabko chhoo gaya. Rishab Shetty and the forest spirit from the official Kantara trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=MTECjlKUgEE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #kantara #rishabshetty #hombale",
   "tags": [
-   "steelballrun",
-   "jojo",
-   "jojosbizarreadventure",
-   "johnnyjoestar",
-   "netflixanime",
+   "kantara",
+   "rishabshetty",
+   "hombale",
+   "kannada",
+   "bollywood",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "IN"
  },
  {
   "id": "20261114-1730-fireflywedding",
@@ -75,28 +75,27 @@
   "market": "US/UK"
  },
  {
-  "id": "20261114-2230-ralphfiennes",
+  "id": "20261114-2230-rajinikanth",
   "slot": "2026-11-14T22:30:00+05:30",
   "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=MPjxijuBuSo",
+  "source_url": "https://www.youtube.com/watch?v=5-qi2TGQ4a4",
   "fallback_mp4": [],
   "template": "whitebar",
-  "hook": "The reason why Ralph Fiennes is the perfect Snow",
-  "words": "THE HUNGER",
-  "title": "The reason why Ralph Fiennes is the perfect Snow 💀 | Ralph Fiennes as President Snow | #edit",
-  "description": "The reason why Ralph Fiennes is the perfect Snow. Ralph Fiennes as President Snow from the official The Hunger Games: Sunrise on the Reaping trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=MPjxijuBuSo). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #ralphfiennes",
+  "hook": "The reason why Thalaivar ka Coolie still rules the room",
+  "words": "COOLIE",
+  "title": "The reason why Thalaivar ka Coolie still rules the room 💀 | Rajinikanth is the one Coolie | #edit",
+  "description": "The reason why Thalaivar ka Coolie still rules the room. Rajinikanth is the one Coolie from the official Coolie trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5-qi2TGQ4a4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #coolie #rajinikanth #thalaivar",
   "tags": [
-   "ralphfiennes",
-   "presidentsnow",
-   "hungergames",
-   "celebrity",
-   "hollywood",
+   "coolie",
+   "rajinikanth",
+   "thalaivar",
+   "kollywood",
    "edit",
    "shorts",
    "trending"
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "IN"
  }
 ]
