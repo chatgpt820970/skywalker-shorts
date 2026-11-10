@@ -6,3 +6,4 @@ Pillow
 onnxruntime
 rembg
 scipy
+faster-whisper

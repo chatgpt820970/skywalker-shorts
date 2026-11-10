@@ -29,5 +29,11 @@ Usage: `python pipeline.py --template whitebar|depthtext|postcard --out out.mp4 
 - 4K is a lanczos upscale of the 1080x1920 edit to 2160x3840. It does not invent detail.
 - Last-resort local fallback: `scripts/local_render.sh <queue-id>` (venv `/workspace/skywalker/.editvenv`).
 
+## Dialogue, subtitles, uniqueness
+- Original trailer audio is kept. When actors speak, dialogue is at ~1.3 volume and the music is ducked to ~0.22 (`sidechaincompress`, with a volume-envelope fallback). Non-speech shots keep music at ~0.65. A beat drop on the reveal is still allowed.
+- Lower-thirds are word-accurate subtitles of what is actually said, transcribed with local `faster-whisper` (no paid API, no committed secrets). Generic filler captions are never used. The white top hook bar is unchanged. Subtitles sit in the bottom black and cover the whole video wherever there is dialogue.
+- Every cut must be unique: a used source range `[s, e]` blocks `[s-6, e+6]`, and visually similar shots (pHash / histogram) are rejected. Auto-QC fails the render if the output still has near-duplicate shots.
+- Prefer shots that contain a complete spoken line; cuts are snapped so a word is never sliced in half.
+
 ## Music
-`music/credits.json` lists the 18 tracks the picker may use (NCS + Kevin MacLeod CC BY 4.0) with exact credit text, BPM, mood and license URL. The credit is appended to the Release notes / `description_final`.
+`music/credits.json` lists the 18 tracks the picker may use (NCS + Kevin MacLeod CC BY 4.0) with exact credit text, BPM, mood and license URL. The credit is appended to the Release notes / `description_final`. Romance prefers mid-tempo emotional NCS; anime/celeb prefers phonk. A slowed+reverb style may be applied to the credited file (the credit still names the original track). Copyrighted trending songs are never downloaded.

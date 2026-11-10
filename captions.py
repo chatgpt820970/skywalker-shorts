@@ -81,20 +81,25 @@ def _maybe_llm(hook: str, drafts: list[str]) -> list[str]:
     return drafts
 
 
-def generate_lines(hook: str, words: str = "", dur: float = 32.0) -> list[dict]:
-    lines = _answer_templates(hook, words)
-    lines = _maybe_llm(hook, lines)
-    n = min(N_MAX, max(N_MIN, len(lines)))
-    lines = lines[:n]
-    # 4s each, starting at 0.4s so the hook bar is readable first
-    t0 = 0.40
+def generate_lines(hook: str, words: str = "", dur: float = 32.0,
+                   dialogue: list[dict] | None = None) -> list[dict]:
+    """Lower-thirds: word-accurate dialogue cues only.
+
+    Generic filler ('The moment X changed everything', etc.) is never used.
+    If `dialogue` is a list of {t0,t1,text} cues from the transcript, those
+    are returned (clamped to duration). Otherwise no lower-thirds are emitted.
+    The top white hook bar is independent and stays as-is.
+    """
     caps = []
-    for i, text in enumerate(lines):
-        start = t0 + i * INTERVAL
-        end = min(dur - 0.15, start + INTERVAL - 0.12)
-        if end <= start:
-            break
-        caps.append({"t0": start, "t1": end, "text": text})
+    for c in dialogue or []:
+        text = " ".join(str(c.get("text") or "").split())
+        if not text:
+            continue
+        start = max(0.0, float(c.get("t0") or 0))
+        end = min(float(dur) - 0.04, float(c.get("t1") or 0))
+        if end <= start + 0.12:
+            continue
+        caps.append({"t0": round(start, 3), "t1": round(end, 3), "text": text})
     return caps
 
 

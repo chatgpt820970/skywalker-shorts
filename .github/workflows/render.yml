@@ -62,6 +62,12 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/faster_whisper
+          key: faster-whisper-${{ hashFiles('requirements.txt') }}
       - name: Install ffmpeg + deps
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
@@ -77,6 +83,7 @@ jobs:
       - name: Render ${{ matrix.id }}
         env:
           GH_TOKEN: ${{ github.token }}
+          SKY_WHISPER_MODEL: base
         run: python3 scripts/render_item.py "${{ matrix.id }}"
       - name: Upload result
         if: always()

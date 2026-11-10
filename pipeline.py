@@ -574,6 +574,11 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
         # Best-scene extras: sharpness, visual interest, faces/characters, mid brightness.
         mid_u8 = frames[len(frames) // 2]
         try:
+            import similarity as _sim
+            fp = _sim.fingerprint_frame(mid_u8)
+        except Exception:
+            fp = {"phash": 0, "hist": []}
+        try:
             import scene_filter as _sf
             sharp = _sf.sharpness(mid_u8)
             interest = _sf.visual_interest(mid_u8)
@@ -657,6 +662,7 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
             bright=float(bright),
             uniq=int(st.get("uniq") or 0), textish=float(st.get("horiz") or 0),
             sat=float(st.get("sat") or 0), flatg=float(st.get("flatg") or 0),
+            phash=int(fp.get("phash") or 0), hist=list(fp.get("hist") or []),
         )
         out.append(s)
         print(
@@ -710,9 +716,34 @@ def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, sa
         pool = alt
     if not pool:
         raise SystemExit("No credited music tracks found under music/")
+    # Prefer modern-sounding NCS; romance wants mid-tempo emotional, not 170+ BPM pop.
+    def _rank(tr):
+        sc = 0
+        if (tr.get("source") or "").upper() == "NCS":
+            sc += 20
+        tm = (tr.get("mood") or "").lower()
+        bpm = float(tr.get("bpm") or 0)
+        if mood == "romance" or (pillar or "").lower() == "romance":
+            if "emotional" in tm:
+                sc += 15
+            if 70 <= bpm <= 130:
+                sc += 15
+            elif bpm > 150:
+                sc -= 25
+        if mood == "anime" or (pillar or "").lower() in ("anime", "celeb"):
+            if "phonk" in tm:
+                sc += 15
+            if 0 < bpm <= 140:
+                sc += 5
+        return sc
+    ranked = [(_rank(tr), tr) for tr in pool]
+    best = max(r for r, _ in ranked)
+    top = [tr for r, tr in ranked if r >= best - 10]
+    pool = top or pool
     h = int(hashlib.sha1((f"{salt}|{seed or pillar or 'x'}").encode()).hexdigest(), 16)
     t = dict(pool[h % len(pool)])
     t["path"] = str(AE / "music" / t["file"])
+    t["rank"] = _rank(t)
     return t
 
 
@@ -803,7 +834,19 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
 # ---------------------------------------------------------------------------
 # 4. Edit plan
 # ---------------------------------------------------------------------------
-def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> list[dict]:
+def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
+              transcript: dict | None = None) -> list[dict]:
+    """Pick a unique, tension-building cut list.
+
+    Strict uniqueness: a used source range [s, e] blocks [s-6, e+6], and any
+    visually similar keyframe (pHash / histogram) is also rejected. Cuts prefer
+    complete spoken lines and are snapped so a word is never sliced in half.
+    """
+    import similarity as sim
+    try:
+        import dialogue as dmod
+    except Exception:
+        dmod = None
     pulses = np.array(music["pulses"], dtype=float)
     ibi = float(np.median(np.diff(pulses))) if len(pulses) > 3 else 0.75
     min_keep = 0.55 if RELAX else 0.70
@@ -820,6 +863,14 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
     else:
         usable_by_spec = sorted(usable, key=lambda s: (s.get("score") or s.get("spectacle") or 0), reverse=True)
 
+    # Attach speech bonus once so picks can prefer complete iconic lines.
+    if dmod and transcript:
+        for s in usable:
+            s["speech"] = dmod.speech_bonus(float(s["start"]), float(s["end"]), transcript)
+    else:
+        for s in usable:
+            s.setdefault("speech", 0.0)
+
     body = target - END_CARD
 
     def dur_for(t, n):
@@ -831,25 +882,43 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
     def fits(s, vis, extra=0.12):
         return s["dur"] >= vis + extra
 
-    used = set()
-    slots = []  # list of (visible, scene)
+    used_ids = set()
+    used_ranges: list[tuple[float, float]] = []
+    used_scenes: list[dict] = []
+    slots = []  # list of (visible, scene, src_start)
+
+    def blocked(s, win_start=None, win_end=None):
+        a = float(s["start"] if win_start is None else win_start)
+        b = float(s["end"] if win_end is None else win_end)
+        if sim.range_blocked(a, b, used_ranges):
+            return True
+        if sim.similar_to_used(s, used_scenes):
+            return True
+        return False
+
+    def mark_used(s, a, b):
+        used_ids.add(s["id"])
+        used_ranges.append((float(a), float(b)))
+        used_scenes.append(s)
 
     # Hook: highest spectacle that is not a talking-head and fits 3 pulses (else 2)
     t = 0.0
     hook_vis = max(1.2, min(dur_for(t, 3), 2.8))
-    hook_cands = [s for s in usable_by_spec if s["skin"] < 0.20 and fits(s, hook_vis)]
+    hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids and s["skin"] < 0.20 and fits(s, hook_vis) and not blocked(s, s["start"], s["start"] + hook_vis)]
     if not hook_cands:
         hook_vis = max(1.0, min(dur_for(t, 2), 2.2))
-        hook_cands = [s for s in usable_by_spec if fits(s, hook_vis)]
+        hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids and fits(s, hook_vis) and not blocked(s, s["start"], s["start"] + hook_vis)]
+    if not hook_cands:
+        hook_cands = [s for s in usable_by_spec if not blocked(s)]
     hook = hook_cands[0]
-    slots.append((hook_vis, hook))
-    used.add(hook["id"])
+    slots.append((hook_vis, hook, float(hook["start"])))
+    mark_used(hook, hook["start"], hook["start"] + hook_vis)
     t += hook_vis
 
     def pick(t, vis, prefer_spectacle, prev):
-        cands = [s for s in usable if s["id"] not in used and fits(s, vis)]
+        cands = [s for s in usable if s["id"] not in used_ids and fits(s, vis) and not blocked(s, s["start"], s["start"] + vis)]
         if not cands:
-            cands = [s for s in usable if s["id"] not in used and s["dur"] >= vis]
+            cands = [s for s in usable if s["id"] not in used_ids and s["dur"] >= vis and not blocked(s, s["start"], s["start"] + vis)]
         if not cands:
             return None
 
@@ -862,7 +931,11 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
                     pen += 25
                 if prev["skin"] > 0.16 and s["skin"] > 0.16:
                     pen += 30
-            return s["spectacle"] - pen
+            # Tension: spectacle should rise toward the late-middle climax.
+            progress = min(1.0, max(0.0, t / max(body, 1.0)))
+            tension = float(s.get("spectacle") or 0) * (0.75 + 0.7 * progress)
+            speech = float(s.get("speech") or 0)
+            return tension + speech - pen
 
         cands.sort(key=key, reverse=True)
         return cands[0]
@@ -871,12 +944,12 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
     while t < body - 0.35:
         remaining = body - t
         climax = t >= body * 0.62
-        # Prefer a pulse count that still fits the remaining time
         prefer = 2 if climax else 3
         if remaining > 3.2 and not climax:
             prefer = 4 if (len(slots) % 4 == 0) else 3
         chosen = None
         vis = 0.0
+        src_start = None
         for n in (prefer, 3, 2, 4, 1):
             vis = dur_for(t, n)
             vis = max(0.75, min(vis, remaining, 3.3))
@@ -886,7 +959,6 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
             if sc is not None:
                 # shrink vis to a pulse boundary that the scene can actually hold
                 if not fits(sc, vis) and sc["dur"] < vis + 0.12:
-                    # step down until it fits
                     ok = False
                     for n2 in range(n, 0, -1):
                         v2 = dur_for(t, n2)
@@ -897,18 +969,19 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
                             break
                     if not ok:
                         continue
+                src_start = float(sc["start"])
                 chosen = sc
                 break
         if chosen is None:
             break
-        slots.append((vis, chosen))
-        used.add(chosen["id"])
+        slots.append((vis, chosen, src_start))
+        mark_used(chosen, src_start, src_start + vis)
         t += vis
 
-    # If we still came up short, top up with leftover scenes that actually fit
+    # If we still came up short, top up with leftover unique scenes that actually fit
     while t < body - 0.50:
         remaining = body - t
-        leftovers = [s for s in usable_by_spec if s["id"] not in used and s["dur"] >= 0.70]
+        leftovers = [s for s in usable_by_spec if s["id"] not in used_ids and s["dur"] >= 0.70 and not blocked(s)]
         if not leftovers:
             break
         placed = False
@@ -916,17 +989,38 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
             vis = min(remaining, sc["dur"] - 0.06, max(0.70, dur_for(t, 2)))
             if vis < 0.70 or sc["dur"] < vis:
                 continue
-            slots.append((vis, sc))
-            used.add(sc["id"])
+            if blocked(sc, sc["start"], sc["start"] + vis):
+                continue
+            slots.append((vis, sc, float(sc["start"])))
+            mark_used(sc, sc["start"], sc["start"] + vis)
             t += vis
             placed = True
             break
         if not placed:
             break
 
+    # Snap every window off mid-word cuts, then rebuild used ranges from the snaps.
+    if dmod and transcript and transcript.get("words"):
+        words = transcript["words"]
+        new_slots = []
+        used_ranges = []
+        used_scenes = []
+        used_ids = set()
+        acc_tmp = 0.0
+        for vis, sc, src_start in slots:
+            a, vis2 = dmod.snap_window(src_start, vis, sc["start"], sc["end"], words, min_vis=0.70)
+            if blocked(sc, a, a + vis2) and (a, a + vis2) != (src_start, src_start + vis):
+                # snap landed in a blocked zone — keep the original window
+                a, vis2 = src_start, vis
+            new_slots.append((vis2, sc, a))
+            used_ids.add(sc["id"])
+            used_ranges.append((a, a + vis2))
+            used_scenes.append(sc)
+        slots = new_slots
+
     edl = []
     acc = 0.0
-    for i, (vis, sc) in enumerate(slots):
+    for i, (vis, sc, src_start) in enumerate(slots):
         trans_out, td = "cut", 0.0
         # Whips/flashes are energy-edit only. Romance and other calm cuts must stay
         # hard cuts so a transition is never mistaken for camera shake in QA.
@@ -939,11 +1033,13 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
                     trans_out, td = "flash", 0.12
                 elif i % 3 == 0:
                     trans_out, td = ("whip_left" if (i // 3) % 2 == 0 else "whip_right"), 0.16
+        src_start = float(src_start)
+        src_end = float(sc["end"])
         edl.append({
             "i": i,
             "scene": sc["id"],
-            "src_start": round(sc["start"], 3),
-            "src_end": round(sc["end"], 3),
+            "src_start": round(src_start, 3),
+            "src_end": round(src_end, 3),
             "src_dur": round(sc["dur"], 3),
             "visible": round(vis, 3),
             "t0": round(acc, 3),
@@ -952,9 +1048,55 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
             "td": td,
             "spectacle": round(sc["spectacle"], 2),
             "skin": round(sc["skin"], 3),
+            "phash": int(sc.get("phash") or 0),
+            "hist": list(sc.get("hist") or []),
+            "speech": round(float(sc.get("speech") or 0), 2),
         })
         acc += vis
+    dups = sim.edl_duplicate_pairs(edl, {s["id"]: s for s in scenes})
+    if dups:
+        print(f"  WARNING: plan_edit still has {len(dups)} uniqueness issue(s); dropping later repeats")
+        edl = _drop_duplicate_edl(edl, dups)
+        # re-accumulate times
+        acc = 0.0
+        kept = []
+        for i, it in enumerate(edl):
+            it["i"] = i
+            it["t0"] = round(acc, 3)
+            it["t1"] = round(acc + float(it["visible"]), 3)
+            acc += float(it["visible"])
+            kept.append(it)
+        edl = kept
     return edl
+
+
+def _drop_duplicate_edl(edl: list[dict], dups: list[dict]) -> list[dict]:
+    """Drop the later item of each duplicate pair so every cut is unique."""
+    drop = set()
+    for d in dups:
+        # drop the later output item
+        drop.add(max(int(d.get("a") or 0), int(d.get("b") or 0)))
+    return [it for it in edl if int(it.get("i") or 0) not in drop]
+
+
+def repair_unique_edl(edl: list[dict], scenes: list[dict], transcript: dict | None = None) -> list[dict]:
+    """After energy swaps, drop any pair that now violates uniqueness."""
+    import similarity as sim
+    dups = sim.edl_duplicate_pairs(edl, {s["id"]: s for s in scenes})
+    if not dups:
+        return edl
+    print(f"  uniqueness repair: dropping {len(dups)} repeat(s) after energy swaps")
+    body = [it for it in edl if it.get("scene") != "end"]
+    end = [it for it in edl if it.get("scene") == "end"]
+    body = _drop_duplicate_edl(body, dups)
+    acc = 0.0
+    for i, it in enumerate(body):
+        it["i"] = i
+        it["t0"] = round(acc, 3)
+        it["t1"] = round(acc + float(it["visible"]), 3)
+        acc += float(it["visible"])
+    return body + end
+
 
 
 def apply_energy(edl: list[dict], scenes: list[dict], music: dict) -> list[dict]:
@@ -1871,11 +2013,12 @@ def render_all_clips(mezz: Path, edl: list[dict], crop_h: int) -> list[Path]:
             fut.result()
             print(f"  rendered clip {i:02d}")
 
-    # End card: freeze a strong still, same uncropped width-fit (no type on it)
-    still_t = END_STILL
-    mezz_dur = ffprobe_dur(mezz)
-    if still_t >= mezz_dur or still_t < 0:
-        still_t = max(0.0, mezz_dur - 0.08)
+    # End card: freeze an unused unique still (never a repeat of a used shot,
+    # never the leftover Godzilla default timestamp). Skip if none is unique.
+    still_t = _choose_end_still(edl, mezz)
+    if still_t is None or END_CARD <= 0:
+        print("  skipping end card (no unique unused still)")
+        return paths
     cx = 0
     vf_still = footage_filter(geom, cx)
     frame = WORK / "end_frame.png"
@@ -1895,11 +2038,37 @@ def render_all_clips(mezz: Path, edl: list[dict], crop_h: int) -> list[Path]:
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     paths.append(end)
     edl.append({
-        "i": len(edl), "scene": "end", "src_start": 0, "src_end": 0, "src_dur": END_CARD,
+        "i": len(edl), "scene": "end", "src_start": float(still_t), "src_end": float(still_t),
+        "src_dur": END_CARD,
         "visible": END_CARD, "t0": edl[-1]["t1"] if edl else 0, "t1": (edl[-1]["t1"] if edl else 0) + END_CARD,
         "trans_out": "cut", "td": 0, "spectacle": 0, "skin": 0, "crop_x": cx,
     })
     return paths
+
+
+def _choose_end_still(edl: list[dict], mezz: Path) -> float | None:
+    """Pick a mid-frame from an unused unique source range, or None to skip."""
+    import similarity as sim
+    used = sim.edl_used_ranges(edl)
+    used_fps = [{"phash": it.get("phash") or 0, "hist": it.get("hist") or []}
+                for it in edl if it.get("scene") not in (None, "end") and it.get("phash")]
+    # Prefer a scored leftover scene if the file is sitting next to the EDL work dir.
+    leftover = []
+    sp = WORK / "scenes_scored.json"
+    if sp.exists():
+        try:
+            leftover = [s for s in json.loads(sp.read_text()) if not s.get("skip") and s.get("dur", 0) >= 0.8]
+        except Exception:
+            leftover = []
+    used_ids = {it.get("scene") for it in edl}
+    cands = [s for s in leftover if s.get("id") not in used_ids
+             and not sim.range_blocked(s["start"], s["end"], used)
+             and not sim.similar_to_used(s, [{"phash": u.get("phash"), "hist": u.get("hist")} for u in leftover if u.get("id") in used_ids] or used_fps)]
+    cands.sort(key=lambda s: float(s.get("spectacle") or 0), reverse=True)
+    if cands:
+        s = cands[0]
+        return float(s["start"]) + 0.5 * float(s["dur"])
+    return None
 
 
 
@@ -2105,11 +2274,46 @@ def prepare_bed(music: dict, dur: float, dst: Path) -> Path:
     return dst
 
 
+
+def _mix_source_and_music(bed: Path, dur: float, src: Path | None = None,
+                          edl: list[dict] | None = None) -> Path:
+    """Keep original trailer audio, duck music around dialogue, write mixed wav."""
+    if not src or not edl:
+        return bed
+    try:
+        import dialogue as dmod
+    except Exception as e:
+        print(f"  dialogue mix skipped: {e}")
+        return bed
+    try:
+        tr = {}
+        tp = WORK / "transcript.json"
+        if tp.exists():
+            tr = json.loads(tp.read_text())
+        dial = WORK / "dialogue.wav"
+        ok = dmod.extract_dialogue_wav(Path(src), edl, dial)
+        if not ok:
+            print("  dialogue bed missing (source has no audio?); music only")
+            return bed
+        src_windows = dmod.speech_windows_from_transcript(tr) or dmod.vad_windows(Path(src))
+        speech_out = dmod.map_windows_to_output(edl, src_windows)
+        mixed = WORK / "mixed.wav"
+        dmod.mix_dialogue_and_music(dial, bed, mixed, dur, speech_out)
+        (WORK / "speech_windows.json").write_text(json.dumps({"source": src_windows, "output": speech_out}))
+        print(f"  mixed original dialogue + ducked music ({len(speech_out)} speech window(s))")
+        return mixed if mixed.exists() and mixed.stat().st_size > 1000 else bed
+    except Exception as e:
+        print(f"  dialogue mix failed, music only: {e}")
+        return bed
+
+
 def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: float,
-              overlay_text: bool = OVERLAY_TEXT) -> Path:
-    """Mux music. Whitebar pads footage under the hook bar; other templates differ."""
+              overlay_text: bool = OVERLAY_TEXT, src: Path | None = None,
+              edl: list[dict] | None = None) -> Path:
+    """Mux original dialogue + ducked music. Whitebar pads footage under the hook bar."""
     bed = WORK / "bed.wav"
     prepare_bed(music, dur, bed)
+    audio = _mix_source_and_music(bed, dur, src=src, edl=edl)
     enc = [
         "-c:v", "libx264", "-preset", "fast", "-crf", "17",
         "-pix_fmt", "yuv420p", "-r", str(FPS),
@@ -2127,12 +2331,12 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         cmd = [
             "ffmpeg", "-y",
             "-i", str(silent),
-            "-i", str(bed),
+            "-i", str(audio),
             "-filter_complex", vfilt,
             "-map", "[v]", "-map", "1:a",
             *enc, str(out),
         ]
-        print(f"Muxing depthtext (uncropped {pw}x{ph} on black @{y}) + music…")
+        print(f"Muxing depthtext (uncropped {pw}x{ph} on black @{y}) + dialogue/music…")
         run(cmd)
         return out
     if TEMPLATE == "postcard":
@@ -2153,13 +2357,13 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
             "ffmpeg", "-y",
             "-i", str(silent),
             "-loop", "1", "-i", str(chrome),
-            "-i", str(bed),
+            "-i", str(audio),
             "-filter_complex", vfilt,
             "-map", "[v]", "-map", "2:a",
             "-t", f"{dur:.3f}",
             *enc, str(out),
         ]
-        print("Muxing postcard chrome + uncropped landscape + music…")
+        print("Muxing postcard chrome + uncropped landscape + dialogue/music…")
         run(cmd)
         return out
     # whitebar: tight hook bar directly on the uncropped plate, one centered block
@@ -2194,17 +2398,34 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
     fontsdir = AE / "fonts"
     try:
         import captions as capmod
+        import dialogue as dmod
         plate_bottom = int(lay["video_y"]) + int(ph)
-        caps = capmod.generate_lines(HOOK_TEXT, globals().get("DEPTH_WORDS") or "", float(dur))
+        cues = []
+        speech_out = []
+        tr = {}
+        tp = WORK / "transcript.json"
+        if tp.exists():
+            tr = json.loads(tp.read_text())
+        if edl and (tr.get("words") or tr.get("segments")):
+            mapped = dmod.map_words_to_output(edl, tr.get("words") or [])
+            cues = dmod.caption_cues(mapped)
+            src_windows = dmod.speech_windows_from_transcript(tr)
+            speech_out = dmod.map_windows_to_output(edl, src_windows)
+        caps = capmod.generate_lines(HOOK_TEXT, globals().get("DEPTH_WORDS") or "", float(dur),
+                                     dialogue=cues)
         ass_lt = WORK / "lowerthirds.ass"
-        capmod.write_ass(ass_lt, caps, plate_bottom=plate_bottom, font="Poppins")
+        if caps:
+            capmod.write_ass(ass_lt, caps, plate_bottom=plate_bottom, font="Poppins")
         layout["caption_y"] = capmod.caption_y(plate_bottom)
         layout["captions"] = caps
+        layout["speech_windows"] = speech_out
         (WORK / "layout.json").write_text(json.dumps(layout, default=str))
-        ass_esc = Path(ass_lt).as_posix().replace(':', r'\:')
-        fd_esc = Path(fontsdir).as_posix().replace(':', r'\:')
-        ass_extra = f",ass={ass_esc}:fontsdir={fd_esc}"
-        print(f"  lower-thirds {len(caps)} lines at Y={layout['caption_y']} (plate ends {plate_bottom})")
+        (WORK / "subtitles.json").write_text(json.dumps(caps, indent=2, ensure_ascii=False))
+        if caps:
+            ass_esc = Path(ass_lt).as_posix().replace(':', r'\:')
+            fd_esc = Path(fontsdir).as_posix().replace(':', r'\:')
+            ass_extra = f",ass={ass_esc}:fontsdir={fd_esc}"
+        print(f"  lower-thirds {len(caps)} dialogue lines at Y={layout['caption_y']} (plate ends {plate_bottom})")
     except Exception as e:
         print(f"  lower-thirds skipped: {e}")
     vfilt = (
@@ -2212,11 +2433,11 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         f"[2:v]format=rgb24[bar];"
         f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto{fx},format=yuv420p{ass_extra}[v]"
     )
-    print(f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) + music…")
+    print(f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) + dialogue/music…")
     cmd = [
         "ffmpeg", "-y",
         "-i", str(silent),
-        "-i", str(bed),
+        "-i", str(audio),
         "-i", str(bar),
         "-filter_complex", vfilt,
         "-map", "[v]", "-map", "1:a",
@@ -2624,6 +2845,20 @@ def main():
         tr = pick_music(args.pillar, args.item_id, exclude=excl, salt=args.music_salt or "")
         args.music = tr["path"]
         WORK.mkdir(parents=True, exist_ok=True)
+        try:
+            import dialogue as dmod
+            styled, note = dmod.style_music(
+                Path(tr["path"]), WORK / "music_styled.wav",
+                pillar=args.pillar or "", mood=tr.get("mood") or "",
+                bpm=tr.get("bpm"),
+            )
+            if note:
+                tr["path"] = str(styled)
+                tr["style"] = note
+                args.music = tr["path"]
+                print("Music style:", note)
+        except Exception as e:
+            print("music style skipped:", e)
         (WORK / "music_credit.json").write_text(json.dumps(tr, indent=2, ensure_ascii=False))
         print("Music:", tr["file"], "|", tr["credit"].splitlines()[0])
     if args.end_still is not None:
@@ -2732,7 +2967,7 @@ def main():
         ass = WORK / "captions.ass"
         if OVERLAY_TEXT:
             ass = write_ass(edl, silent_dur, ass)
-        mux_final(silent, music, ass, WORK / "grad.png", Path(args.out), silent_dur, OVERLAY_TEXT)
+        mux_final(silent, music, ass, WORK / "grad.png", Path(args.out), silent_dur, OVERLAY_TEXT, src=Path(args.src), edl=edl)
         report = qa(Path(args.out), edl)
         print("OUT", args.out, f"{ffprobe_dur(Path(args.out)):.2f}s")
         return 0 if not report["issues"] else 1
@@ -2769,7 +3004,7 @@ def main():
         ass = WORK / "captions.ass"
         if OVERLAY_TEXT:
             ass = write_ass(edl, silent_dur, ass)
-        mux_final(silent, music, ass, WORK / "grad.png", Path(args.out), silent_dur, OVERLAY_TEXT)
+        mux_final(silent, music, ass, WORK / "grad.png", Path(args.out), silent_dur, OVERLAY_TEXT, src=Path(args.src), edl=edl)
         print("=== 8. QA ===")
         report = qa(Path(args.out), edl)
         print("OUT", args.out, f"{ffprobe_dur(Path(args.out)):.2f}s", "size", Path(args.out).stat().st_size)
@@ -2808,6 +3043,22 @@ def main():
         print(f"  {len(kept)} usable scenes")
         scored_path.write_text(json.dumps(scenes, indent=2))
 
+    print("=== 2b. Transcribe original dialogue ===")
+    transcript = {"words": [], "segments": [], "ok": False}
+    try:
+        import dialogue as dmod
+        transcript = dmod.transcribe_source(src, WORK / "transcript.json")
+        n_w = len(transcript.get("words") or [])
+        n_s = len(transcript.get("segments") or [])
+        print(f"  whisper lang={transcript.get('language') or '?'} words={n_w} lines={n_s} ok={transcript.get('ok')}")
+        if transcript.get("error"):
+            print("  transcript:", transcript.get("error"))
+        for s in scenes:
+            s["speech"] = dmod.speech_bonus(float(s["start"]), float(s["end"]), transcript)
+    except Exception as e:
+        print("  transcribe skipped:", e)
+        transcript = {"words": [], "segments": [], "ok": False, "error": str(e)}
+
     print("=== 3. Music analysis ===")
     music = analyze_music(music_path, TARGET_DUR)
     print(f"  {Path(music['path']).name} tempo={music['tempo']:.1f} bpm "
@@ -2815,10 +3066,11 @@ def main():
     (WORK / "music.json").write_text(json.dumps({k: v for k, v in music.items() if k != "abs_beats"}, indent=2))
 
     print("=== 4. Plan edit ===")
-    edl = plan_edit(scenes, music, TARGET_DUR)
+    edl = plan_edit(scenes, music, TARGET_DUR, transcript=transcript)
     edl = finalize_edl_for_template(edl, music, TARGET_DUR)
     if ENERGY:
         edl = apply_energy(edl, scenes, music)
+        edl = repair_unique_edl(edl, scenes, transcript)
         (WORK / "music.json").write_text(json.dumps({k: v for k, v in music.items() if k != "abs_beats"}, indent=2))
     for item in edl:
         extra = ""
@@ -2856,7 +3108,7 @@ def main():
     ass = WORK / "captions.ass"
     if OVERLAY_TEXT:
         ass = write_ass(edl, silent_dur, ass)
-    mux_final(silent, music, ass, WORK / "grad.png", out, silent_dur, OVERLAY_TEXT)
+    mux_final(silent, music, ass, WORK / "grad.png", out, silent_dur, OVERLAY_TEXT, src=src, edl=edl)
 
     print("=== 8. QA ===")
     # reload edl (end card appended in render)
@@ -2880,10 +3132,11 @@ def main():
         print(f"=== 8b. Re-slice after auto_qc ({qc_i + 1}), dropped {marked} scene(s) ===")
         scored_path.write_text(json.dumps(scenes, indent=2, default=str))
         try:
-            edl = plan_edit(scenes, music, TARGET_DUR)
+            edl = plan_edit(scenes, music, TARGET_DUR, transcript=transcript if "transcript" in dir() else None)
             edl = finalize_edl_for_template(edl, music, TARGET_DUR)
             if ENERGY:
                 edl = apply_energy(edl, scenes, music)
+                edl = repair_unique_edl(edl, scenes, transcript if "transcript" in dir() else None)
         except SystemExit as e:
             print(f"  re-plan failed: {e}; keeping previous cut")
             break
@@ -2900,7 +3153,7 @@ def main():
         ass = WORK / "captions.ass"
         if OVERLAY_TEXT:
             ass = write_ass(edl, silent_dur, ass)
-        mux_final(silent, music, ass, WORK / "grad.png", out, silent_dur, OVERLAY_TEXT)
+        mux_final(silent, music, ass, WORK / "grad.png", out, silent_dur, OVERLAY_TEXT, src=src, edl=edl)
         report = qa(out, edl)
         issues = list(report["issues"])
         if TEMPLATE == "whitebar":

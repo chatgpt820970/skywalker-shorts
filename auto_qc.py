@@ -6,7 +6,10 @@ Checks:
   - fps >= 30
   - audio is not silent
   - zero frames fail the empty-dark / logo / overlay-text / title / date detectors
-  - hook banner and lower-third captions are visible
+  - hook banner is visible
+  - lower-third captions are visible wherever dialogue is present
+  - no near-duplicate shots in the output
+  - dialogue is audible during speech windows (when a transcript is provided)
 On failure, timestamps are blacklisted so the caller can re-slice and
 re-render (bounded loop lives in render_item / pipeline).
 """
@@ -109,6 +112,107 @@ def _caption_visible(frame: np.ndarray, y_hint: int = 1420) -> bool:
     return bright > 0.01 and dark > 0.01
 
 
+
+def _mean_volume_window(path: Path, t0: float, t1: float) -> float | None:
+    if t1 <= t0:
+        return None
+    r = subprocess.run(
+        ["ffmpeg", "-ss", f"{t0:.3f}", "-t", f"{max(0.12, t1-t0):.3f}",
+         "-i", str(path), "-af", "volumedetect", "-vn", "-f", "null", "-"],
+        capture_output=True, text=True,
+    )
+    for ln in (r.stderr or "").splitlines():
+        if "mean_volume" in ln:
+            try:
+                return float(ln.split("mean_volume:")[1].split()[0])
+            except Exception:
+                return None
+    return None
+
+
+def _plate_of(frame: np.ndarray, layout: dict | None) -> np.ndarray:
+    if frame is None or not getattr(frame, "size", 0):
+        return frame
+    if not layout or layout.get("plate_y") is None:
+        return frame
+    h = frame.shape[0]
+    sy = h / 1920.0
+    y = int(layout["plate_y"] * sy)
+    ph = int(layout.get("plate_h", 0) * sy)
+    if ph <= 0:
+        return frame
+    plate = frame[y:y + ph, :]
+    try:
+        plate = scene_filter.active_picture(plate)
+    except Exception:
+        pass
+    return plate
+
+
+def check_duplicate_shots(path: Path, layout: dict | None = None, dur: float = 0.0) -> list[dict]:
+    """Fail QC when two output shots look like the same angle."""
+    try:
+        import similarity
+    except Exception:
+        return []
+    if dur <= 0:
+        return []
+    # Sample the plate at 2 fps, split into shots on large frame diffs, compare mids.
+    step = 0.5
+    times = []
+    t = 0.08
+    while t < dur - 0.08:
+        times.append(round(t, 3))
+        t += step
+    if not times:
+        return []
+    try:
+        grabbed = scene_filter.grab_times(path, times)
+    except Exception:
+        grabbed = [(tt, _frame_at(path, tt)) for tt in times]
+    plates = []
+    for tt, fr in grabbed:
+        if fr is None:
+            continue
+        plates.append((tt, _plate_of(fr, layout)))
+    if len(plates) < 4:
+        return []
+    # Shot boundaries: high inter-frame difference.
+    diffs = []
+    for i in range(1, len(plates)):
+        a, b = plates[i - 1][1], plates[i][1]
+        if a is None or b is None or a.size == 0 or b.size == 0:
+            diffs.append(0.0)
+            continue
+        ha, wa = a.shape[:2]
+        hb, wb = b.shape[:2]
+        if (ha, wa) != (hb, wb):
+            b = cv2.resize(b, (wa, ha))
+        diffs.append(float(np.mean(np.abs(a.astype(np.float32) - b.astype(np.float32)))))
+    med = float(np.median(diffs)) if diffs else 0.0
+    cut = max(18.0, med * 2.4)
+    shots = []
+    start = 0
+    for i, d in enumerate(diffs, start=1):
+        if d >= cut:
+            shots.append(plates[start:i])
+            start = i
+    shots.append(plates[start:])
+    mids, mid_t = [], []
+    for sh in shots:
+        if not sh:
+            continue
+        # Ignore very short flashes (< 0.4s)
+        if sh[-1][0] - sh[0][0] < 0.35:
+            continue
+        mid = sh[len(sh) // 2]
+        if mid[1] is None or mid[1].size == 0:
+            continue
+        mids.append(similarity.fingerprint_frame(mid[1]))
+        mid_t.append(mid[0])
+    return similarity.shot_duplicate_pairs(mids, mid_t)
+
+
 def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict:
     path = Path(path)
     issues = []
@@ -207,6 +311,45 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
         cap.release()
     except Exception:
         pass
+    # Dialogue captions: require visibility inside speech/caption windows, not filler-all-the-way.
+    speech_wins = layout.get("speech_windows") if layout else None
+    cap_cues = layout.get("captions") if layout else None
+    if cap_cues:
+        issues[:] = [x for x in issues if x != "lower-third captions not visible"]
+        miss = 0
+        checked_cues = 0
+        for c in cap_cues:
+            mid = (float(c.get("t0") or 0) + float(c.get("t1") or 0)) / 2.0
+            if mid < 0 or (dur and mid >= dur):
+                continue
+            fr = _frame_at(path, mid)
+            if fr is None:
+                continue
+            checked_cues += 1
+            if not _caption_visible(fr, caption_y):
+                miss += 1
+        if checked_cues and miss > max(1, checked_cues // 3):
+            issues.append(f"dialogue subtitles missing on {miss}/{checked_cues} speech cues")
+    elif speech_wins:
+        issues.append("speech detected but no dialogue subtitles were written")
+    # Relax the old "captions must appear somewhere" rule when we know there is no speech.
+    if (not cap_cues) and (not speech_wins):
+        issues[:] = [x for x in issues if x != "lower-third captions not visible"]
+    # Near-duplicate shots in the output.
+    dupes = check_duplicate_shots(path, layout, dur)
+    if dupes:
+        issues.append(f"{len(dupes)} near-duplicate shot pair(s) in the output")
+    # Dialogue must be audible during speech windows.
+    speech_vols = []
+    if speech_wins:
+        for a, b in speech_wins:
+            if isinstance(a, (list, tuple)):
+                a, b = a[0], a[1] if len(a) > 1 else b
+            mv = _mean_volume_window(path, float(a), float(b))
+            if mv is not None:
+                speech_vols.append(mv)
+        if speech_vols and max(speech_vols) <= -32:
+            issues.append(f"dialogue inaudible during speech (mean_volume={sum(speech_vols)/len(speech_vols):.1f} dB)")
     return {
         "ok": not issues,
         "issues": issues,
@@ -216,6 +359,8 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
         "banner_hits": banner_hits,
         "caption_hits": cap_hits,
         "checked": checked,
+        "duplicate_shots": dupes,
+        "speech_volumes_db": speech_vols,
     }
 
 
