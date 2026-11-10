@@ -2,12 +2,14 @@
 """Skywalker auto-editor: scene-aware, beat-synced 9:16 Shorts.
 
 Default template (caption-bar, from the "Rocket knew something" style):
-- 1080x1920.
-- A white hook bar across the top (~18% of the height) with a bold
-  black italic 1-2 line hook, fully on-screen, never cut.
-- Footage fills everything below the bar (no blur bars). A smart crop
-  keeps faces and the main subject in frame; faces are never cut when
-  they fit the window.
+- 1080x1920 black canvas.
+- A TIGHT white hook bar (text-block height + ~30px pad top and bottom,
+  ~195px for two lines) with a bold black italic 1-2 line hook, centered
+  in the bar, fully on-screen, never cut.
+- The full UNCROPPED source frame, scaled to 1080 width, sits DIRECTLY
+  below the bar with no gap. Bar + frame form one block, centered
+  vertically on the canvas. Never crop the source; leftover space is
+  plain black (no blur).
 - Moody/desaturated cinematic grade, stabilized, no Ken Burns.
 - No text is burned onto the footage itself.
 
@@ -44,11 +46,14 @@ QA = WORK / "qa"
 FONTS = WORK / "fonts"
 W, H = 1080, 1920
 FPS = 24
-# Caption-bar template: white hook bar on top, footage fills the rest.
-BAR_FRAC = 0.1875
-BAR_H = 360                # 18.75% of 1920, within the 15-20% target
-FOOT_H = H - BAR_H         # 1560 — footage covers this, no blur bars
-SEP_H = 4                  # thin black line under the bar (matches the ref)
+# Caption-bar template: tight white hook bar directly above the
+# uncropped 1080-wide frame. Bar + frame are one block, centered
+# vertically on a black 1080x1920 canvas. Never crop the source.
+BAR_PAD_Y = 30             # padding above and below the hook text
+SEP_H = 2                  # 2px hairline at the bottom of the bar (no gap)
+# BAR_H is computed from the text; this is only a fallback estimate
+# (~195px for a 2-line hook, matching the approved layout).
+BAR_H = 196
 ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
@@ -526,14 +531,35 @@ def hook_lines(text: str | None = None) -> list[str]:
     return [" ".join(words[: best_i + 1]), " ".join(words[best_i + 1 :])]
 
 
+def centered_block_y(block_h: int) -> int:
+    """Vertical origin of a block so it sits in the middle of the 9:16 canvas."""
+    y = even(max(0, (H - int(block_h)) // 2))
+    if y + block_h > H:
+        y = max(0, even(H - int(block_h)))
+    return y
+
+
+def whitebar_layout(plate_h: int, bar_h: int) -> dict:
+    """Tight bar directly on top of the uncropped plate, as one centered block."""
+    block_h = int(bar_h) + int(plate_h)
+    y = centered_block_y(block_h)
+    return {
+        "bar_y": y,
+        "bar_h": int(bar_h),
+        "video_y": y + int(bar_h),
+        "plate_h": int(plate_h),
+        "block_h": block_h,
+    }
+
+
 def draw_caption_bar(dst: Path, lines: list[str] | None = None) -> Path:
-    """White 1080xBAR_H bar, bold black italic hook, fully inside the safe area."""
+    """Tight white bar: text height + ~30px pad top/bottom, bold black italic, centered."""
     lines = lines or hook_lines()
-    bar = Image.new("RGB", (W, BAR_H), (255, 255, 255))
-    d = ImageDraw.Draw(bar)
+    probe = Image.new("RGB", (W, 400), (255, 255, 255))
+    d = ImageDraw.Draw(probe)
     font_path = FONT_HOOK if FONT_HOOK.exists() else FONT_ANTON
     side = 56          # left/right margin so type is never clipped
-    top_bot = 48       # vertical padding
+    pad_y = BAR_PAD_Y  # approved tight padding
     size = 72
     font = None
     widths = heights = None
@@ -544,14 +570,19 @@ def draw_caption_bar(dst: Path, lines: list[str] | None = None) -> Path:
             bbox = d.textbbox((0, 0), ln, font=font)
             widths.append(bbox[2] - bbox[0])
             heights.append(bbox[3] - bbox[1])
-        gap = max(6, int(size * 0.22))
-        if max(widths) <= W - 2 * side and sum(heights) + gap * (len(lines) - 1) <= BAR_H - 2 * top_bot - SEP_H:
+        if max(widths) <= W - 2 * side:
             break
         size -= 2
-    gap = max(6, int(size * 0.22))
+    # 12px gap matches the approved 2-line hook
+    gap = 12 if len(lines) > 1 else 0
     total_h = sum(heights) + gap * (len(lines) - 1)
-    y = (BAR_H - SEP_H - total_h) // 2
-    for i, ln in enumerate(lines):
+    bar_h = total_h + 2 * pad_y + SEP_H
+    if bar_h % 2:
+        bar_h += 1  # even height for yuv420, keep pad >= 30
+    bar = Image.new("RGB", (W, bar_h), (255, 255, 255))
+    d = ImageDraw.Draw(bar)
+    y = pad_y
+    for ln in lines:
         bbox = d.textbbox((0, 0), ln, font=font)
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
         x = (W - tw) // 2 - bbox[0]
@@ -560,7 +591,7 @@ def draw_caption_bar(dst: Path, lines: list[str] | None = None) -> Path:
         d.text((x, y - bbox[1]), ln, font=font, fill=(0, 0, 0))
         y += th + gap
     if SEP_H:
-        d.rectangle([0, BAR_H - SEP_H, W, BAR_H], fill=(0, 0, 0))
+        d.rectangle([0, bar_h - SEP_H, W, bar_h], fill=(0, 0, 0))
     dst.parent.mkdir(parents=True, exist_ok=True)
     bar.save(dst)
     return dst
@@ -1119,12 +1150,11 @@ def make_round_logo(src: Path | None, size: int) -> Image.Image:
 
 
 def postcard_layout(plate_h: int) -> dict:
+    """Header sits directly above the uncropped clip; the pair is one centered block."""
     header_h = POSTCARD_HEADER_H
-    group = header_h + plate_h
-    top = POSTCARD_PAD_TOP
-    if top + group > H - 60:
-        top = max(36, H - 60 - group)
-    return {"top": top, "header_h": header_h, "video_y": top + header_h, "plate_h": plate_h}
+    group = header_h + int(plate_h)
+    top = centered_block_y(group)
+    return {"top": top, "header_h": header_h, "video_y": top + header_h, "plate_h": int(plate_h)}
 
 
 def _caption_font(size: int):
@@ -1604,16 +1634,21 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         print("Muxing postcard chrome + uncropped landscape + music…")
         run(cmd)
         return out
-    # whitebar: white hook bar, full uncropped frame directly under it, rest black
+    # whitebar: tight hook bar directly on the uncropped plate, one centered block
     bar = WORK / "caption_bar.png"
     if not bar.exists():
         draw_caption_bar(bar, hook_lines())
-    # silent is the uncropped 1080-wide plate; place it under the bar, rest black.
+    # silent is the uncropped 1080-wide plate; bar sits flush on top, rest black.
     # The hook lives only in the bar, so xfades never fade or clip the type.
+    pw, ph = _mezz_size(silent)
+    bar_h = Image.open(bar).size[1]
+    lay = whitebar_layout(ph, bar_h)
     vfilt = (
-        f"[0:v]pad={W}:{H}:0:{BAR_H}:color=black[bg];"
-        f"[bg][2:v]overlay=0:0:format=auto,format=yuv420p[v]"
+        f"[0:v]pad={W}:{H}:0:{lay['video_y']}:color=black[bg];"
+        f"[2:v]format=rgb24[bar];"
+        f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto,format=yuv420p[v]"
     )
+    print(f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) + music…")
     cmd = [
         "ffmpeg", "-y",
         "-i", str(silent),
@@ -1623,7 +1658,6 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         "-map", "[v]", "-map", "1:a",
         *enc, str(out),
     ]
-    print("Muxing caption bar + music (no text on footage)…")
     run(cmd)
     return out
 
@@ -1821,9 +1855,11 @@ def main():
                 "-frames:v", "1", "-vf", footage_filter(geom, cx), str(tmp),
             ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             foot = Image.open(tmp).convert("RGB")
-            canvas = Image.new("RGB", (W, H), (255, 255, 255))
-            canvas.paste(Image.open(WORK / "caption_bar.png").convert("RGB"), (0, 0))
-            canvas.paste(foot, (0, BAR_H))
+            bar_im = Image.open(WORK / "caption_bar.png").convert("RGB")
+            lay = whitebar_layout(foot.size[1], bar_im.size[1])
+            canvas = Image.new("RGB", (W, H), (0, 0, 0))
+            canvas.paste(bar_im, (0, lay["bar_y"]))
+            canvas.paste(foot, (0, lay["video_y"]))
             dst.parent.mkdir(parents=True, exist_ok=True)
             canvas.save(dst)
             print("Whitebar check frame", dst)
