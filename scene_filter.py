@@ -81,6 +81,44 @@ def _corner_ignore(h: int, w: int) -> np.ndarray:
     return m
 
 
+def active_picture(frame: np.ndarray, luma_thr: float = 16.0,
+                   min_bar: float = 0.04, max_bar: float = 0.28) -> np.ndarray:
+    """Drop uniform black letterbox/pillarbox for MEASUREMENT only.
+
+    Never used to crop the delivered frame. Source-baked bars inflate
+    dark-pixel share and make a compact subject look like a centered logo.
+    """
+    a = np.asarray(frame)
+    if a.size == 0:
+        return a
+    L = a.mean(axis=2) if a.ndim == 3 else a.astype(np.float32)
+    h, w = L.shape
+    row = L.mean(axis=1)
+    col = L.mean(axis=0)
+    top = 0
+    while top < int(h * max_bar) and row[top] < luma_thr:
+        top += 1
+    bot = h - 1
+    while bot > int(h * (1.0 - max_bar)) and row[bot] < luma_thr:
+        bot -= 1
+    left = 0
+    while left < int(w * max_bar) and col[left] < luma_thr:
+        left += 1
+    right = w - 1
+    while right > int(w * (1.0 - max_bar)) and col[right] < luma_thr:
+        right -= 1
+    bar_h = top + (h - 1 - bot)
+    bar_w = left + (w - 1 - right)
+    if bar_h < h * min_bar and bar_w < w * min_bar:
+        return a
+    if bot - top < 8 or right - left < 8:
+        return a
+    interior = L[top:bot + 1, left:right + 1]
+    if float(interior.mean()) < float(L.mean()) + 4:
+        return a
+    return a[top:bot + 1, left:right + 1]
+
+
 def is_dark(frame: np.ndarray) -> bool:
     """>45% of pixels have luma < 25. Cinematic night often trips this;
     do not use it alone as a hard reject. Prefer is_empty_dark()."""
@@ -96,9 +134,10 @@ def is_empty_dark(frame: np.ndarray) -> bool:
     """Near-fully-black filler / short black flash, not a dark story beat.
 
     Rejects when mean luma is very low AND almost every pixel is dark
-    (e.g. a 0.3s fade-to-black between shots).
+    (e.g. a 0.3s fade-to-black between shots). Letterbox bars are ignored
+    so a letterboxed night shot with a visible subject is kept.
     """
-    a = _resize(frame, 480)
+    a = _resize(active_picture(frame), 480)
     L = a.mean(axis=2) if a.ndim == 3 else a.astype(np.float32)
     mean = float(L.mean())
     dark16 = float((L < 16).mean())
@@ -144,7 +183,7 @@ def is_red_or_solid(frame: np.ndarray) -> bool:
 
 def is_text_card(frame: np.ndarray) -> bool:
     """Flat outer region + sharp center (title / date / credit typography)."""
-    a = _resize(frame).astype(np.float32)
+    a = _resize(active_picture(frame)).astype(np.float32)
     L = a.mean(axis=2)
     h, w = L.shape
     outer = np.ones((h, w), bool)
@@ -490,19 +529,19 @@ def _is_text_page(gray: np.ndarray, ign: np.ndarray) -> bool:
             x, y, bw_, bh, area = st[i]
             if area < 15 or bh < 6 or bw_ < 3:
                 continue
-            if bh > int(H * 0.10) or bw_ > int(W * 0.18):
+            if bh > int(H * 0.16) or bw_ > int(W * 0.20):
                 continue
             ar = bw_ / max(bh, 1)
             if 0.15 <= ar <= 3.5:
                 glyphs.append((x, y, bw_, bh, area))
-        if len(glyphs) < 30:
+        if len(glyphs) < 28:
             continue
         heights = np.array([g_[3] for g_ in glyphs], dtype=np.float32)
         medh = float(np.median(heights))
         if medh < 6:
             continue
         similar = sum(1 for h in heights if 0.55 * medh <= h <= 1.6 * medh)
-        if similar < 25:
+        if similar < 24:
             continue
         bases = np.array([g_[1] + g_[3] for g_ in glyphs], dtype=np.float32)
         order = np.argsort(bases)
@@ -519,6 +558,7 @@ def _is_text_page(gray: np.ndarray, ign: np.ndarray) -> bool:
             last = b
         rows.append(cur)
         good = 0
+        wide = 0
         for r in rows:
             if len(r) < 6:
                 continue
@@ -526,10 +566,88 @@ def _is_text_page(gray: np.ndarray, ign: np.ndarray) -> bool:
             hs = [c[3] for c in r]
             if span >= 0.28 and (np.std(hs) / max(np.mean(hs), 1)) <= 0.45:
                 good += 1
+            if span >= 0.50 and len(r) >= 8:
+                wide += 1
         area = sum(c[4] for c in glyphs) / (H * W)
         if good >= 5 and area >= 0.03:
             return True
+        # close-up document (hand-marked Japanese page): many full-width
+        # lines even if glyph heights are a bit irregular
+        # Close-up document (hand-marked Japanese page): a few very wide
+        # lines of relatively tall glyphs. Park foliage has many tiny
+        # "glyphs" (low median height) and must not match.
+        if wide >= 3 and area >= 0.10 and similar >= 40 and medh >= 14:
+            return True
     return False
+
+
+def _baseline_glyph_lines(gray: np.ndarray, ign: np.ndarray) -> list[dict]:
+    """One or two typographic lines (title / date / 'A R RAHMAN MUSICAL').
+
+    Clusters letter-sized components on a shared baseline. Works on gold or
+    white type over a busy or dark field, where residual-close can merge the
+    whole card into one blob.
+    """
+    H, W = gray.shape
+    hits = []
+    blur = cv2.GaussianBlur(gray, (3, 3), 0)
+    _, otsu = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    for m in (otsu, 255 - otsu):
+        ink = (m > 0) & (~ign)
+        if not (0.01 <= float(ink.mean()) <= 0.45):
+            continue
+        n, _lab, st, _ = cv2.connectedComponentsWithStats(ink.astype(np.uint8), 8)
+        glyphs = []
+        for i in range(1, n):
+            x, y, bw, bh, area = st[i]
+            if area < 18 or bh < 8 or bw < 3:
+                continue
+            if bh > int(H * 0.28) or bw > int(W * 0.45):
+                continue
+            ar = bw / max(bh, 1)
+            if 0.12 <= ar <= 3.2:
+                glyphs.append((x, y, bw, bh, area))
+        if len(glyphs) < 4:
+            continue
+        bases = np.array([g[1] + g[3] for g in glyphs], dtype=np.float32)
+        heights = np.array([g[3] for g in glyphs], dtype=np.float32)
+        order = np.argsort(bases)
+        rows: list[list] = []
+        cur = [glyphs[order[0]]]
+        last = bases[order[0]]
+        medh = float(np.median(heights))
+        for idx in order[1:]:
+            b = bases[idx]
+            if b - last > max(medh * 0.70, 8):
+                rows.append(cur)
+                cur = [glyphs[idx]]
+            else:
+                cur.append(glyphs[idx])
+            last = b
+        rows.append(cur)
+        for r in rows:
+            if not (6 <= len(r) <= 18):
+                continue
+            hs = np.array([c[3] for c in r], dtype=np.float32)
+            if float(np.std(hs) / max(float(np.mean(hs)), 1)) > 0.40:
+                continue
+            xs = min(c[0] for c in r)
+            xe = max(c[0] + c[2] for c in r)
+            span = (xe - xs) / W
+            ys = min(c[1] for c in r)
+            ye = max(c[1] + c[3] for c in r)
+            hfrac = (ye - ys) / H
+            pack = sum(c[2] for c in r) / max(xe - xs, 1)
+            # single typographic baseline, not a band of hair / windows / crowd heads
+            if (ye - ys) > 2.1 * float(np.median(hs)):
+                continue
+            if span >= 0.28 and 0.035 <= hfrac <= 0.20 and pack >= 0.32:
+                hits.append({
+                    "box": (int(xs), int(ys), int(xe - xs), int(ye - ys)),
+                    "n": len(r),
+                    "span": round(float(span), 3),
+                })
+    return hits
 
 
 def detect_overlay_text(frame: np.ndarray) -> list[str]:
@@ -552,6 +670,9 @@ def detect_overlay_text(frame: np.ndarray) -> list[str]:
         reasons.append("title_logo")
     if _is_text_page(gray, ign):
         reasons.append("text_page")
+    if _baseline_glyph_lines(gray, ign):
+        if "text_overlay" not in reasons:
+            reasons.append("text_overlay")
     return list(dict.fromkeys(reasons))
 
 
@@ -580,16 +701,48 @@ def detect_frame(frame: np.ndarray) -> list[str]:
     return list(dict.fromkeys(reasons))
 
 
-def _grab(path: Path, t: float) -> np.ndarray | None:
+def _video_fps(cap: cv2.VideoCapture) -> float:
+    fps = float(cap.get(cv2.CAP_PROP_FPS) or 0.0)
+    return fps if fps > 1.0 else 30.0
+
+
+def grab_times(path: Path, times: list[float]) -> list[tuple[float, np.ndarray]]:
+    """Frame-accurate RGB grabs. Seek a little early, then read forward.
+
+    H.264 cap.set(POS_MSEC) lands on the previous keyframe, so typography
+    flashes and title cards were being missed at score time.
+    """
+    if not times:
+        return []
     cap = cv2.VideoCapture(str(path))
     if not cap.isOpened():
-        return None
-    cap.set(cv2.CAP_PROP_POS_MSEC, max(0.0, t) * 1000.0)
-    ok, fr = cap.read()
+        return []
+    fps = _video_fps(cap)
+    want = sorted({max(0.0, float(t)) for t in times})
+    first = want[0]
+    start_f = max(0, int(round(first * fps)) - int(round(fps * 0.85)) - 1)
+    cap.set(cv2.CAP_PROP_POS_FRAMES, start_f)
+    out: list[tuple[float, np.ndarray]] = []
+    # After a seek, POS_FRAMES is the index of the *next* frame that will be read.
+    safety = 0
+    max_reads = int((want[-1] - start_f / fps) * fps) + int(fps * 2) + 40
+    while want and safety < max_reads:
+        ok, fr = cap.read()
+        safety += 1
+        if not ok or fr is None:
+            break
+        nxt = cap.get(cv2.CAP_PROP_POS_FRAMES)
+        t = (float(nxt) - 1.0) / fps if nxt else (start_f + safety - 1) / fps
+        # Assign every due sample that this decoded frame covers.
+        while want and want[0] <= t + 0.51 / fps:
+            out.append((want.pop(0), cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)))
     cap.release()
-    if not ok or fr is None:
-        return None
-    return cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)
+    return out
+
+
+def _grab(path: Path, t: float) -> np.ndarray | None:
+    got = grab_times(path, [t])
+    return got[0][1] if got else None
 
 
 def sample_times(start: float, end: float, fps: float = QC_FPS) -> list[float]:
@@ -616,8 +769,15 @@ def inspect_clip(path: Path, start: float, end: float) -> tuple[bool, list[str],
     n_dark = 0
     sampled = 0
     hard = set(HARD)
+    grabbed = {round(t, 3): fr for t, fr in grab_times(path, times)}
     for t in times:
-        fr = _grab(path, t)
+        fr = grabbed.get(round(t, 3))
+        if fr is None:
+            # closest decoded sample
+            if grabbed:
+                fr = min(grabbed.items(), key=lambda kv: abs(kv[0] - t))[1]
+            else:
+                fr = _grab(path, t)
         if fr is None:
             continue
         sampled += 1

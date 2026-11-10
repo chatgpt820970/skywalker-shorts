@@ -132,15 +132,22 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
     banner_hits = 0
     cap_hits = 0
     checked = 0
-    cap = cv2.VideoCapture(str(path))
+    # Decode once, sequentially, so H.264 keyframe seek cannot skip a flash.
+    times = []
     for i in range(n):
         t = min(dur - 0.04, i * step + 0.04) if dur > 0.2 else 0.0
-        fr = None
-        if cap.isOpened():
-            cap.set(cv2.CAP_PROP_POS_MSEC, max(0.0, float(t)) * 1000.0)
-            ok, raw = cap.read()
-            if ok and raw is not None:
-                fr = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
+        times.append(float(t))
+    grabbed = []
+    try:
+        grabbed = scene_filter.grab_times(path, times)
+    except Exception:
+        grabbed = []
+    by_t = {round(t, 3): fr for t, fr in grabbed}
+    cap = cv2.VideoCapture(str(path))
+    for i, t in enumerate(times):
+        fr = by_t.get(round(t, 3))
+        if fr is None and grabbed:
+            fr = min(grabbed, key=lambda kv: abs(kv[0] - t))[1]
         if fr is None:
             fr = _frame_at(path, t)
         if fr is None:
@@ -156,6 +163,10 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
             ph = int(layout.get("plate_h", 0) * sy)
             if ph > 0:
                 plate = fr[y:y + ph, :]
+                try:
+                    plate = scene_filter.active_picture(plate)
+                except Exception:
+                    pass
         # Hard cards only: logo / title / date / overlay typography / empty near-black.
         # Cinematic darkness or saturated lighting in real story footage is NOT a fail.
         # (Fool Night and other thrillers are full of dark story frames.)

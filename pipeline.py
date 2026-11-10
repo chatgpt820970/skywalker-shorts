@@ -310,30 +310,61 @@ def detect_scenes(mezz: Path) -> list[dict]:
 
 
 def _sample_frames(mezz: Path, start: float, dur: float, n: int = 6) -> list[np.ndarray]:
-    times = [start + dur * (i + 0.5) / n for i in range(n)]
-    times = [min(t, start + max(dur - 1 / FPS, 0)) for t in times]
+    """Accurate samples at >= n points, always including the first and last instants."""
+    dur = max(0.01, float(dur))
+    start = max(0.0, float(start))
+    end = start + dur
+    times = [start + 0.02]
+    if n > 2:
+        times += [start + dur * i / (n - 1) for i in range(1, n - 1)]
+    times.append(max(start, end - 0.02))
+    # unique, ordered
+    out_t = []
+    for t in times:
+        t = float(min(max(start, t), max(start, end - 0.001)))
+        if not out_t or abs(t - out_t[-1]) >= 0.03:
+            out_t.append(t)
     frames: list[np.ndarray] = []
+    try:
+        import scene_filter as _sf
+        got = _sf.grab_times(mezz, out_t)
+        if got:
+            return [fr for _t, fr in got]
+    except Exception:
+        pass
     cap = cv2.VideoCapture(str(mezz))
     if cap.isOpened():
-        for t in times:
-            cap.set(cv2.CAP_PROP_POS_MSEC, max(0.0, float(t)) * 1000.0)
+        fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+        first = out_t[0]
+        start_f = max(0, int(round(first * fps)) - int(round(fps * 0.85)) - 1)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, start_f)
+        want = list(out_t)
+        safety = 0
+        max_reads = int((out_t[-1] - start_f / fps) * fps) + int(fps * 2) + 40
+        while want and safety < max_reads:
             ok, fr = cap.read()
-            if ok and fr is not None:
+            safety += 1
+            if not ok or fr is None:
+                break
+            nxt = cap.get(cv2.CAP_PROP_POS_FRAMES)
+            t = (float(nxt) - 1.0) / fps if nxt else (start_f + safety - 1) / fps
+            while want and want[0] <= t + 0.51 / fps:
+                want.pop(0)
                 frames.append(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB))
         cap.release()
         if frames:
             return frames
-    # ffmpeg fallback
-    for i, t in enumerate(times):
-        p = WORK / f"_sf_{start:.3f}_{i}.jpg"
+    # ffmpeg fallback (input-side seek, slower but accurate)
+    for i, t in enumerate(out_t):
+        pth = WORK / f"_sf_{start:.3f}_{i}.jpg"
         subprocess.call(
-            ["ffmpeg", "-y", "-ss", f"{t:.3f}", "-i", str(mezz),
-             "-frames:v", "1", "-q:v", "3", str(p)],
+            ["ffmpeg", "-y", "-i", str(mezz), "-ss", f"{t:.3f}",
+             "-frames:v", "1", "-q:v", "3", str(pth)],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
-        if p.exists():
-            frames.append(np.array(Image.open(p).convert("RGB")))
-            p.unlink(missing_ok=True)
+        if pth.exists():
+            frames.append(np.array(Image.open(pth).convert("RGB")))
+            pth.unlink(missing_ok=True)
     return frames
 
 
@@ -357,6 +388,11 @@ def classify_shot(arr: np.ndarray) -> tuple[list[str], dict]:
     A small corner watermark that is part of the original frame is ignored
     by measuring typography in the inner 80% and never cropping it out.
     """
+    try:
+        import scene_filter as _sf
+        arr = _sf.active_picture(arr)
+    except Exception:
+        pass
     a = _resize_for_class(arr).astype(np.float32)
     L = a.mean(axis=2)
     h, w = L.shape
@@ -2834,7 +2870,7 @@ def main():
     qc = run_auto_qc(out)
     report["auto_qc"] = {k: qc.get(k) for k in ("ok", "issues", "blacklist", "meta", "mean_volume_db",
                                                  "banner_hits", "caption_hits", "checked") if k in qc}
-    for qc_i in range(2):
+    for qc_i in range(3):
         if qc.get("ok") or not qc.get("blacklist"):
             break
         marked = apply_qc_blacklist(scenes, edl, qc.get("blacklist") or [])
