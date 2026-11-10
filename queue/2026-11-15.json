@@ -1,0 +1,102 @@
+[
+ {
+  "id": "20261115-0630-werwulf",
+  "slot": "2026-11-15T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=CL1EFACsWag",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why nobody leaves the village after dark",
+  "words": "WERWULF",
+  "title": "The reason why nobody leaves the village after dark 💀 | The beast in the snow | #edit",
+  "description": "The reason why nobody leaves the village after dark. The beast in the snow from the official Werwulf trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=CL1EFACsWag). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #werwulf",
+  "tags": [
+   "werwulf",
+   "horrormovie",
+   "roberteggers",
+   "focusfeatures",
+   "werewolf",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261115-1230-dragonballsuper",
+  "slot": "2026-11-15T12:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=i2iicVzWa5A",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why even Goku fears Beerus",
+  "words": "DRAGON BALL",
+  "title": "The reason why even Goku fears Beerus 💀 | The God of Destruction wakes up | #edit",
+  "description": "The reason why even Goku fears Beerus. The God of Destruction wakes up from the official Dragon Ball Super: Beerus trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=i2iicVzWa5A). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dragonballsuper",
+  "tags": [
+   "dragonballsuper",
+   "beerus",
+   "goku",
+   "dragonball",
+   "toeianimation",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261115-1730-jumanji",
+  "slot": "2026-11-15T17:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=zhApeaHMvfs",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why nobody wants to play Jumanji again",
+  "words": "JUMANJI OPEN",
+  "title": "The reason why nobody wants to play Jumanji again 💀 | The game goes open world | #edit",
+  "description": "The reason why nobody wants to play Jumanji again. The game goes open world from the official Jumanji: Open World trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=zhApeaHMvfs). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jumanji",
+  "tags": [
+   "jumanji",
+   "jumanjiopenworld",
+   "dwaynejohnson",
+   "kevinhart",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261115-2230-arnoldschwarzenegger",
+  "slot": "2026-11-15T22:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=PEVkJHLq4rQ",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Arnold is playing Santa Claus",
+  "words": "THE MAN",
+  "title": "The reason why Arnold is playing Santa Claus 💀 | Arnold Schwarzenegger as Santa | #edit",
+  "description": "The reason why Arnold is playing Santa Claus. Arnold Schwarzenegger as Santa from the official The Man with the Bag trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=PEVkJHLq4rQ). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #arnoldschwarzenegger",
+  "tags": [
+   "arnoldschwarzenegger",
+   "themanwiththebag",
+   "primevideo",
+   "celebrity",
+   "christmasmovie",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ }
+]

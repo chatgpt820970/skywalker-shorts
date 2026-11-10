@@ -1,0 +1,102 @@
+[
+ {
+  "id": "20261117-0630-violentnight2",
+  "slot": "2026-11-17T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=FmM2giDwLAE",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Santa is the deadliest man alive",
+  "words": "VIOLENT NIGHT",
+  "title": "The reason why Santa is the deadliest man alive 💀 | Santa fights back | #edit",
+  "description": "The reason why Santa is the deadliest man alive. Santa fights back from the official Violent Night 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=FmM2giDwLAE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #violentnight2",
+  "tags": [
+   "violentnight2",
+   "davidharbour",
+   "santa",
+   "christmasmovie",
+   "actioncomedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261117-1230-overgeared",
+  "slot": "2026-11-17T12:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=yE8EuFlQzjY",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Grid became the strongest player",
+  "words": "OVERGEARED",
+  "title": "The reason why Grid became the strongest player 💀 | The blacksmith becomes a legend | #edit",
+  "description": "The reason why Grid became the strongest player. The blacksmith becomes a legend from the official Overgeared trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=yE8EuFlQzjY). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #overgeared",
+  "tags": [
+   "overgeared",
+   "grid",
+   "crunchyroll",
+   "manhwa",
+   "animeedit",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261117-1730-ebenezer",
+  "slot": "2026-11-17T17:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=A7lyvgnDuDE",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Scrooge started screaming",
+  "words": "EBENEZER",
+  "title": "The reason why Scrooge started screaming 💀 | Scrooge meets the ghosts | #edit",
+  "description": "The reason why Scrooge started screaming. Scrooge meets the ghosts from the official Ebenezer trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=A7lyvgnDuDE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #ebenezer",
+  "tags": [
+   "ebenezer",
+   "johnnydepp",
+   "achristmascarol",
+   "tiwest",
+   "christmasmovie",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261117-2230-dwaynejohnson",
+  "slot": "2026-11-17T22:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=nIw1O3zvOfE",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why The Rock and Kevin Hart never miss",
+  "words": "JUMANJI OPEN",
+  "title": "The reason why The Rock and Kevin Hart never miss 💀 | Dwayne Johnson and Kevin Hart | #edit",
+  "description": "The reason why The Rock and Kevin Hart never miss. Dwayne Johnson and Kevin Hart from the official Jumanji: Open World trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=nIw1O3zvOfE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dwaynejohnson",
+  "tags": [
+   "dwaynejohnson",
+   "therock",
+   "kevinhart",
+   "jumanji",
+   "celebrity",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ }
+]

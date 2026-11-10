@@ -1,0 +1,32 @@
+[
+ {
+  "id": "demo-foolnight",
+  "slot": "2026-11-10T14:00:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=2Qg_AfPF2sM",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/foolnight_trailer.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why Fool Night has everyone talking",
+  "words": "FOOL NIGHT",
+  "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
+  "description": "The reason why Fool Night has everyone talking. Energy edit (beat cuts, ramp, drop flash + punch-in) from the official Netflix Anime Fool Night trailer.\nSource: official trailer (https://www.youtube.com/watch?v=2Qg_AfPF2sM).\n#edit #shorts #foolnight",
+  "tags": [
+   "foolnight",
+   "netflixanime",
+   "anime",
+   "animeedit",
+   "phonk",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "demo": true,
+  "fallback_release": "sources",
+  "fallback_asset": "foolnight_trailer.mp4"
+ }
+]

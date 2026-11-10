@@ -12,6 +12,9 @@ Default template (caption-bar, from the "Rocket knew something" style):
   plain black (no blur).
 - Moody/desaturated cinematic grade, stabilized, no Ken Burns.
 - No text is burned onto the footage itself.
+- Anime/movie energy (flag --energy, auto for those pillars): hard beat
+  cuts, a speed ramp into the drop, and a temporary (<=0.4s) flash +
+  punch-in of the whole bar+frame block. The source frame is never cropped.
 
 Cuts snap to music beats. Transitions: hard cut, white flash, or whip.
 
@@ -38,12 +41,23 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageStat
 from scipy import ndimage
 
-ROOT = Path("/workspace/skywalker")
-AE = ROOT / "autoedit"
-WORK = AE / "work"
+REPO = Path(__file__).resolve().parent
+ROOT = Path(os.environ.get("SKY_ROOT", "/workspace/skywalker"))
+# CI / repo layout: models, music, assets live next to this file.
+AE = Path(os.environ.get("SKY_AE", str(REPO if (REPO / "models").exists() else ROOT / "autoedit")))
+WORK = Path(os.environ.get("SKY_WORK", str(AE / "work")))
 CLIPS = WORK / "clips"
 QA = WORK / "qa"
-FONTS = WORK / "fonts"
+
+
+def _fonts_dir() -> Path:
+    for p in (REPO / "fonts", AE / "fonts", WORK / "fonts"):
+        if (p / "Poppins-BoldItalic.ttf").exists():
+            return p
+    return REPO / "fonts"
+
+
+FONTS = _fonts_dir()
 W, H = 1080, 1920
 FPS = 24
 # Caption-bar template: tight white hook bar directly above the
@@ -54,6 +68,9 @@ SEP_H = 2                  # 2px hairline at the bottom of the bar (no gap)
 # BAR_H is computed from the text; this is only a fallback estimate
 # (~195px for a 2-line hook, matching the approved layout).
 BAR_H = 196
+ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
+DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
+PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
 ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
@@ -162,9 +179,23 @@ def make_mezzanine(src: Path, dst: Path, crop) -> Path:
     return dst
 
 
+def _has_vidstab() -> bool:
+    try:
+        out = subprocess.check_output(["ffmpeg", "-hide_banner", "-filters"],
+                                      stderr=subprocess.STDOUT, text=True)
+        return "vidstabdetect" in out and "vidstabtransform" in out
+    except Exception:
+        return False
+
+
 def stabilize(src: Path, dst: Path, trf: Path) -> Path:
     """Two-pass libvidstab. Removes handheld jitter, keeps intentional moves."""
     if dst.exists() and dst.stat().st_size > 1_000_000 and trf.exists():
+        return dst
+    if not _has_vidstab():
+        print("  WARNING: ffmpeg has no vidstab filters; copying mezzanine unstabilized")
+        if src.resolve() != dst.resolve():
+            dst.write_bytes(src.read_bytes())
         return dst
     detect = (
         f"vidstabdetect=shakiness=5:accuracy=15:stepsize=6:"
@@ -321,6 +352,48 @@ def score_scenes(mezz: Path, scenes: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 # 3. Music analysis
 # ---------------------------------------------------------------------------
+def pick_music(pillar: str, seed: str = "") -> dict:
+    """Pick a credited, copyright-safe track for a pillar from music/credits.json.
+
+    anime/celeb -> phonk/hype, movie -> epic, romance -> emotional, funny -> upbeat.
+    Deterministic per seed (queue item id) so re-renders keep the same track.
+    """
+    import hashlib
+    cj = json.loads((AE / "music" / "credits.json").read_text())
+    mood = PILLAR_MOOD.get((pillar or "movie").lower(), "movie")
+    pool = [t for t in cj["tracks"] if t["pillar"] == mood and (AE / "music" / t["file"]).exists()]
+    if not pool:
+        pool = [t for t in cj["tracks"] if (AE / "music" / t["file"]).exists()]
+    if not pool:
+        raise SystemExit("No credited music tracks found under music/")
+    h = int(hashlib.sha1((seed or pillar or "x").encode()).hexdigest(), 16)
+    t = dict(pool[h % len(pool)])
+    t["path"] = str(AE / "music" / t["file"])
+    return t
+
+
+def find_drop(y: np.ndarray, sr: int, pulse: np.ndarray, lo: float, hi: float) -> float | None:
+    """Biggest sustained energy jump (the drop), snapped to a beat, in [lo, hi]."""
+    hop = 512
+    rms = librosa.feature.rms(y=y, hop_length=hop)[0]
+    onset = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop)
+    n = min(len(rms), len(onset))
+    e = rms[:n] / (rms[:n].max() + 1e-9) + 0.25 * onset[:n] / (onset[:n].max() + 1e-9)
+    tt = librosa.frames_to_time(np.arange(n), sr=sr, hop_length=hop)
+    k = max(1, int(1.5 * sr / hop))
+    best, best_t = -1e9, None
+    for b in pulse:
+        if b < lo or b > hi:
+            continue
+        i = int(np.searchsorted(tt, b))
+        if i - k < 0 or i + k >= n:
+            continue
+        jump = float(e[i:i + k].mean() - e[i - k:i].mean())
+        if jump > best:
+            best, best_t = jump, float(b)
+    return best_t
+
+
 def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
     y, sr = librosa.load(str(path), sr=22050, mono=True)
     tempo, beats = librosa.beat.beat_track(y=y, sr=sr, units="time")
@@ -355,10 +428,28 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
         rel = np.insert(rel, 0, 0.0)
     else:
         rel[0] = 0.0
+    drop_rel = None
+    if ENERGY:
+        # Align the music drop with the reveal at ~38% of the edit.
+        reveal_at = max(4.0, 0.38 * target)
+        dur_m = float(times[-1])
+        d = find_drop(y, sr, pulse, reveal_at, max(reveal_at, dur_m - (target - reveal_at)))
+        if d is not None:
+            start = max(0.0, d - reveal_at)
+            on = pulse[pulse <= start + 0.05]
+            start = float(on[-1]) if len(on) else start
+            drop_rel = d - start
+            rel = pulse[(pulse >= start - 0.02) & (pulse <= start + win + 0.5)] - start
+            rel = np.unique(np.round(np.clip(rel, 0, None), 4))
+            if rel.size == 0 or rel[0] > 0.15:
+                rel = np.insert(rel, 0, 0.0)
+            else:
+                rel[0] = 0.0
     return {
         "path": str(path),
         "tempo": tempo,
         "start": start,
+        "drop_rel": drop_rel,
         "window": win,
         "pulses": rel.tolist(),  # seconds relative to music window / video t=0
         "abs_beats": pulse.tolist(),
@@ -508,6 +599,76 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> li
             "skin": round(sc["skin"], 3),
         })
         acc += vis
+    return edl
+
+
+def apply_energy(edl: list[dict], scenes: list[dict], music: dict) -> list[dict]:
+    """Anime/movie energy: hard beat cuts, ramp into the drop, reveal on the drop.
+
+    - every transition becomes a hard cut on the beat grid (plan_edit snaps to pulses)
+    - the clip right before the drop gets a speed ramp (1x -> ~2.2x)
+    - the strongest unused shot is swapped onto the cut nearest the music drop
+    - music start is nudged so the drop lands exactly on that cut
+    The flash + punch-in are added in mux_final at DROP_T (whole block, temporary, <=0.4s).
+    The source frame itself is never cropped.
+    """
+    global DROP_T
+    body = [it for it in edl if it.get("scene") != "end"]
+    for it in body:
+        it["trans_out"], it["td"] = "cut", 0.0
+    if len(body) < 3:
+        return edl
+    want = music.get("drop_rel")
+    if want is None:
+        want = 0.38 * body[-1]["t1"]
+    cand = [it for it in body[2:]]
+    drop = min(cand, key=lambda it: abs(it["t0"] - want))
+    # reveal = highest-spectacle scene not used as the hook that fits this slot
+    by_id = {sc["id"]: sc for sc in scenes}
+    hook_id = body[0]["scene"]
+    best = None
+    for it in body:
+        if it is drop or it["scene"] == hook_id:
+            continue
+        sa, sb = by_id.get(it["scene"]), by_id.get(drop["scene"])
+        if not sa or not sb:
+            continue
+        if sa["dur"] >= drop["visible"] + 0.1 and sb["dur"] >= it["visible"] + 0.1:
+            if it["spectacle"] > drop["spectacle"] and (best is None or it["spectacle"] > best["spectacle"]):
+                best = it
+    if best is not None:
+        for k in ("scene", "src_start", "src_end", "src_dur", "spectacle", "skin"):
+            best[k], drop[k] = drop[k], best[k]
+    drop["drop"] = True
+    i = body.index(drop)
+    prev = body[i - 1]
+    def need(vis, k):
+        return vis * k / math.log(1 + k)
+    for k in (1.2, 1.0, 0.8, 0.6, 0.4, 0.25):  # speed goes 1x -> (1+k)x across the pre-drop clip
+        if prev["src_dur"] >= need(prev["visible"], k) + 0.1:
+            prev["ramp"] = k
+            break
+        # else try swapping a longer shot into the pre-drop slot
+        swapped = False
+        for it in body[1:]:
+            if it is prev or it is drop:
+                continue
+            sa, sb = by_id.get(it["scene"]), by_id.get(prev["scene"])
+            if sa and sb and sa["dur"] >= need(prev["visible"], k) + 0.1 and sb["dur"] >= it["visible"] + 0.1:
+                for kk in ("scene", "src_start", "src_end", "src_dur", "spectacle", "skin"):
+                    it[kk], prev[kk] = prev[kk], it[kk]
+                prev["ramp"] = k
+                swapped = True
+                break
+        if swapped:
+            break
+    # shift the music window so the drop sits exactly on the cut
+    if music.get("drop_rel") is not None:
+        shift = float(music["drop_rel"]) - float(drop["t0"])
+        music["start"] = max(0.0, float(music["start"]) + shift)
+        music["drop_rel"] = float(drop["t0"])
+    DROP_T = float(drop["t0"])
+    print(f"  ENERGY: drop/reveal @ {DROP_T:.2f}s (scene {drop['scene']}), ramp on clip {prev['i']}: {prev.get('ramp')}")
     return edl
 
 
@@ -1283,9 +1444,21 @@ def render_clip(mezz: Path, item: dict, geom: dict, out: Path) -> Path:
         if src_needed > max_len:
             src_needed = max_len
             length = max_len
+    ramp = float(item.get("ramp") or 0)
+    if ramp > 0:
+        # src seconds needed so that integral(1/(1+k*t/L)) == length
+        need = length * ramp / math.log(1 + ramp)
+        if need <= max_len:
+            src_needed, speed = need, 1.0
+        else:
+            ramp = 0.0
     crop_x = int(item.get("crop_x", 0))
     vf = footage_filter(geom, crop_x)
-    if abs(speed - 1.0) > 1e-3:
+    if ramp > 0:
+        L = src_needed
+        vf = (f"{vf},setpts=PTS-STARTPTS,"
+              f"setpts='({L:.4f}/{ramp:.3f})*log(1+{ramp:.3f}*T/{L:.4f})/TB',fps={FPS}")
+    elif abs(speed - 1.0) > 1e-3:
         vf = f"{vf},setpts=PTS/{speed:.4f},fps={FPS}"
     preroll = 0.4
     ss = max(0.0, src_start - preroll)
@@ -1643,10 +1816,27 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
     pw, ph = _mezz_size(silent)
     bar_h = Image.open(bar).size[1]
     lay = whitebar_layout(ph, bar_h)
+    layout = {
+        "bar_y": lay["bar_y"], "bar_h": lay["bar_h"],
+        "plate_y": lay["video_y"], "video_y": lay["video_y"],
+        "plate_w": pw, "plate_h": ph, "block_h": lay["block_h"],
+        "drop_t": DROP_T, "energy": ENERGY,
+    }
+    (WORK / "layout.json").write_text(json.dumps(layout))
+    fx = ""
+    if ENERGY and DROP_T is not None:
+        D = float(DROP_T)
+        # Temporary punch-in of the WHOLE bar+frame block (not a source crop).
+        # 1.12x at the drop, decays to 1.0 in 0.35s (<= 0.4s hard cap).
+        z = f"if(between(in/{FPS},{D:.3f},{D + 0.35:.3f}),1+0.12*(1-(in/{FPS}-{D:.3f})/0.35),1)"
+        fx = (f",zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS}"
+              f",drawbox=x=0:y=0:w=iw:h=ih:color=white@1.0:t=fill:enable='between(t,{D:.3f},{D + 0.05:.3f})'"
+              f",drawbox=x=0:y=0:w=iw:h=ih:color=white@0.55:t=fill:enable='between(t,{D + 0.05:.3f},{D + 0.10:.3f})'"
+              f",drawbox=x=0:y=0:w=iw:h=ih:color=white@0.25:t=fill:enable='between(t,{D + 0.10:.3f},{D + 0.15:.3f})'")
     vfilt = (
         f"[0:v]pad={W}:{H}:0:{lay['video_y']}:color=black[bg];"
         f"[2:v]format=rgb24[bar];"
-        f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto,format=yuv420p[v]"
+        f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto{fx},format=yuv420p[v]"
     )
     print(f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) + music…")
     cmd = [
@@ -1701,7 +1891,7 @@ def qa(path: Path, edl: list[dict]) -> dict:
         luma = float(a[content].mean()) if content.any() else float(a.mean())
         if luma < 8:
             issues.append(f"{t:.2f}s nearly black (luma={luma:.1f})")
-        if luma > 245:
+        if luma > 245 and not (DROP_T is not None and abs(t - DROP_T) < 0.25):
             issues.append(f"{t:.2f}s nearly white (flash? luma={luma:.1f})")
         # leftover hard letterbox bars? check top 8 and a mid-plate row
         top = a[:8].mean()
@@ -1753,6 +1943,139 @@ def qa(path: Path, edl: list[dict]) -> dict:
     return report
 
 
+def _frame(path: Path, t: float) -> np.ndarray | None:
+    p = QA / f"_x_{abs(hash((str(path), round(t, 3))))}.png"
+    subprocess.call(["ffmpeg", "-y", "-ss", f"{t:.3f}", "-i", str(path), "-frames:v", "1", str(p)],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if not p.exists():
+        return None
+    a = np.array(Image.open(p).convert("L"), dtype=np.float32)
+    p.unlink(missing_ok=True)
+    return a
+
+
+def _corr(a: np.ndarray, b: np.ndarray) -> float:
+    a = a.ravel() - a.mean()
+    b = b.ravel() - b.mean()
+    d = float(np.sqrt((a * a).sum() * (b * b).sum()))
+    return float((a * b).sum() / d) if d > 1e-6 else 1.0
+
+
+def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
+    """Hard QA: no-crop edge check vs source, caption visible, audio present, no shake."""
+    layp = WORK / "layout.json"
+    if not layp.exists():
+        return {"checks": {}, "issues": ["layout.json missing"], "layout": {}}
+    lay = json.loads(layp.read_text())
+    checks, issues = {}, []
+    # 1. geometry: plate is the FULL letterbox-free source scaled to 1080 wide
+    mw, mh = _mezz_size(mezz)
+    sw, sh = [int(x) for x in subprocess.check_output(
+        ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+         "-of", "csv=p=0", str(src)], text=True).strip().split(",")[:2]]
+    ar_src, ar_plate = mw / mh, lay["plate_w"] / lay["plate_h"]
+    geo_ok = (abs(ar_src - ar_plate) / ar_src < 0.01 and lay["plate_w"] == W)
+    # letterbox rows removed must be black only
+    lb_ok = True
+    if crop[3] > 0:
+        f0 = _frame(src, min(10.0, ffprobe_dur(src) / 2))
+        if f0 is not None:
+            top = f0[: crop[3]].mean()
+            bot = f0[crop[3] + crop[1]:].mean() if crop[3] + crop[1] < f0.shape[0] else 0
+            lb_ok = top < 20 and bot < 20
+    # 2. edge check: compare output plate vs source frame at matching times
+    corrs, edges, shifts = [], [], []
+    body = [it for it in edl if it.get("scene") != "end"]
+    for j, it in enumerate(body):
+        prev = body[j - 1] if j else None
+        if it.get("ramp") or it.get("drop") or float(it.get("speed") or 1) != 1.0:
+            continue
+        if prev is not None and float(prev.get("td") or 0) > 0:
+            continue
+        dt = min(0.5, it["visible"] / 2)
+        t_out = it["t0"] + dt
+        if DROP_T is not None and abs(t_out - DROP_T) < 0.5:
+            continue
+        o = _frame(out, t_out)
+        m = _frame(mezz, it["src_start"] + dt)
+        if o is None or m is None:
+            continue
+        plate = o[lay["plate_y"]:lay["plate_y"] + lay["plate_h"], :]
+        if plate.size == 0:
+            continue
+        mm = np.array(Image.fromarray(m.astype(np.uint8)).resize((plate.shape[1], plate.shape[0])), dtype=np.float32)
+        c = _corr(plate[::4, ::4], mm[::4, ::4])
+        # border ring (outer 48px on every side): a crop/zoom would misalign it
+        if plate.shape[0] > 96 and plate.shape[1] > 96:
+            ring = np.ones(plate.shape, bool)
+            ring[48:-48, 48:-48] = False
+            e = _corr(plate[ring], mm[ring])
+        else:
+            e = c
+        (sx, sy), _ = cv2.phaseCorrelate(plate, mm)
+        corrs.append(c)
+        edges.append(e)
+        shifts.append(float(np.hypot(sx, sy)))
+        if len(corrs) >= 6:
+            break
+    edge_ok = (bool(corrs) and float(np.median(corrs)) > 0.75 and float(np.median(edges)) > 0.6
+               and float(np.median(shifts)) < 3.0)
+    checks["no_crop"] = {"ok": bool(geo_ok and lb_ok and edge_ok), "source": [sw, sh], "letterbox_free": [mw, mh],
+                         "plate": [lay["plate_w"], lay["plate_h"]], "letterbox_rows_black": lb_ok,
+                         "frame_corr_median": round(float(np.median(corrs)), 3) if corrs else None,
+                         "edge_corr_median": round(float(np.median(edges)), 3) if edges else None,
+                         "shift_px_median": round(float(np.median(shifts)), 2) if shifts else None,
+                         "pairs": len(corrs)}
+    # 3. caption visible: white bar with dark type directly on top of the plate
+    o = _frame(out, max(0.3, (body[0]["t1"] if body else 1.0) / 2))
+    cap_ok = False
+    if o is not None:
+        barr = o[lay["bar_y"]:lay["bar_y"] + lay["bar_h"], :]
+        white = float((barr > 235).mean()) if barr.size else 0.0
+        ink = float((barr < 60).mean()) if barr.size else 0.0
+        cap_ok = white > 0.6 and 0.01 < ink < 0.4 and lay["plate_y"] == lay["bar_y"] + lay["bar_h"]
+        checks["caption"] = {"ok": cap_ok, "white_frac": round(white, 3), "ink_frac": round(ink, 3),
+                             "bar_y": lay["bar_y"], "bar_h": lay["bar_h"]}
+    else:
+        checks["caption"] = {"ok": False}
+    # 4. audio present and audible
+    r = subprocess.run(["ffmpeg", "-i", str(out), "-af", "volumedetect", "-vn", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    mv = None
+    for ln in r.stderr.splitlines():
+        if "mean_volume" in ln:
+            mv = float(ln.split("mean_volume:")[1].split()[0])
+    checks["audio"] = {"ok": mv is not None and mv > -35, "mean_volume_db": mv}
+    # 5. no shake: high-frequency jitter of global motion inside shots
+    jit = []
+    for it in body[:8]:
+        if it["visible"] < 1.0 or it.get("drop") or it.get("ramp"):
+            continue
+        t0 = it["t0"] + 0.15
+        tmpd = QA / "_shake"
+        tmpd.mkdir(exist_ok=True)
+        for f in tmpd.glob("*"):
+            f.unlink()
+        subprocess.call(["ffmpeg", "-y", "-ss", f"{t0:.3f}", "-i", str(out), "-t", "0.5",
+                         "-vf", f"crop={W}:{lay['plate_h']}:0:{lay['plate_y']},scale=540:-2,format=gray",
+                         str(tmpd / "f_%03d.png")], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        fr = [np.array(Image.open(f), dtype=np.float32) for f in sorted(tmpd.glob("*.png"))]
+        if len(fr) < 6:
+            continue
+        sh_ = [cv2.phaseCorrelate(fr[i - 1], fr[i])[0] for i in range(1, len(fr))]
+        dx = np.array([v[0] for v in sh_]); dy = np.array([v[1] for v in sh_])
+        jit.append(float(np.std(np.diff(dx)) + np.std(np.diff(dy))))
+    jm = float(np.median(jit)) if jit else 0.0
+    checks["no_shake"] = {"ok": jm < 4.0, "jitter_px_median": round(jm, 2), "stabilized": STABILIZE, "shots": len(jit)}
+    for k, v in checks.items():
+        if not v.get("ok"):
+            issues.append(f"QA {k} failed: {v}")
+    rep_ = {"checks": checks, "issues": issues, "layout": lay}
+    (QA / "qa_extra.json").write_text(json.dumps(rep_, indent=2))
+    print("QA extra:", json.dumps(checks))
+    return rep_
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -1791,8 +2114,19 @@ def main():
                     help="Bold italic hook line shown in the top white bar (or postcard caption)")
     ap.add_argument("--ken-burns", type=float, default=None,
                     help="Optional Ken Burns zoom factor (off by default; e.g. 1.07)")
+    ap.add_argument("--pillar", default=None, help="anime|movie|celeb|romance|funny (music + energy)")
+    ap.add_argument("--item-id", default="", help="Queue item id (music picker seed)")
+    ap.add_argument("--energy", action="store_true", help="Force energy edit (auto for anime/movie)")
+    ap.add_argument("--qa-json", default=None, help="Write the combined QA report here")
     args = ap.parse_args()
-    global END_STILL
+    global END_STILL, ENERGY
+    ENERGY = bool(args.energy or (args.pillar or "").lower() in ("anime", "movie"))
+    if args.pillar and args.music == "auto":
+        tr = pick_music(args.pillar, args.item_id)
+        args.music = tr["path"]
+        WORK.mkdir(parents=True, exist_ok=True)
+        (WORK / "music_credit.json").write_text(json.dumps(tr, indent=2, ensure_ascii=False))
+        print("Music:", tr["file"], "|", tr["credit"].splitlines()[0])
     if args.end_still is not None:
         END_STILL = float(args.end_still)
 
@@ -1979,6 +2313,9 @@ def main():
     print("=== 4. Plan edit ===")
     edl = plan_edit(scenes, music, TARGET_DUR)
     edl = finalize_edl_for_template(edl, music, TARGET_DUR)
+    if ENERGY:
+        edl = apply_energy(edl, scenes, music)
+        (WORK / "music.json").write_text(json.dumps({k: v for k, v in music.items() if k != "abs_beats"}, indent=2))
     for item in edl:
         extra = ""
         if item.get("show_text"):
@@ -2020,9 +2357,19 @@ def main():
     print("=== 8. QA ===")
     # reload edl (end card appended in render)
     report = qa(out, edl)
+    issues = list(report["issues"])
+    if TEMPLATE == "whitebar":
+        ex = qa_extra(out, mezz, src, crop, edl)
+        issues += ex["issues"]
+        report["checks"] = ex["checks"]
+    report["issues"] = issues
+    report["drop_t"] = DROP_T
+    report["energy"] = ENERGY
+    if args.qa_json:
+        Path(args.qa_json).write_text(json.dumps(report, indent=2, default=str))
     print("OUT", out, f"{ffprobe_dur(out):.2f}s", "size", out.stat().st_size)
     print("Done.")
-    return 0 if not report["issues"] else 1
+    return 0 if not issues else 1
 
 
 if __name__ == "__main__":

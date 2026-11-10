@@ -19,3 +19,12 @@ Pipeline for the YouTube channel Skywalker (@Skywalker-k3i).
 {id, slot, source_url, template, hook, words, title, description, tags, target_dur}
 
 Usage: `python pipeline.py --template whitebar|depthtext|postcard --out out.mp4 ...` (see `--help`).
+
+## Render workflow (`.github/workflows/render.yml`)
+- Triggers: push to `queue/*.json`, `workflow_dispatch` (optional `ids`, `max`, `retry_failed`), and a 3-hourly cron.
+- `scripts/plan.py` renders only items that are `status: queued`, have no done result, and whose IST `slot` is within 20h (max 3 per run). Committing the whole 7-day queue therefore never fires 28 renders.
+- `scripts/render_item.py`: yt-dlp download (else `fallback_mp4` official direct links / the `sources` Release, else `failed` with the reason) → `pipeline.py` (music picked by pillar from `music/credits.json`; anime/movie get the energy edit) → hard QA (no-crop edge check vs source, caption visible, audio, no shake) → lanczos 2160x3840 → Release `render-<id>` → `results/<id>.json`.
+- 4K is a lanczos upscale of the 1080x1920 edit to 2160x3840. It does not invent detail.
+
+## Music
+`music/credits.json` lists the 18 tracks the picker may use (NCS + Kevin MacLeod CC BY 4.0) with exact credit text, BPM, mood and license URL. The credit is appended to the Release notes / `description_final`.

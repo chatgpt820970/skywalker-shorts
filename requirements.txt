@@ -5,3 +5,4 @@ opencv-python-headless
 Pillow
 onnxruntime
 rembg
+scipy

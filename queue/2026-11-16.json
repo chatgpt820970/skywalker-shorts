@@ -1,0 +1,102 @@
+[
+ {
+  "id": "20261116-0630-godzillaminuszero",
+  "slot": "2026-11-16T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Pu0pH5BuCPM",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why the whole world is talking about Godzilla",
+  "words": "GODZILLA MINUS",
+  "title": "The reason why the whole world is talking about Godzilla 💀 | Godzilla rises | #edit",
+  "description": "The reason why the whole world is talking about Godzilla. Godzilla rises from the official Godzilla Minus Zero trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Pu0pH5BuCPM). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #godzillaminuszero",
+  "tags": [
+   "godzillaminuszero",
+   "godzilla",
+   "toho",
+   "kaiju",
+   "monsterverse",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261116-1230-onepiece",
+  "slot": "2026-11-16T12:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=2QjJMT554Bc",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Egghead changes One Piece forever",
+  "words": "ONE PIECE",
+  "title": "The reason why Egghead changes One Piece forever 💀 | Luffy on Egghead Island | #edit",
+  "description": "The reason why Egghead changes One Piece forever. Luffy on Egghead Island from the official ONE PIECE Egghead Arc trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2QjJMT554Bc). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #onepiece",
+  "tags": [
+   "onepiece",
+   "egghead",
+   "luffy",
+   "onepieceanime",
+   "netflixanime",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261116-1730-wildhorsenine",
+  "slot": "2026-11-16T17:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=Haw_sznA5aQ",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why this spy mission is pure chaos",
+  "words": "WILD HORSE",
+  "title": "The reason why this spy mission is pure chaos 💀 | Sam Rockwell goes rogue | #edit",
+  "description": "The reason why this spy mission is pure chaos. Sam Rockwell goes rogue from the official Wild Horse Nine trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Haw_sznA5aQ). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #wildhorsenine",
+  "tags": [
+   "wildhorsenine",
+   "samrockwell",
+   "martinmcdonagh",
+   "searchlight",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261116-2230-robertdeniro",
+  "slot": "2026-11-16T22:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=5jEeTPYVBsY",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why De Niro and Stiller are still iconic",
+  "words": "FOCKER-IN-LAW",
+  "title": "The reason why De Niro and Stiller are still iconic 💀 | Robert De Niro vs Ben Stiller | #edit",
+  "description": "The reason why De Niro and Stiller are still iconic. Robert De Niro vs Ben Stiller from the official Focker-In-Law trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5jEeTPYVBsY). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #robertdeniro",
+  "tags": [
+   "robertdeniro",
+   "benstiller",
+   "fockerinlaw",
+   "celebrity",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ }
+]

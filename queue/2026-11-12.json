@@ -1,0 +1,102 @@
+[
+ {
+  "id": "20261112-0630-avengersdoomsday",
+  "slot": "2026-11-12T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=irVNGjRFZGk",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Doctor Doom terrifies every Avenger",
+  "words": "AVENGERS DOOMSDAY",
+  "title": "The reason why Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
+  "description": "The reason why Doctor Doom terrifies every Avenger. Doctor Doom arrives from the official Avengers: Doomsday trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=irVNGjRFZGk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #avengersdoomsday",
+  "tags": [
+   "avengersdoomsday",
+   "doctordoom",
+   "marvel",
+   "mcu",
+   "robertdowneyjr",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261112-1230-blackclover",
+  "slot": "2026-11-12T12:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=BwdMT-OiARI",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Asta never gives up",
+  "words": "BLACK CLOVER",
+  "title": "The reason why Asta never gives up 💀 | Asta's anti-magic returns | #edit",
+  "description": "The reason why Asta never gives up. Asta's anti-magic returns from the official Black Clover Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=BwdMT-OiARI). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #blackclover",
+  "tags": [
+   "blackclover",
+   "asta",
+   "blackcloverseason2",
+   "crunchyroll",
+   "animeedit",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261112-1730-therampartsofice",
+  "slot": "2026-11-12T17:30:00+05:30",
+  "pillar": "romance",
+  "source_url": "https://www.youtube.com/watch?v=sWvfeHOkAOU",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Koyuki finally smiled",
+  "words": "THE RAMPARTS",
+  "title": "The reason why Koyuki finally smiled 💀 | Koyuki lets someone in | #edit",
+  "description": "The reason why Koyuki finally smiled. Koyuki lets someone in from the official The Ramparts of Ice: Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=sWvfeHOkAOU). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #therampartsofice",
+  "tags": [
+   "therampartsofice",
+   "romanceanime",
+   "netflixanime",
+   "koyuki",
+   "shoujo",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261112-2230-robertdowneyjr",
+  "slot": "2026-11-12T22:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=X1aFkAkFASk",
+  "fallback_mp4": [],
+  "template": "whitebar",
+  "hook": "The reason why Robert Downey Jr. came back as Doom",
+  "words": "AVENGERS DOOMSDAY",
+  "title": "The reason why Robert Downey Jr. came back as Doom 💀 | Robert Downey Jr. as Doctor Doom | #edit",
+  "description": "The reason why Robert Downey Jr. came back as Doom. Robert Downey Jr. as Doctor Doom from the official Avengers: Doomsday trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=X1aFkAkFASk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #robertdowneyjr",
+  "tags": [
+   "robertdowneyjr",
+   "doctordoom",
+   "avengersdoomsday",
+   "marvel",
+   "celebrity",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK"
+ }
+]

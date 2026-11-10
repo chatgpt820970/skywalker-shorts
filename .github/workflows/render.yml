@@ -1,0 +1,108 @@
+name: render
+
+on:
+  push:
+    branches: [main]
+    paths: ["queue/*.json"]
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: "Comma-separated queue ids to force-render (empty = due items only)"
+        required: false
+        default: ""
+      max:
+        description: "Max items this run"
+        required: false
+        default: "3"
+      retry_failed:
+        description: "Retry items whose result is failed"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "15 */3 * * *"   # picks up items as they become due (RENDER_AHEAD_HOURS before slot)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      ids: ${{ steps.p.outputs.ids }}
+      count: ${{ steps.p.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        env:
+          IDS: ${{ github.event.inputs.ids }}
+          MAX_PER_RUN: ${{ github.event.inputs.max || '3' }}
+          RETRY_FAILED: ${{ github.event.inputs.retry_failed || 'false' }}
+          RENDER_AHEAD_HOURS: "20"
+        run: python3 scripts/plan.py
+
+  render:
+    needs: plan
+    if: needs.plan.outputs.count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        id: ${{ fromJSON(needs.plan.outputs.ids) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install ffmpeg + deps
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          if ! ffmpeg -hide_banner -filters 2>/dev/null | grep -q vidstabdetect; then
+            echo "System ffmpeg lacks vidstab; installing static GPL build"
+            curl -fsSL -o /tmp/ffmpeg.txz "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
+            mkdir -p /tmp/ff && tar -xJf /tmp/ffmpeg.txz -C /tmp/ff --strip-components=1
+            sudo install -m 0755 /tmp/ff/ffmpeg /tmp/ff/ffprobe /usr/local/bin/
+            hash -r
+          fi
+          ffmpeg -hide_banner -filters | grep -q vidstabdetect || { echo "ffmpeg still lacks vidstab"; exit 1; }
+          pip install -q -r requirements.txt "yt-dlp[default]"
+      - name: Render ${{ matrix.id }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/render_item.py "${{ matrix.id }}"
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-${{ matrix.id }}
+          path: |
+            results/${{ matrix.id }}.json
+            out/work_${{ matrix.id }}/qa/qa_extra.json
+            out/work_${{ matrix.id }}/qa/qa_all.jpg
+          if-no-files-found: ignore
+
+  commit-results:
+    needs: [plan, render]
+    if: always() && needs.plan.outputs.count != '0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: art
+          pattern: result-*
+      - name: Commit results/<id>.json
+        run: |
+          find art -path '*/results/*.json' -exec cp {} results/ \;
+          git config user.name "skywalker-render"
+          git config user.email "actions@users.noreply.github.com"
+          git add results/*.json || true
+          git diff --cached --quiet && exit 0
+          git commit -m "results: ${{ needs.plan.outputs.ids }} (run ${{ github.run_id }})"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
