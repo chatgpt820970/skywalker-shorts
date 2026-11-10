@@ -1,9 +1,9 @@
 {
   "id": "20261110-2230-mattdamon",
   "status": "failed",
-  "detail": "pipeline/QA failed (exit 1)",
-  "at": "2026-11-10 23:48 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42867611629",
+  "detail": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 87, 't_src': 139.83, 't_out': 16.67, 'reasons': ['logo_animation'], 'luma': 53.7}]}; auto_qc: duration 18.87s below hard minimum 20s (aim 25-32s); auto_qc: 8 frame(s) failed empty-dark/logo/text detectors; duration 18.87s below hard minimum 20s (aim 25-32s)",
+  "at": "2026-11-11 00:49 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42874252531",
   "slot": "2026-11-10T22:30:00+05:30",
   "title": "The reason why Matt Damon's Odysseus will not be stopped 💀 | Ithaca's king comes home | #edit",
   "auto_retries": 1,
@@ -12,24 +12,24 @@
     {
       "attempt": 1,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1)",
+      "error": "pipeline/QA failed (exit 1): only 23.2s of unique clean shots (need ≥25s, aim 25-32s); not repeating shots and not publishing a short cut; auto_qc: 36 frame(s) failed empty-dark/logo/text detectors; auto_qc: only 23.2s of unique clean shots (need ≥25s, aim 25-32s); not repeating shots and not publishing a short cut; only 23.238s of unique clean shots (need ≥25.0s, aim 25-32s); not repeating shots and not publishing a short cut",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
       "music": "ncs_fellshortofhell.mp3"
     },
     {
       "attempt": 2,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1)",
+      "error": "pipeline/QA failed (exit 1): only 22.5s of unique clean shots (need ≥25s, aim 25-32s); not repeating shots and not publishing a short cut; auto_qc: 38 frame(s) failed empty-dark/logo/text detectors; auto_qc: only 22.5s of unique clean shots (need ≥25s, aim 25-32s); not repeating shots and not publishing a short cut; only 22.539s of unique clean shots (need ≥25.0s, aim 25-32s); not repeating shots and not publishing a short cut",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
       "music": "ncs_fellshortofhell.mp3"
     },
     {
       "attempt": 3,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1)",
+      "error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 87, 't_src': 139.83, 't_out': 16.67, 'reasons': ['logo_animation'], 'luma': 53.7}]}; auto_qc: duration 18.87s below hard minimum 20s (aim 25-32s); auto_qc: 8 frame(s) failed empty-dark/logo/text detectors; duration 18.87s below hard minimum 20s (aim 25-32s)",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
-      "music": "ncs_montagemtoma.mp3"
+      "music": "ncs_favela.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1)"
+  "last_error": "pipeline/QA failed (exit 1): QA no_logo failed: {'ok': False, 'shots_flagged': 1, 'flags': [{'scene': 87, 't_src': 139.83, 't_out': 16.67, 'reasons': ['logo_animation'], 'luma': 53.7}]}; auto_qc: duration 18.87s below hard minimum 20s (aim 25-32s); auto_qc: 8 frame(s) failed empty-dark/logo/text detectors; duration 18.87s below hard minimum 20s (aim 25-32s)"
 }
