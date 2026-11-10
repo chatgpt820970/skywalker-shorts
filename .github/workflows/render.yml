@@ -66,8 +66,12 @@ jobs:
         with:
           path: |
             ~/.cache/huggingface
+            ~/.cache/huggingface/hub
             ~/.cache/faster_whisper
-          key: faster-whisper-${{ hashFiles('requirements.txt') }}
+          key: faster-whisper-small-int8-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            faster-whisper-small-int8-
+            faster-whisper-
       - name: Install ffmpeg + deps
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
@@ -83,7 +87,7 @@ jobs:
       - name: Render ${{ matrix.id }}
         env:
           GH_TOKEN: ${{ github.token }}
-          SKY_WHISPER_MODEL: base
+          SKY_WHISPER_MODEL: small
         run: python3 scripts/render_item.py "${{ matrix.id }}"
       - name: Upload result
         if: always()

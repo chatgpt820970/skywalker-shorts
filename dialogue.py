@@ -18,7 +18,7 @@ import numpy as np
 DIALOGUE_VOL = 1.3
 MUSIC_SPEECH_VOL = 0.22
 MUSIC_BED_VOL = 0.65
-WHISPER_MODEL = os.environ.get("SKY_WHISPER_MODEL", "base")
+WHISPER_MODEL = os.environ.get("SKY_WHISPER_MODEL", "small")
 _MODEL = None
 
 
@@ -301,7 +301,145 @@ def snap_window(src_start: float, visible: float, scene_start: float, scene_end:
     return round(a, 3), round(max(min_vis, b - a), 3)
 
 
+
+MIN_SHOT = 1.5
+MAX_SHOT = 3.5
+
+
+def fit_dialogue_window(src_start: float, visible: float, scene_start: float, scene_end: float,
+                        transcript: dict | None, min_vis: float = MIN_SHOT, max_vis: float = MAX_SHOT,
+                        hard_end: float | None = None) -> tuple[float, float]:
+    """Return a 1.5–3.5s window that contains only complete spoken lines.
+
+    Any whisper segment that overlaps the planned cut is either included in
+    full (extend the window to the segment end/start) or dropped. A line is
+    never left half-inside the shot. `hard_end` may reach slightly past the
+    detected scene so a line that spills over by a beat can still finish.
+    """
+    S = float(scene_start)
+    E = float(hard_end if hard_end is not None else scene_end)
+    a = min(max(float(src_start), S), E)
+    b = min(max(a + float(visible), a + min_vis), E)
+    segs = list((transcript or {}).get("segments") or [])
+    words = list((transcript or {}).get("words") or [])
+    overlapping = [s for s in segs
+                   if float(s["end"]) > a + 0.06 and float(s["start"]) < b - 0.06
+                   and (s.get("text") or "").strip()]
+    included = []
+    lo, hi = a, b
+    for s in sorted(overlapping, key=lambda x: float(x["start"])):
+        s0, s1 = float(s["start"]), float(s["end"])
+        if s0 < S - 0.10 or s1 > E + 0.10:
+            continue  # cannot fit the full line in this scene
+        trial_lo = min(lo if included else a, s0)
+        trial_hi = max(hi if included else b, s1)
+        trial_lo = max(trial_lo, S)
+        trial_hi = min(trial_hi, E)
+        if trial_lo > s0 + 0.08 or trial_hi < s1 - 0.08:
+            continue
+        if (trial_hi - trial_lo) > max_vis + 0.08:
+            if not included and (s1 - s0) <= max_vis and s0 >= S and s1 <= E:
+                lo, hi = s0, max(s1, s0 + min_vis)
+                included = [s]
+            continue
+        lo, hi, included = trial_lo, trial_hi, included + [s]
+    if not included:
+        # Non-dialogue (or no complete line fits): mid-word snap, then shrink
+        # so no partial segment remains inside the window.
+        a2, vis2 = snap_window(a, max(min_vis, b - a), S, E, words, min_vis=min_vis)
+        lo, hi = a2, a2 + vis2
+        for s in segs:
+            s0, s1 = float(s["start"]), float(s["end"])
+            if s1 <= lo + 0.05 or s0 >= hi - 0.05:
+                continue
+            # Partial overlap: drop the line by shrinking, prefer keeping min_vis.
+            if s0 < lo + 0.05 and lo < s1 < hi:
+                lo = s1  # start after the leftover tail
+            elif lo < s0 < hi and s1 > hi - 0.05:
+                hi = s0  # end before the leftover head
+            elif s0 >= lo and s1 <= hi:
+                pass  # fully inside — should have been included; leave it
+            else:
+                # segment covers the whole window; can't keep any of it
+                mid = (s0 + s1) / 2.0
+                if abs(lo - s0) < abs(hi - s1):
+                    lo = min(hi - min_vis, s1)
+                else:
+                    hi = max(lo + min_vis, s0)
+        if hi - lo < min_vis - 0.05:
+            # Give up on this tight window; keep the snapped one, captions will drop partials.
+            lo, hi = a2, a2 + vis2
+    if hi - lo < min_vis:
+        # Grow into silence (not into a new partial line).
+        need = min_vis - (hi - lo)
+        # try later first (extend end)
+        grow_hi = min(E, hi + need)
+        hit = any(float(s["start"]) < grow_hi - 0.05 and float(s["end"]) > hi + 0.05 for s in segs)
+        if not hit:
+            hi = grow_hi
+        need = min_vis - (hi - lo)
+        if need > 0.02:
+            grow_lo = max(S, lo - need)
+            hit = any(float(s["end"]) > grow_lo + 0.05 and float(s["start"]) < lo - 0.05 for s in segs)
+            if not hit:
+                lo = grow_lo
+    lo = min(max(lo, S), E)
+    hi = min(max(hi, lo + 0.40), E)
+    # Final clamp to max_vis, keeping complete included lines if possible.
+    if hi - lo > max_vis + 0.08 and included:
+        # keep from the first included start, cap at max_vis if all lines still fit
+        lo = max(lo, float(included[0]["start"]))
+        last_end = max(float(s["end"]) for s in included)
+        if last_end - lo <= max_vis + 0.08:
+            hi = max(last_end, lo + min_vis)
+        else:
+            hi = min(hi, lo + max_vis)
+    elif hi - lo > max_vis + 0.08:
+        hi = lo + max_vis
+    return round(lo, 3), round(max(0.40, hi - lo), 3)
+
+
+def segment_for_word(word: dict, segments: list[dict]) -> dict | None:
+    w0, w1 = float(word.get("src_start") or word.get("start") or 0), float(word.get("src_end") or word.get("end") or 0)
+    mid = 0.5 * (w0 + w1)
+    for s in segments or []:
+        if float(s["start"]) - 0.08 <= mid <= float(s["end"]) + 0.08:
+            return s
+    return None
+
+
+def word_line_is_complete(word: dict, item: dict, segments: list[dict], slack: float = 0.10) -> bool:
+    """True if the word's full whisper line sits inside the clip (or there is no line)."""
+    a = float(item.get("src_start") or 0)
+    b = a + float(item.get("visible") or 0)
+    seg = segment_for_word(word, segments)
+    if not seg:
+        # bare word: keep only if the word itself is fully inside
+        return float(word.get("src_start") or word.get("start") or 0) >= a - slack and                float(word.get("src_end") or word.get("end") or 0) <= b + slack
+    return float(seg["start"]) >= a - slack and float(seg["end"]) <= b + slack
+
+
+def drop_incomplete_lines(mapped: list[dict], edl: list[dict], segments: list[dict]) -> list[dict]:
+    """Safety net: never emit a subtitle for a line the cut slices in half."""
+    by_i = {it.get("i"): it for it in (edl or []) if it.get("scene") not in (None, "end")}
+    kept = []
+    dropped = 0
+    for w in mapped or []:
+        it = by_i.get(w.get("clip"))
+        if it is None:
+            kept.append(w)
+            continue
+        if word_line_is_complete(w, it, segments):
+            kept.append(w)
+        else:
+            dropped += 1
+    if dropped:
+        print(f"  dropped {dropped} word(s) from incomplete dialogue lines")
+    return kept
+
+
 def _out_time(item: dict, src_t: float) -> float | None:
+
     """Map a source timestamp onto the output timeline for one EDL item."""
     a = float(item.get("src_start") or 0)
     vis = float(item.get("visible") or 0)

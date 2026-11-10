@@ -45,10 +45,15 @@ def test_phash_tolerates_light_noise():
 
 def test_range_pad_blocks_nearby():
     used = [(10.0, 12.0)]
-    assert similarity.range_blocked(16.5, 18.0, used, pad=6.0)  # 16.5 < 12+6
-    assert similarity.range_blocked(5.0, 5.5, used, pad=6.0)    # 5.5 > 10-6
+    # Default pad is 2s — nearby enough to collide, far enough not to.
+    assert similarity.RANGE_PAD == 2.0
+    assert similarity.range_blocked(13.5, 15.0, used)          # 13.5 < 12+2
+    assert similarity.range_blocked(8.5, 9.5, used)            # 9.5 > 10-2
+    assert not similarity.range_blocked(14.5, 16.0, used)      # 14.5 >= 14
+    assert not similarity.range_blocked(0.0, 7.5, used)
+    # Explicit wider pad still works.
+    assert similarity.range_blocked(16.5, 18.0, used, pad=6.0)
     assert not similarity.range_blocked(19.0, 21.0, used, pad=6.0)
-    assert not similarity.range_blocked(0.0, 3.5, used, pad=6.0)
 
 
 def test_edl_duplicate_pairs_range_and_visual():
@@ -67,10 +72,10 @@ def test_edl_duplicate_pairs_range_and_visual():
     hits = similarity.edl_duplicate_pairs(edl, scenes)
     reasons = {tuple(h["reasons"]) for h in hits}
     assert any("visual" in h["reasons"] for h in hits)
-    # 4-6 vs 20-22 are more than 6s apart, so range_pad should not fire on 1 vs 2
+    # 4-6 vs 20-22 are far past the 2s pad, so range_pad should not fire on 1 vs 2
     close = [
         {"i": 0, "scene": 1, "src_start": 4.0, "visible": 2.0, **blu},
-        {"i": 1, "scene": 3, "src_start": 10.0, "visible": 2.0, **red},  # 10 is inside [4-6, 6+6]
+        {"i": 1, "scene": 3, "src_start": 7.5, "visible": 2.0, **red},  # 7.5 is inside [4-2, 6+2]
     ]
     hits2 = similarity.edl_duplicate_pairs(close, {1: {"id": 1, **blu}, 3: {"id": 3, **red}})
     assert any("range_pad" in h["reasons"] for h in hits2)
@@ -159,6 +164,56 @@ def test_caption_cues_sort_by_output_time():
     assert "settle down" in joined
     assert not any("settle" in c and "Coconut" in c for c in texts)
     assert not any("beer" in c and "HAVE" in c for c in texts)
+
+
+def test_fit_dialogue_extends_to_segment_end():
+    tr = {
+        "segments": [{"start": 10.0, "end": 12.4, "text": "You can do better than me."}],
+        "words": [
+            {"start": 10.0, "end": 10.3, "word": "You"},
+            {"start": 10.3, "end": 10.5, "word": "can"},
+            {"start": 10.5, "end": 10.7, "word": "do"},
+            {"start": 10.7, "end": 11.0, "word": "better"},
+            {"start": 11.0, "end": 11.3, "word": "than"},
+            {"start": 11.3, "end": 12.4, "word": "me."},
+        ],
+    }
+    # Planned 1.8s window would have cut "me."
+    a, vis = dialogue.fit_dialogue_window(10.0, 1.8, 9.5, 13.0, tr, min_vis=1.5, max_vis=3.5)
+    assert a <= 10.0 + 0.05
+    assert a + vis >= 12.4 - 0.05
+    assert 1.5 <= vis <= 3.5
+
+
+def test_fit_dialogue_drops_line_that_cannot_fit():
+    tr = {
+        "segments": [{"start": 10.0, "end": 14.5, "text": "a very long line that exceeds max_vis"}],
+        "words": [{"start": 10.0, "end": 14.5, "word": "long"}],
+    }
+    # Scene is long enough, but the line is 4.5s > max_vis 3.5, so do not slice it
+    # into a subtitle. The visual shot may remain; captions must drop the line.
+    a, vis = dialogue.fit_dialogue_window(10.0, 2.0, 9.0, 16.0, tr, min_vis=1.5, max_vis=3.5)
+    fully = a <= 10.05 and (a + vis) >= 14.45
+    outside = (a + vis) <= 10.05 or a >= 14.45
+    if not (fully or outside):
+        edl = [{"i": 0, "scene": 1, "src_start": a, "visible": vis}]
+        mapped = [{"t0": 0.0, "t1": 0.2, "word": "long", "clip": 0, "src_start": 10.0, "src_end": 10.4}]
+        assert dialogue.drop_incomplete_lines(mapped, edl, tr["segments"]) == []
+
+
+def test_drop_incomplete_lines_from_captions():
+    edl = [{"i": 0, "scene": 1, "src_start": 10.0, "visible": 1.8, "t0": 0.0, "t1": 1.8}]
+    segs = [{"start": 10.0, "end": 12.4, "text": "You can do better than me."}]
+    mapped = [
+        {"t0": 0.0, "t1": 0.4, "word": "You", "clip": 0, "src_start": 10.0, "src_end": 10.4},
+        {"t0": 0.4, "t1": 0.8, "word": "can", "clip": 0, "src_start": 10.4, "src_end": 10.8},
+    ]
+    kept = dialogue.drop_incomplete_lines(mapped, edl, segs)
+    assert kept == []
+    # Fully covered line is kept
+    edl[0]["visible"] = 2.5
+    kept = dialogue.drop_incomplete_lines(mapped, edl, segs)
+    assert [w["word"] for w in kept] == ["You", "can"]
 
 
 if __name__ == "__main__":

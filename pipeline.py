@@ -836,11 +836,13 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
 # ---------------------------------------------------------------------------
 def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
               transcript: dict | None = None) -> list[dict]:
-    """Pick a unique, tension-building cut list.
+    """Pick a unique, tension-building cut list targeting 25–32s.
 
-    Strict uniqueness: a used source range [s, e] blocks [s-6, e+6], and any
-    visually similar keyframe (pHash / histogram) is also rejected. Cuts prefer
-    complete spoken lines and are snapped so a word is never sliced in half.
+    Uniqueness: a used source range [s, e] blocks [s-2, e+2], and any visually
+    similar keyframe (pHash / histogram) is also rejected. Shots are 1.5–3.5s
+    and are extended to the end of a complete spoken line (or that line is
+    dropped). If 25s of unique clean shots cannot be reached, we report it
+    rather than repeating a shot.
     """
     import similarity as sim
     try:
@@ -871,7 +873,12 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         for s in usable:
             s.setdefault("speech", 0.0)
 
-    body = target - END_CARD
+    # Fill the whole target with unique live shots (25–32s). An end-card still
+    # is only added later if we still have a unique unused frame.
+    MIN_SHOT = 1.5
+    MAX_SHOT = 3.5
+    MIN_UNIQUE = 25.0
+    body = float(target)
 
     def dur_for(t, n):
         later = pulses[pulses >= t - 1e-3]
@@ -901,24 +908,34 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         used_ranges.append((float(a), float(b)))
         used_scenes.append(s)
 
-    # Hook: highest spectacle that is not a talking-head and fits 3 pulses (else 2)
+    def shot_vis(s, desired, remaining):
+        return max(MIN_SHOT, min(float(desired), float(s["dur"]) - 0.04, remaining, MAX_SHOT))
+
+    # Hook: highest spectacle that is not a talking-head and fits ~3 pulses
     t = 0.0
-    hook_vis = max(1.2, min(dur_for(t, 3), 2.8))
-    hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids and s["skin"] < 0.20 and fits(s, hook_vis) and not blocked(s, s["start"], s["start"] + hook_vis)]
+    hook_vis = max(MIN_SHOT, min(dur_for(t, 3), MAX_SHOT))
+    hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids and s["skin"] < 0.20
+                  and s["dur"] >= MIN_SHOT and not blocked(s, s["start"], s["start"] + min(hook_vis, s["dur"]))]
     if not hook_cands:
-        hook_vis = max(1.0, min(dur_for(t, 2), 2.2))
-        hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids and fits(s, hook_vis) and not blocked(s, s["start"], s["start"] + hook_vis)]
+        hook_vis = max(MIN_SHOT, min(dur_for(t, 2), MAX_SHOT))
+        hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids
+                      and s["dur"] >= MIN_SHOT and not blocked(s, s["start"], s["start"] + min(hook_vis, s["dur"]))]
+    if not hook_cands:
+        hook_cands = [s for s in usable_by_spec if s["dur"] >= MIN_SHOT and not blocked(s)]
     if not hook_cands:
         hook_cands = [s for s in usable_by_spec if not blocked(s)]
     hook = hook_cands[0]
+    hook_vis = shot_vis(hook, hook_vis, body)
     slots.append((hook_vis, hook, float(hook["start"])))
     mark_used(hook, hook["start"], hook["start"] + hook_vis)
     t += hook_vis
 
     def pick(t, vis, prefer_spectacle, prev):
-        cands = [s for s in usable if s["id"] not in used_ids and fits(s, vis) and not blocked(s, s["start"], s["start"] + vis)]
+        cands = [s for s in usable if s["id"] not in used_ids and s["dur"] >= MIN_SHOT
+                 and not blocked(s, s["start"], s["start"] + min(vis, s["dur"]))]
         if not cands:
-            cands = [s for s in usable if s["id"] not in used_ids and s["dur"] >= vis and not blocked(s, s["start"], s["start"] + vis)]
+            cands = [s for s in usable if s["id"] not in used_ids and s["dur"] >= min(vis, MIN_SHOT)
+                     and not blocked(s, s["start"], s["start"] + min(vis, s["dur"]))]
         if not cands:
             return None
 
@@ -950,25 +967,16 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         chosen = None
         vis = 0.0
         src_start = None
-        for n in (prefer, 3, 2, 4, 1):
+        for n in (prefer, 4, 3, 2, 5):
             vis = dur_for(t, n)
-            vis = max(0.75, min(vis, remaining, 3.3))
-            if vis > remaining + 0.01:
+            vis = max(MIN_SHOT, min(vis, remaining, MAX_SHOT))
+            if vis > remaining + 0.05 or vis < min(MIN_SHOT, remaining) - 0.05:
                 continue
             sc = pick(t, vis, climax, slots[-1][1])
             if sc is not None:
-                # shrink vis to a pulse boundary that the scene can actually hold
-                if not fits(sc, vis) and sc["dur"] < vis + 0.12:
-                    ok = False
-                    for n2 in range(n, 0, -1):
-                        v2 = dur_for(t, n2)
-                        v2 = max(0.70, min(v2, sc["dur"] - 0.08, remaining))
-                        if sc["dur"] >= v2:
-                            vis = v2
-                            ok = True
-                            break
-                    if not ok:
-                        continue
+                vis = shot_vis(sc, vis, remaining)
+                if vis < min(MIN_SHOT, remaining, sc["dur"]) - 0.05:
+                    continue
                 src_start = float(sc["start"])
                 chosen = sc
                 break
@@ -981,13 +989,13 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
     # If we still came up short, top up with leftover unique scenes that actually fit
     while t < body - 0.50:
         remaining = body - t
-        leftovers = [s for s in usable_by_spec if s["id"] not in used_ids and s["dur"] >= 0.70 and not blocked(s)]
+        leftovers = [s for s in usable_by_spec if s["id"] not in used_ids and s["dur"] >= MIN_SHOT and not blocked(s)]
         if not leftovers:
             break
         placed = False
         for sc in leftovers:
-            vis = min(remaining, sc["dur"] - 0.06, max(0.70, dur_for(t, 2)))
-            if vis < 0.70 or sc["dur"] < vis:
+            vis = shot_vis(sc, max(MIN_SHOT, dur_for(t, 3)), remaining)
+            if vis < min(MIN_SHOT, remaining, sc["dur"]) - 0.05:
                 continue
             if blocked(sc, sc["start"], sc["start"] + vis):
                 continue
@@ -999,18 +1007,32 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         if not placed:
             break
 
-    # Snap every window off mid-word cuts, then rebuild used ranges from the snaps.
-    if dmod and transcript and transcript.get("words"):
-        words = transcript["words"]
+    # Snap / extend every window to complete spoken lines, then rebuild used ranges.
+    if dmod and transcript and (transcript.get("words") or transcript.get("segments")):
         new_slots = []
         used_ranges = []
         used_scenes = []
         used_ids = set()
-        acc_tmp = 0.0
         for vis, sc, src_start in slots:
-            a, vis2 = dmod.snap_window(src_start, vis, sc["start"], sc["end"], words, min_vis=0.70)
-            if blocked(sc, a, a + vis2) and (a, a + vis2) != (src_start, src_start + vis):
-                # snap landed in a blocked zone — keep the original window
+            # Allow a short spill past the detected scene to finish a line,
+            # but never into a skipped card or an already-used range.
+            hard = float(sc["end"])
+            # next scored scene start, if contiguous and not a skip
+            nxts = [x for x in scenes if float(x.get("start") or 0) >= float(sc["end"]) - 0.05]
+            nxts.sort(key=lambda x: float(x["start"]))
+            if nxts and not nxts[0].get("skip"):
+                hard = min(hard + 0.85, float(nxts[0]["end"]))
+            a, vis2 = dmod.fit_dialogue_window(
+                src_start, vis, sc["start"], sc["end"], transcript,
+                min_vis=MIN_SHOT, max_vis=MAX_SHOT, hard_end=hard,
+            )
+            if blocked(sc, a, a + vis2) and (abs(a - src_start) > 0.05 or abs(vis2 - vis) > 0.05):
+                # extension collided with a used range — try without spill
+                a, vis2 = dmod.fit_dialogue_window(
+                    src_start, vis, sc["start"], sc["end"], transcript,
+                    min_vis=MIN_SHOT, max_vis=MAX_SHOT, hard_end=float(sc["end"]),
+                )
+            if blocked(sc, a, a + vis2) and (abs(a - src_start) > 0.05 or abs(vis2 - vis) > 0.05):
                 a, vis2 = src_start, vis
             new_slots.append((vis2, sc, a))
             used_ids.add(sc["id"])
@@ -1067,6 +1089,21 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             acc += float(it["visible"])
             kept.append(it)
         edl = kept
+    acc = float(edl[-1]["t1"]) if edl else 0.0
+    meta = {
+        "unique_duration": round(acc, 3),
+        "target": float(target),
+        "min_unique": MIN_UNIQUE,
+        "short_unique": bool(acc + 1e-6 < MIN_UNIQUE),
+        "n_shots": len(edl),
+    }
+    if acc + 1e-6 < MIN_UNIQUE:
+        print(f"WARNING: only {acc:.1f}s of unique clean shots (need ≥{MIN_UNIQUE:.0f}s); "
+              f"not repeating shots to pad")
+    try:
+        (WORK / "plan_meta.json").write_text(json.dumps(meta, indent=2))
+    except Exception:
+        pass
     return edl
 
 
@@ -2408,6 +2445,7 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
             tr = json.loads(tp.read_text())
         if edl and (tr.get("words") or tr.get("segments")):
             mapped = dmod.map_words_to_output(edl, tr.get("words") or [])
+            mapped = dmod.drop_incomplete_lines(mapped, edl, tr.get("segments") or [])
             cues = dmod.caption_cues(mapped)
             src_windows = dmod.speech_windows_from_transcript(tr)
             speech_out = dmod.map_windows_to_output(edl, src_windows)
@@ -3168,6 +3206,18 @@ def main():
     report["issues"] = issues
     report["drop_t"] = DROP_T
     report["energy"] = ENERGY
+    try:
+        meta = json.loads((WORK / "plan_meta.json").read_text()) if (WORK / "plan_meta.json").exists() else {}
+    except Exception:
+        meta = {}
+    if meta:
+        report["unique_duration"] = meta.get("unique_duration")
+        report["warnings"] = list(report.get("warnings") or [])
+        if meta.get("short_unique"):
+            msg = (f"only {meta.get('unique_duration')}s of unique clean shots "
+                   f"(need ≥{meta.get('min_unique')}s); not repeating shots to pad")
+            report["warnings"].append(msg)
+            print("WARNING:", msg)
     if args.qa_json:
         Path(args.qa_json).write_text(json.dumps(report, indent=2, default=str))
     print("OUT", out, f"{ffprobe_dur(out):.2f}s", "size", out.stat().st_size)

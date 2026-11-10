@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Shot uniqueness helpers: source-range padding + perceptual / histogram similarity.
 
-Once a source range [s, e] is used, anything overlapping [s-6, e+6] is blocked.
+Once a source range [s, e] is used, anything overlapping [s-2, e+2] is blocked.
 Keyframes of used shots are compared with a 64-bit DCT pHash and an HSV histogram
 so visually similar angles (same car, same table, same booth) cannot be re-used
 even if they sit far apart in the trailer.
@@ -13,7 +13,7 @@ from typing import Iterable
 import cv2
 import numpy as np
 
-RANGE_PAD = 6.0
+RANGE_PAD = 2.0
 # Tight pHash = same frame / same angle. Combined with histogram so two
 # different dark interiors are not automatically collapsed together.
 PHASH_HARD = 8
