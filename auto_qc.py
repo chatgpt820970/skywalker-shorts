@@ -69,6 +69,14 @@ def _mean_volume(path: Path) -> float | None:
 
 
 def _frame_at(path: Path, t: float) -> np.ndarray | None:
+    # Frame-accurate: cap.set(POS_MSEC) lands on the previous H.264 keyframe,
+    # which made short subtitle cues look "missing" in QA.
+    try:
+        got = scene_filter.grab_times(path, [float(t)])
+        if got:
+            return got[0][1]
+    except Exception:
+        pass
     cap = cv2.VideoCapture(str(path))
     if not cap.isOpened():
         return None
@@ -105,11 +113,15 @@ def _caption_visible(frame: np.ndarray, y_hint: int = 1420) -> bool:
     band = frame[max(0, y - 20):min(h, y + 90), int(w * 0.08):int(w * 0.92)]
     if band.size == 0:
         return False
+    # Use the brightest channel: keyword words are yellow (255,255,0), whose
+    # RGB mean is only 170, so short all-keyword cues ("Yes", "No way") were
+    # read as missing. Glyph area also scales with text length, so a short
+    # word needs a lower bright-pixel fraction than a full line.
+    V = band.max(axis=2) if band.ndim == 3 else band
     L = band.mean(axis=2) if band.ndim == 3 else band
-    # thick black stroke around bright type
-    bright = float((L > 180).mean())
+    bright = float((V > 180).mean())
     dark = float((L < 40).mean())
-    return bright > 0.01 and dark > 0.01
+    return bright > 0.003 and dark > 0.01
 
 
 
@@ -318,11 +330,20 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
         issues[:] = [x for x in issues if x != "lower-third captions not visible"]
         miss = 0
         checked_cues = 0
+        mids = []
         for c in cap_cues:
             mid = (float(c.get("t0") or 0) + float(c.get("t1") or 0)) / 2.0
             if mid < 0 or (dur and mid >= dur):
                 continue
-            fr = _frame_at(path, mid)
+            mids.append(round(mid, 3))
+        try:
+            cue_frames = {round(t, 3): fr for t, fr in scene_filter.grab_times(path, mids)}
+        except Exception:
+            cue_frames = {}
+        for mid in mids:
+            fr = cue_frames.get(round(mid, 3))
+            if fr is None:
+                fr = _frame_at(path, mid)
             if fr is None:
                 continue
             checked_cues += 1
