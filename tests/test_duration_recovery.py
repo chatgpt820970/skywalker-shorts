@@ -114,3 +114,29 @@ def test_plain_footage_is_not_flagged_as_text():
     yy = np.linspace(0, 80, 720).reshape(-1, 1)
     pix[:, :, 1] = np.clip(pix[:, :, 1] + yy, 0, 255)
     assert scene_filter.detect_overlay_text(pix) == []
+
+
+def test_plan_edit_can_fill_with_short_recovered_slices():
+    """Sub-shot leftovers are often 0.7–1.4s; they must still count toward 25s."""
+    pipeline.RELAX = False
+    rng = np.random.default_rng(7)
+    scenes = []
+    t = 0.0
+    for i in range(32):
+        fr = rng.integers(0, 255, (64, 64, 3), dtype=np.uint8)
+        fr[:, :] = ((i * 17) % 255, (i * 41) % 255, (255 - i * 9) % 255)
+        # unique texture so pHash does not collapse them
+        fr.reshape(-1)[i::32] = 255
+        fp = similarity.fingerprint_frame(fr)
+        dur = 0.95
+        scenes.append({
+            "id": i + 1, "start": t, "end": t + dur, "dur": dur,
+            "skip": False, "score": 12.0 + i, "spectacle": 12.0 + i, "skin": 0.04,
+            "motion": 6.0, "speech": 0.0,
+            "phash": fp["phash"], "hist": fp["hist"],
+        })
+        t += 4.0  # well past the 2s range pad
+    music = {"pulses": list(np.linspace(0, 36, 50))}
+    edl = pipeline.plan_edit(scenes, music, target=32)
+    acc = float(edl[-1]["t1"]) if edl else 0.0
+    assert acc + 1e-6 >= 25.0, acc

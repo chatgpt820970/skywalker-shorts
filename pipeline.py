@@ -1059,8 +1059,15 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         used_ranges.append((float(a), float(b)))
         used_scenes.append(s)
 
-    def shot_vis(s, desired, remaining):
-        return max(MIN_SHOT, min(float(desired), float(s["dur"]) - 0.04, remaining, MAX_SHOT))
+    MIN_SHOT_RECOVER = float(min_keep)
+
+    def shot_vis(s, desired, remaining, min_shot=None):
+        floor = MIN_SHOT if min_shot is None else float(min_shot)
+        cap = min(float(s["dur"]) - 0.04, remaining, MAX_SHOT)
+        if cap <= 0:
+            return 0.0
+        want = max(float(desired), floor)
+        return min(want, cap)
 
     # Hook: highest spectacle that is not a talking-head and fits ~3 pulses
     t = 0.0
@@ -1086,6 +1093,9 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
                  and not blocked(s, s["start"], s["start"] + min(vis, s["dur"]))]
         if not cands:
             cands = [s for s in usable if s["id"] not in used_ids and s["dur"] >= min(vis, MIN_SHOT)
+                     and not blocked(s, s["start"], s["start"] + min(vis, s["dur"]))]
+        if not cands:
+            cands = [s for s in usable if s["id"] not in used_ids and s["dur"] >= MIN_SHOT_RECOVER
                      and not blocked(s, s["start"], s["start"] + min(vis, s["dur"]))]
         if not cands:
             return None
@@ -1125,8 +1135,8 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
                 continue
             sc = pick(t, vis, climax, slots[-1][1])
             if sc is not None:
-                vis = shot_vis(sc, vis, remaining)
-                if vis < min(MIN_SHOT, remaining, sc["dur"]) - 0.05:
+                vis = shot_vis(sc, vis, remaining, min_shot=min(MIN_SHOT, sc["dur"]))
+                if vis < min(MIN_SHOT_RECOVER, remaining, sc["dur"]) - 0.05:
                     continue
                 src_start = float(sc["start"])
                 chosen = sc
@@ -1140,13 +1150,14 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
     # If we still came up short, top up with leftover unique scenes that actually fit
     while t < body - 0.50:
         remaining = body - t
-        leftovers = [s for s in usable_by_spec if s["id"] not in used_ids and s["dur"] >= MIN_SHOT and not blocked(s)]
+        leftovers = [s for s in usable_by_spec if s["id"] not in used_ids and s["dur"] >= MIN_SHOT_RECOVER and not blocked(s)]
         if not leftovers:
             break
         placed = False
         for sc in leftovers:
-            vis = shot_vis(sc, max(MIN_SHOT, dur_for(t, 3)), remaining)
-            if vis < min(MIN_SHOT, remaining, sc["dur"]) - 0.05:
+            vis = shot_vis(sc, max(MIN_SHOT_RECOVER, min(dur_for(t, 3), sc["dur"])), remaining,
+                           min_shot=MIN_SHOT_RECOVER)
+            if vis < min(MIN_SHOT_RECOVER, remaining, sc["dur"]) - 0.05:
                 continue
             if blocked(sc, sc["start"], sc["start"] + vis):
                 continue
@@ -3455,4 +3466,30 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main() or 0)
+    try:
+        sys.exit(main() or 0)
+    except SystemExit as e:
+        msg = e.code if isinstance(getattr(e, "code", None), str) else None
+        if msg:
+            if "--qa-json" in sys.argv:
+                try:
+                    qpath = Path(sys.argv[sys.argv.index("--qa-json") + 1])
+                    payload = {"ok": False, "issues": [msg]}
+                    if qpath.exists():
+                        try:
+                            prev = json.loads(qpath.read_text())
+                            if isinstance(prev, dict):
+                                prev_issues = list(prev.get("issues") or [])
+                                if msg not in prev_issues:
+                                    prev_issues.append(msg)
+                                prev["issues"] = prev_issues
+                                prev["ok"] = False
+                                payload = prev
+                        except Exception:
+                            pass
+                    qpath.write_text(json.dumps(payload, indent=2, default=str))
+                except Exception:
+                    pass
+            print(msg)
+            sys.exit(1)
+        raise
