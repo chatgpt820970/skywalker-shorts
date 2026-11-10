@@ -1,9 +1,9 @@
 {
   "id": "20261110-2230-mattdamon",
   "status": "done",
-  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
-  "at": "2026-11-10 18:03 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42815170140",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok (retry: sources fallback)",
+  "at": "2026-11-10 22:11 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42851785055",
   "slot": "2026-11-10T22:30:00+05:30",
   "title": "The reason why Matt Damon's Odysseus will not be stopped 💀 | Ithaca's king comes home | #edit",
   "auto_retries": 1,
@@ -11,6 +11,13 @@
   "attempts": [
     {
       "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): missing frame at 5.60s",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
+      "music": "ncs_fellshortofhell.mp3"
+    },
+    {
+      "attempt": 2,
       "ok": true,
       "error": null,
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4",
