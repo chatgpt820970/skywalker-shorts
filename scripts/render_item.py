@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""Render one queue item: download -> pipeline.py (+QA) -> 4K lanczos -> Release -> results/<id>.json."""
+"""Render one queue item: download -> pipeline.py (+QA) -> 4K lanczos -> Release -> results/<id>.json.
+
+Automatic retry ladder (self-heal, no bot required):
+  1) normal (yt-dlp, then official fallbacks)
+  2) force the sources-release fallback mp4
+  3) fallback mp4 + a different credited music track + alternate scene
+     selection + relaxed NON-hard-rule thresholds
+     (never relaxes no-crop, layout, or no-logo/title)
+
+If all three attempts in this job fail and results/<id>.json has not yet used
+its outer auto-retry, we write status=retry_queued and exit 0. A companion
+workflow re-dispatches the item once more later. Only after that last attempt
+fails do we write status=failed and exit 1 (that is what wakes BIBI).
+"""
 import glob, json, os, subprocess, sys, time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -10,6 +23,7 @@ iid = sys.argv[1]
 OUT = REPO / "out"; OUT.mkdir(exist_ok=True)
 RES = REPO / "results"; RES.mkdir(exist_ok=True)
 run_url = f"{os.environ.get('GITHUB_SERVER_URL','https://github.com')}/{os.environ.get('GITHUB_REPOSITORY','')}/actions/runs/{os.environ.get('GITHUB_RUN_ID','')}"
+MAX_AUTO_RETRIES = 1  # outer workflow_run re-dispatch budget
 
 item = None
 for f in sorted(glob.glob(str(REPO / "queue" / "*.json"))):
@@ -22,11 +36,21 @@ if item is None:
 def now():
     return datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
 
+def read_prev():
+    p = RES / f"{iid}.json"
+    if p.exists():
+        try:
+            return json.loads(p.read_text())
+        except Exception:
+            return {}
+    return {}
+
 def write(status, detail, **extra):
     r = {"id": iid, "status": status, "detail": detail, "at": now(), "run_url": run_url,
          "slot": item.get("slot"), "title": item.get("title"), **extra}
     (RES / f"{iid}.json").write_text(json.dumps(r, indent=2, ensure_ascii=False))
     print(json.dumps(r, indent=2, ensure_ascii=False))
+    return r
 
 def probe_wh(p):
     o = subprocess.check_output(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
@@ -40,7 +64,6 @@ def download_url(url, dest):
     """Fetch a direct mp4. GitHub release URLs use gh (token) first, then curl."""
     dest.unlink(missing_ok=True)
     if "github.com" in url and "/releases/download/" in url:
-        # https://github.com/<owner>/<repo>/releases/download/<tag>/<asset>
         parts = url.split("/releases/download/")
         repo = parts[0].split("github.com/")[-1].strip("/")
         tag, asset = parts[1].split("/", 1)
@@ -51,98 +74,226 @@ def download_url(url, dest):
             if cand.resolve() != dest.resolve():
                 dest.write_bytes(cand.read_bytes())
             return True, f"gh:{url}"
-        err_gh = (r.stderr or r.stdout or "?").strip().splitlines()[-1][:300] if (r.stderr or r.stdout) else "gh failed"
-        # fall through to curl (public repo)
     r = subprocess.run(["curl", "-fsSL", "--retry", "3", "-L", "-o", str(dest), url], capture_output=True, text=True)
     if r.returncode == 0 and _ok_src(dest):
         return True, url
     return False, f"direct mp4 {url}: curl exit {r.returncode} {(r.stderr or '')[-200:]}"
 
-# 1. download (official source; YouTube via yt-dlp, else official direct mp4s / Release fallback)
-src = OUT / f"{iid}_src.mp4"
-errors, used = [], None
-if item.get("source_url"):
-    for attempt in range(2):
-        r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
-                            "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
-                            "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
-                            item["source_url"]], capture_output=True, text=True)
-        if r.returncode == 0 and _ok_src(src):
-            used = item["source_url"]; break
-        errors.append("yt-dlp: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
-        time.sleep(5)
-if not used:
+def download_fallback(src):
+    errors = []
+    used = None
     for u in item.get("fallback_mp4", []) or []:
         ok, info = download_url(u, src)
         if ok:
-            used = info; break
+            return info, []
         errors.append(info)
-if not used and item.get("fallback_release") and item.get("fallback_asset"):
-    tag, asset = item["fallback_release"], item["fallback_asset"]
-    repo = os.environ.get("GITHUB_REPOSITORY", "chatgpt820970/skywalker-shorts")
-    r = subprocess.run(["gh", "release", "download", tag, "-p", asset, "-R", repo, "-D", str(OUT), "--clobber"],
-                       capture_output=True, text=True)
-    cand = OUT / asset
-    if r.returncode == 0 and _ok_src(cand):
-        if cand.resolve() != src.resolve():
-            src.write_bytes(cand.read_bytes())
-        used = f"gh:release/{tag}/{asset}"
-    else:
+    if item.get("fallback_release") and item.get("fallback_asset"):
+        tag, asset = item["fallback_release"], item["fallback_asset"]
+        repo = os.environ.get("GITHUB_REPOSITORY", "chatgpt820970/skywalker-shorts")
+        r = subprocess.run(["gh", "release", "download", tag, "-p", asset, "-R", repo, "-D", str(OUT), "--clobber"],
+                           capture_output=True, text=True)
+        cand = OUT / asset
+        if r.returncode == 0 and _ok_src(cand):
+            if cand.resolve() != src.resolve():
+                src.write_bytes(cand.read_bytes())
+            return f"gh:release/{tag}/{asset}", []
         errors.append("gh release " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
-if not used:
-    write("failed", "download failed: " + " | ".join(errors))
-    print(f"::error::{iid}: download failed")
-    sys.exit(1)
+    # last resort: sources release, guess asset from fallback_mp4 names or id
+    repo = os.environ.get("GITHUB_REPOSITORY", "chatgpt820970/skywalker-shorts")
+    guesses = []
+    if item.get("fallback_asset"):
+        guesses.append(item["fallback_asset"])
+    for u in item.get("fallback_mp4") or []:
+        guesses.append(u.rstrip("/").split("/")[-1])
+    for g in guesses:
+        r = subprocess.run(["gh", "release", "download", "sources", "-p", g, "-R", repo, "-D", str(OUT), "--clobber"],
+                           capture_output=True, text=True)
+        cand = OUT / g
+        if r.returncode == 0 and _ok_src(cand):
+            if cand.resolve() != src.resolve():
+                src.write_bytes(cand.read_bytes())
+            return f"gh:release/sources/{g}", []
+        errors.append("gh sources " + g + " " + (r.stderr.strip().splitlines() or ["?"])[-1][:200])
+    return None, errors
 
-# 2. edit + QA
-out = OUT / f"{iid}_1080.mp4"
-qa_json = OUT / f"{iid}_qa.json"
-cmd = [sys.executable, str(REPO / "pipeline.py"), "--src", str(src), "--out", str(out),
-       "--template", item.get("template", "whitebar"), "--hook", item["hook"],
-       "--pillar", item.get("pillar", "movie"), "--item-id", iid, "--music", "auto",
-       "--target-dur", str(item.get("target_dur", 32)), "--qa-json", str(qa_json)]
-if item.get("words"):
-    cmd += ["--words", item["words"]]
-env = dict(os.environ, SKY_WORK=str(OUT / f"work_{iid}"), SKY_ROOT=str(OUT))
-rc = subprocess.call(cmd, env=env)
-qa = json.loads(qa_json.read_text()) if qa_json.exists() else {}
-credit = {}
-cpath = OUT / f"work_{iid}" / "music_credit.json"
-if cpath.exists():
-    credit = json.loads(cpath.read_text())
-checks = {k: v.get("ok") for k, v in (qa.get("checks") or {}).items()}
-if rc != 0 or not out.exists():
-    write("failed", f"pipeline/QA failed (exit {rc}): " + "; ".join(qa.get("issues", [])[:5])[:800],
-          qa=checks, source=used)
-    sys.exit(1)
+def download_source(src, force_fallback=False):
+    errors, used = [], None
+    if not force_fallback and item.get("source_url"):
+        for attempt in range(2):
+            r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
+                                "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
+                                "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
+                                item["source_url"]], capture_output=True, text=True)
+            if r.returncode == 0 and _ok_src(src):
+                return item["source_url"], []
+            errors.append("yt-dlp: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
+            time.sleep(5)
+    used, ferr = download_fallback(src)
+    errors.extend(ferr)
+    if used:
+        return used, errors
+    return None, errors
 
-# 3. 4K: upscale with lanczos when the source is under 4K
-sw, sh = probe_wh(src)
-final = OUT / f"render-{iid}.mp4"
-if min(sw, sh) < 2160:
-    subprocess.check_call(["ffmpeg", "-y", "-i", str(out), "-vf", "scale=2160:3840:flags=lanczos",
+def publish(final, fw, fh, up, used, qa, credit, qa_obj):
+    desc = item.get("description", "")
+    if credit.get("credit"):
+        desc = desc.rstrip() + "\n\nMusic:\n" + credit["credit"]
+    notes = f"{item.get('title','')}\n\n{desc}\n\nTags: {', '.join(item.get('tags', []))}\nSource: {used}\nRun: {run_url}"
+    tag = f"render-{iid}"
+    r = subprocess.run(["gh", "release", "view", tag], capture_output=True)
+    if r.returncode != 0:
+        subprocess.check_call(["gh", "release", "create", tag, str(final), "--title", f"render {iid}", "--notes", notes])
+    else:
+        subprocess.check_call(["gh", "release", "upload", tag, str(final), "--clobber"])
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    return dict(
+        release_url=f"https://github.com/{repo}/releases/tag/{tag}",
+        asset_url=f"https://github.com/{repo}/releases/download/{tag}/{final.name}",
+        qa=qa, drop_t=qa_obj.get("drop_t"), energy=qa_obj.get("energy"), source=used,
+        music=credit.get("file"), music_credit=credit.get("credit"), description_final=desc,
+        detail=f"rendered {fw}x{fh} ({up}), QA ok",
+    )
+
+def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, exclude_music=None, music_salt=""):
+    cmd = [sys.executable, str(REPO / "pipeline.py"), "--src", str(src), "--out", str(out),
+           "--template", item.get("template", "whitebar"), "--hook", item["hook"],
+           "--pillar", item.get("pillar", "movie"), "--item-id", iid, "--music", "auto",
+           "--target-dur", str(item.get("target_dur", 32)), "--qa-json", str(qa_json)]
+    if item.get("words"):
+        cmd += ["--words", item["words"]]
+    if relax:
+        cmd += ["--relax"]
+    if alt_scenes:
+        cmd += ["--alt-scenes"]
+    if exclude_music:
+        cmd += ["--exclude-music", ",".join(exclude_music)]
+    if music_salt:
+        cmd += ["--music-salt", music_salt]
+    env = dict(os.environ, SKY_WORK=str(work), SKY_ROOT=str(OUT))
+    # fresh work dir per attempt so reused scenes/edl cannot leak
+    if work.exists():
+        import shutil
+        shutil.rmtree(work, ignore_errors=True)
+    work.mkdir(parents=True, exist_ok=True)
+    rc = subprocess.call(cmd, env=env)
+    qa = json.loads(qa_json.read_text()) if qa_json.exists() else {}
+    credit = {}
+    cpath = work / "music_credit.json"
+    if cpath.exists():
+        credit = json.loads(cpath.read_text())
+    checks = {k: v.get("ok") if isinstance(v, dict) else v for k, v in (qa.get("checks") or {}).items()}
+    return rc, qa, credit, checks
+
+def upscale(src, out_1080, final):
+    sw, sh = probe_wh(src)
+    subprocess.check_call(["ffmpeg", "-y", "-i", str(out_1080), "-vf", "scale=2160:3840:flags=lanczos",
                            "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
                            "-c:a", "copy", "-movflags", "+faststart", str(final)])
-    up = f"lanczos {sw}x{sh} source -> 2160x3840"
-else:
-    subprocess.check_call(["ffmpeg", "-y", "-i", str(out), "-vf", "scale=2160:3840:flags=lanczos",
-                           "-c:v", "libx264", "-crf", "18", "-c:a", "copy", str(final)])
-    up = "4K source, scaled to 2160x3840"
-fw, fh = probe_wh(final)
+    up = f"lanczos {sw}x{sh} source -> 2160x3840" if min(sw, sh) < 2160 else "4K source, scaled to 2160x3840"
+    fw, fh = probe_wh(final)
+    return fw, fh, up
 
-# 4. Release asset render-<id>
-desc = item.get("description", "")
-if credit.get("credit"):
-    desc = desc.rstrip() + "\n\nMusic:\n" + credit["credit"]
-notes = f"{item.get('title','')}\n\n{desc}\n\nTags: {', '.join(item.get('tags', []))}\nSource: {used}\nRun: {run_url}"
-tag = f"render-{iid}"
-r = subprocess.run(["gh", "release", "view", tag], capture_output=True)
-if r.returncode != 0:
-    subprocess.check_call(["gh", "release", "create", tag, str(final), "--title", f"render {iid}", "--notes", notes])
-else:
-    subprocess.check_call(["gh", "release", "upload", tag, str(final), "--clobber"])
-repo = os.environ.get("GITHUB_REPOSITORY", "")
-write("done", f"rendered {fw}x{fh} ({up}), QA ok", release_url=f"https://github.com/{repo}/releases/tag/{tag}",
-      asset_url=f"https://github.com/{repo}/releases/download/{tag}/{final.name}",
-      qa=checks, drop_t=qa.get("drop_t"), energy=qa.get("energy"), source=used,
-      music=credit.get("file"), music_credit=credit.get("credit"), description_final=desc)
+def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_music=None, music_salt=""):
+    src = OUT / f"{iid}_src.mp4"
+    print(f"=== attempt {n}: force_fallback={force_fallback} relax={relax} alt_scenes={alt_scenes} ===", flush=True)
+    used, errors = download_source(src, force_fallback=force_fallback)
+    if not used:
+        reason = "download failed: " + " | ".join(errors)
+        return False, {"attempt": n, "ok": False, "error": reason, "source": None, "music": None}
+
+    out = OUT / f"{iid}_1080.mp4"
+    qa_json = OUT / f"{iid}_qa.json"
+    work = OUT / f"work_{iid}"
+    # unique names per attempt so a failed leftover is not reused
+    if n > 1:
+        out = OUT / f"{iid}_1080_a{n}.mp4"
+        qa_json = OUT / f"{iid}_qa_a{n}.json"
+        work = OUT / f"work_{iid}_a{n}"
+        # keep using the same src path (already written)
+    rc, qa, credit, checks = run_pipeline(
+        src, out, qa_json, work,
+        relax=relax, alt_scenes=alt_scenes,
+        exclude_music=exclude_music, music_salt=music_salt,
+    )
+    if rc != 0 or not out.exists():
+        reason = f"pipeline/QA failed (exit {rc}): " + "; ".join((qa.get("issues") or [])[:5])[:800]
+        if not reason.endswith(")") and not qa.get("issues"):
+            reason = f"pipeline/QA failed (exit {rc})"
+        return False, {"attempt": n, "ok": False, "error": reason, "source": used,
+                       "music": credit.get("file"), "qa": checks}
+    try:
+        final = OUT / f"render-{iid}.mp4"
+        fw, fh, up = upscale(src, out, final)
+        extra = publish(final, fw, fh, up, used, checks, credit, qa)
+    except Exception as e:
+        return False, {"attempt": n, "ok": False, "error": f"upscale/release failed: {e}",
+                       "source": used, "music": credit.get("file"), "qa": checks}
+    extra.update({"attempt": n, "ok": True, "error": None})
+    return True, extra
+
+def main():
+    prev = read_prev()
+    auto_retries = int(prev.get("auto_retries") or 0)
+    # This job IS the outer auto-retry if the last result asked for one.
+    if prev.get("status") == "retry_queued":
+        auto_retries += 1
+    prior_music = []
+    if prev.get("music"):
+        prior_music.append(prev["music"])
+    for a in prev.get("attempts") or []:
+        if a.get("music"):
+            prior_music.append(a["music"])
+
+    attempts_log = []
+    # Attempt 1: normal
+    ok, info = attempt(1, force_fallback=False)
+    attempts_log.append({k: info.get(k) for k in ("attempt", "ok", "error", "source", "music")})
+    if ok:
+        write("done", info["detail"], auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
+              attempts=attempts_log, last_error=None, **{k: v for k, v in info.items()
+                if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
+                         "music", "music_credit", "description_final")})
+        return 0
+
+    # Attempt 2: sources-release fallback mp4
+    ok, info = attempt(2, force_fallback=True)
+    attempts_log.append({k: info.get(k) for k in ("attempt", "ok", "error", "source", "music")})
+    if ok:
+        write("done", info["detail"] + " (retry: sources fallback)", auto_retries=auto_retries,
+              max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=None,
+              **{k: v for k, v in info.items()
+                 if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
+                          "music", "music_credit", "description_final")})
+        return 0
+
+    # Attempt 3: fallback + different music + alt scenes + relaxed non-hard thresholds
+    excl = list(dict.fromkeys([m for m in prior_music + [attempts_log[0].get("music"), attempts_log[1].get("music")] if m]))
+    ok, info = attempt(3, force_fallback=True, relax=True, alt_scenes=True,
+                       exclude_music=excl, music_salt=f"retry3-{auto_retries}")
+    attempts_log.append({k: info.get(k) for k in ("attempt", "ok", "error", "source", "music")})
+    if ok:
+        write("done", info["detail"] + " (retry: alt music/scenes, non-hard relax)", auto_retries=auto_retries,
+              max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=None,
+              **{k: v for k, v in info.items()
+                 if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
+                          "music", "music_credit", "description_final")})
+        return 0
+
+    last = attempts_log[-1].get("error") or "unknown failure"
+    # All 3 in-job attempts failed. If we still have an outer auto-retry, queue it
+    # and exit 0 so this run does not wake BIBI yet.
+    if auto_retries < MAX_AUTO_RETRIES:
+        write("retry_queued",
+              f"all 3 in-job attempts failed; auto-retry {auto_retries + 1}/{MAX_AUTO_RETRIES} will be dispatched: {last}"[:800],
+              auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
+              attempts=attempts_log, last_error=last)
+        print(f"::warning::{iid}: queued outer auto-retry ({auto_retries + 1}/{MAX_AUTO_RETRIES})")
+        return 0
+
+    write("failed", last[:800], auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
+          attempts=attempts_log, last_error=last)
+    print(f"::error::{iid}: {last[:300]}")
+    return 1
+
+if __name__ == "__main__":
+    sys.exit(main())

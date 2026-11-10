@@ -15,14 +15,16 @@ on:
         required: false
         default: "3"
       retry_failed:
-        description: "Retry items whose result is failed"
+        description: "Retry items whose result is failed or retry_queued"
         type: boolean
         default: false
   schedule:
-    - cron: "15 */3 * * *"   # picks up items as they become due (RENDER_AHEAD_HOURS before slot)
+    # Hourly, so each slot is picked ~3h before and the Release is ready ~2h before upload.
+    - cron: "20 * * * *"
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: render-${{ github.ref }}
@@ -41,7 +43,7 @@ jobs:
           IDS: ${{ github.event.inputs.ids }}
           MAX_PER_RUN: ${{ github.event.inputs.max || '3' }}
           RETRY_FAILED: ${{ github.event.inputs.retry_failed || 'false' }}
-          RENDER_AHEAD_HOURS: "20"
+          RENDER_AHEAD_HOURS: "3"
         run: python3 scripts/plan.py
 
   render:
@@ -85,6 +87,8 @@ jobs:
             results/${{ matrix.id }}.json
             out/work_${{ matrix.id }}/qa/qa_extra.json
             out/work_${{ matrix.id }}/qa/qa_all.jpg
+            out/work_${{ matrix.id }}_a3/qa/qa_extra.json
+            out/work_${{ matrix.id }}_a3/qa/qa_all.jpg
           if-no-files-found: ignore
 
   commit-results:

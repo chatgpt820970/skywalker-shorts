@@ -12,6 +12,11 @@ Default template (caption-bar, from the "Rocket knew something" style):
   plain black (no blur).
 - Moody/desaturated cinematic grade, stabilized, no Ken Burns.
 - No text is burned onto the footage itself.
+- HARD: never include studio/distributor logo intros (Netflix N, Warner,
+  Lionsgate, Marvel, etc.), title cards, rating cards, 'coming soon'/date
+  cards, credits, or near-black/empty filler. Only real story/character
+  footage. A small corner watermark that is part of the original frame may
+  stay (never crop it out).
 - Anime/movie energy (flag --energy, auto for those pillars): hard beat
   cuts, a speed ramp into the drop, and a temporary (<=0.4s) flash +
   punch-in of the whole bar+frame block. The source frame is never cropped.
@@ -71,6 +76,12 @@ BAR_H = 196
 ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
+TRAILER_OPEN_SKIP = 7.0   # skip first ~5-8s of long trailers (studio logos)
+TRAILER_END_SKIP = 10.0   # skip last ~10s (title / coming-soon / logo cards)
+MIN_TRAILER_FOR_WINDOW = 40.0
+RELAX = False             # retry-tier 3: relax ONLY non-hard-rule thresholds
+ALT_SCENES = False        # retry-tier 3: alternate scene preference
+LOGO_REASONS = ("near_black", "centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card")
 ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
@@ -306,72 +317,200 @@ def _sample_frames(mezz: Path, start: float, dur: float, n: int = 6) -> list[np.
     return frames
 
 
-def score_scenes(mezz: Path, scenes: list[dict]) -> list[dict]:
-    """Motion, luma, spectacle vs talking-head / title-card flags."""
+def _resize_for_class(arr: np.ndarray, width: int = 480) -> np.ndarray:
+    """Downscale a frame for logo/title classification (keeps aspect)."""
+    a = np.asarray(arr)
+    if a.ndim == 2:
+        a = np.stack([a, a, a], axis=2)
+    h, w = a.shape[:2]
+    if w > width:
+        nh = max(2, int(round(h * width / w)))
+        a = np.array(Image.fromarray(a.astype(np.uint8)).resize((width, nh), Image.BILINEAR))
+    return a
+
+
+def classify_shot(arr: np.ndarray) -> tuple[list[str], dict]:
+    """Flag studio logos, title/date/rating cards, credits, and empty dark filler.
+
+    Tuned on official trailers so real story/character footage (including dark
+    night scenes and anime linework, plus a small corner watermark) is kept.
+    A small corner watermark that is part of the original frame is ignored
+    by measuring typography in the inner 80% and never cropping it out.
+    """
+    a = _resize_for_class(arr).astype(np.float32)
+    L = a.mean(axis=2)
+    h, w = L.shape
+    luma = float(L.mean())
+    black = float((L < 18).mean())
+    dark = float((L < 28).mean())
+    vdark = float((L < 12).mean())
+    mask = L >= 28
+    bright = float(mask.mean())
+    if mask.any():
+        ys, xs = np.where(mask)
+        cy0, cy1 = int(h * 0.22), int(h * 0.78)
+        cx0, cx1 = int(w * 0.22), int(w * 0.78)
+        inC = float(mask[cy0:cy1, cx0:cx1].sum() / mask.sum())
+        bbox = float((ys.max() - ys.min() + 1) * (xs.max() - xs.min() + 1) / (h * w))
+        ystd, xstd = float(ys.std() / h), float(xs.std() / w)
+    else:
+        inC = bbox = ystd = xstd = 0.0
+    q = (a // 32).astype(np.int32)
+    uniq = int(len(np.unique(q[:, :, 0] * 64 + q[:, :, 1] * 8 + q[:, :, 2])))
+    blur = ndimage.gaussian_filter(L, 3)
+    hf = float(np.mean(np.abs(L - blur)))
+    gx = np.abs(np.diff(L, axis=1))
+    gy = np.abs(np.diff(L, axis=0))
+    g = np.hypot(np.pad(gx, ((0, 0), (0, 1))), np.pad(gy, ((0, 1), (0, 0))))
+    flatg = float((g < 4).mean())
+    strong = float((g > 25).mean())
+    loc = np.abs(L - ndimage.uniform_filter(L, 21))
+    hard = loc > 28
+    # ignore a thin outer band so a corner watermark is not treated as a title card
+    hard_in = hard[int(h * 0.10):int(h * 0.90), int(w * 0.08):int(w * 0.92)]
+    horiz = float(ndimage.binary_opening(hard_in, structure=np.ones((1, 9))).mean()) if hard_in.size else 0.0
+    mx, mn = a.max(axis=2), a.min(axis=2)
+    sat = np.where(mx > 1, (mx - mn) / np.maximum(mx, 1), 0)
+    sat_frac = float((sat > 0.45).mean())
+    small = ndimage.zoom(a, (0.25, 0.25, 1), order=1)
+    qs = (small // 48).astype(np.int32)
+    keys = qs[:, :, 0] * 64 + qs[:, :, 1] * 8 + qs[:, :, 2]
+    Ls = small.mean(axis=2)
+    blob_frac = 0.0
+    for val in np.unique(keys):
+        m = (keys == val) & (Ls >= 24)
+        if not m.any():
+            continue
+        lab, n = ndimage.label(m)
+        if not n:
+            continue
+        sizes = ndimage.sum(m, lab, range(1, n + 1))
+        mxsz = float(np.max(sizes) / keys.size)
+        if mxsz > blob_frac:
+            blob_frac = mxsz
+    reasons: list[str] = []
+    # near-black / empty filler (not just a dark story beat with visible content)
+    if luma < 12 or vdark > 0.92 or (black > 0.90 and bright < 0.08) or (luma < 14 and bright < 0.12):
+        reasons.append("near_black")
+    # compact graphic on a dark field (studio mark)
+    if dark >= 0.70 and bright <= 0.28 and inC >= 0.50 and (bbox < 0.60 or uniq <= 24 or (ystd < 0.20 and xstd < 0.22)):
+        reasons.append("centered_logo")
+    # saturated smooth logo animation (Netflix N + color bars) — needs a visible mark
+    if sat_frac >= 0.80 and flatg >= 0.78 and strong <= 0.02 and dark >= 0.35 and bright >= 0.18:
+        reasons.append("logo_animation")
+    # large smooth brand-color field on a dark card
+    if blob_frac >= 0.18 and flatg >= 0.80 and strong <= 0.03 and dark >= 0.50 and sat_frac >= 0.25:
+        reasons.append("graphic_blob")
+    if blob_frac >= 0.28 and flatg >= 0.90 and hf < 3.0 and strong <= 0.015 and dark >= 0.40:
+        reasons.append("graphic_blob")
+    # typography / title / date / coming-soon / credit cards (not busy footage with signs)
+    if uniq <= 16 and horiz >= 0.06:
+        reasons.append("text_card")
+    if horiz >= 0.045 and flatg >= 0.82 and strong <= 0.04:
+        reasons.append("text_card")
+    # flat white or plain-color title card
+    if flatg >= 0.88 and luma >= 200 and horiz >= 0.02:
+        reasons.append("flat_card")
+    if flatg >= 0.90 and uniq <= 24 and luma >= 30 and strong <= 0.04:
+        reasons.append("flat_card")
+    # unique, stable order
+    reasons = list(dict.fromkeys(reasons))
+    stats = {
+        "luma": luma, "dark": dark, "black": black, "bright": bright, "inC": inC,
+        "uniq": uniq, "flatg": flatg, "strong": strong, "horiz": horiz,
+        "sat": sat_frac, "blob": blob_frac, "hf": hf,
+    }
+    return reasons, stats
+
+
+def _in_trailer_window(start: float, end: float, dur: float) -> str:
+    """Return a skip reason if this scene lives in the opening or end card window."""
+    if dur < MIN_TRAILER_FOR_WINDOW:
+        return ""
+    mid = 0.5 * (start + end)
+    if start < TRAILER_OPEN_SKIP and mid < TRAILER_OPEN_SKIP + 1.0:
+        return "open_window"
+    if start >= dur - TRAILER_END_SKIP or (end > dur - TRAILER_END_SKIP and (end - max(start, dur - TRAILER_END_SKIP)) >= 0.5 * (end - start)):
+        return "end_window"
+    return ""
+
+
+def _scene_card_reason(frames: list[np.ndarray], start: float, end: float, dur: float) -> str:
+    """Decide whether a scene is a logo/title/dark card. Any logo/title sample bans it;
+    near-black requires the mid frame or a majority (so a short fade does not kill a shot)."""
+    w = _in_trailer_window(start, end, dur)
+    if w:
+        return w
+    if not frames:
+        return "no_frames"
+    flags = []
+    for fr in frames:
+        reasons, _st = classify_shot(fr)
+        flags.append(reasons)
+    mid = flags[len(flags) // 2]
+    hard = ("centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card")
+    if any(any(r in hard for r in rs) for rs in flags):
+        # first matching reason
+        for rs in flags:
+            for r in rs:
+                if r in hard:
+                    return r
+    black_hits = sum(1 for rs in flags if "near_black" in rs)
+    if "near_black" in mid or black_hits >= max(2, (len(flags) + 1) // 2):
+        return "near_black"
+    return ""
+
+
+
+def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = None) -> list[dict]:
+    """Motion, luma, spectacle vs talking-head, plus HARD logo/title/dark-card skip."""
+    if trailer_dur is None:
+        try:
+            trailer_dur = ffprobe_dur(mezz)
+        except Exception:
+            trailer_dur = 0.0
     out = []
+    min_dur = 0.45
     for s in scenes:
-        if s["dur"] < 0.45:
+        if s["dur"] < min_dur:
             s.update(score=0, skip=True, reason="too_short", motion=0,
-                     luma=0, black=1, spectacle=0, skin=0, graphic=0)
+                     luma=0, black=1, spectacle=0, skin=0, graphic=1,
+                     card_reason="too_short")
             out.append(s)
             continue
         frames = _sample_frames(mezz, s["start"], s["dur"], n=5)
         if not frames:
             s.update(score=0, skip=True, reason="no_frames", motion=0,
-                     luma=0, black=1, spectacle=0, skin=0, graphic=0)
+                     luma=0, black=1, spectacle=0, skin=0, graphic=1,
+                     card_reason="no_frames")
             out.append(s)
             continue
         arrs = [f.astype(np.float32) for f in frames]
-        # motion
         diffs = [np.mean(np.abs(arrs[i] - arrs[i - 1])) for i in range(1, len(arrs))]
         motion = float(np.mean(diffs)) if diffs else 0.0
         mid = arrs[len(arrs) // 2]
         luma = float(mid.mean())
         black = float((mid.mean(axis=2) < 18).mean())
-        # skin-ish (talking heads)
         r, g, b = mid[:, :, 0], mid[:, :, 1], mid[:, :, 2]
         skin = float((((r > 80) & (r > g) & (g > b * 0.7) & (r - b > 15)).mean()))
-        # typography / logo card: sharp horizontal letterforms on a smoother field
-        # (tuned so live-action and blue atomic-breath shots are NOT flagged)
-        L = mid.mean(axis=2)
-        hL, wL = L.shape
-        cL = L[int(hL * 0.12):int(hL * 0.88), int(wL * 0.10):int(wL * 0.90)]
-        loc = np.abs(cL - ndimage.uniform_filter(cL, 21))
-        hard = loc > 28
-        horiz = ndimage.binary_opening(hard, structure=np.ones((1, 9)))
-        horiz_frac = float(horiz.mean())
-        quant = (mid // 32).astype(np.int32)
-        keys = quant[:, :, 0] * 64 + quant[:, :, 1] * 8 + quant[:, :, 2]
-        uniq = len(np.unique(keys))
-        gy = np.abs(np.diff(L, axis=0)).mean()
-        gx = np.abs(np.diff(L, axis=1)).mean()
-        textish = float(gy / (gx + 1e-3))
-        graphic = 1.0 if horiz_frac >= 0.040 else 0.0
-        if black > 0.75 and luma < 20:
-            graphic = 1.0
-        # studio logos at the very start of a trailer
-        if s["start"] < 1.20:
-            graphic = 1.0
-        # spectacle: motion + contrast + not skin-heavy
+        # classify every sample; HARD rule: logo / title / date / credit / empty dark out
+        card_reason = _scene_card_reason(frames, s["start"], s["end"], float(trailer_dur or 0))
+        reasons, st = classify_shot(mid)
+        graphic = 1.0 if (card_reason or reasons) else 0.0
         contrast = float(mid.std())
         spectacle = motion * 0.55 + contrast * 0.35 + (1.0 - skin) * 12 + (1.0 - black) * 8
-        # skip logo/title cards and near-black
-        skip = False
-        reason = ""
-        if graphic >= 1.0:
-            skip, reason = True, "title_or_graphic"
-        elif luma < 16:
-            skip, reason = True, "black"
-        elif s["dur"] < 0.55:
+        skip = bool(card_reason)
+        reason = card_reason
+        if (not skip) and s["dur"] < 0.55:
             skip, reason = True, "too_short"
-        score = spectacle
-        if skip:
-            score = 0
+        score = 0.0 if skip else float(spectacle)
         s.update(
-            score=float(score), skip=skip, reason=reason,
+            score=float(score), skip=skip, reason=reason or "",
             motion=float(motion), luma=float(luma), black=float(black),
             spectacle=float(spectacle), skin=float(skin), graphic=float(graphic),
-            uniq=int(uniq), textish=float(textish),
+            card_reason=reason or "",
+            uniq=int(st.get("uniq") or 0), textish=float(st.get("horiz") or 0),
+            sat=float(st.get("sat") or 0), flatg=float(st.get("flatg") or 0),
         )
         out.append(s)
         print(
@@ -386,11 +525,12 @@ def score_scenes(mezz: Path, scenes: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 # 3. Music analysis
 # ---------------------------------------------------------------------------
-def pick_music(pillar: str, seed: str = "") -> dict:
+def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "") -> dict:
     """Pick a credited, copyright-safe track for a pillar from music/credits.json.
 
     anime/celeb -> phonk/hype, movie -> epic, romance -> emotional, funny -> upbeat.
     Deterministic per seed (queue item id) so re-renders keep the same track.
+    `exclude` + `salt` are used on retry-tier 3 to pick a different credited track.
     """
     import hashlib
     cj = json.loads((AE / "music" / "credits.json").read_text())
@@ -398,9 +538,13 @@ def pick_music(pillar: str, seed: str = "") -> dict:
     pool = [t for t in cj["tracks"] if t["pillar"] == mood and (AE / "music" / t["file"]).exists()]
     if not pool:
         pool = [t for t in cj["tracks"] if (AE / "music" / t["file"]).exists()]
+    excl = {x for x in (exclude or []) if x}
+    alt = [t for t in pool if t["file"] not in excl]
+    if alt:
+        pool = alt
     if not pool:
         raise SystemExit("No credited music tracks found under music/")
-    h = int(hashlib.sha1((seed or pillar or "x").encode()).hexdigest(), 16)
+    h = int(hashlib.sha1((f"{salt}|{seed or pillar or 'x'}").encode()).hexdigest(), 16)
     t = dict(pool[h % len(pool)])
     t["path"] = str(AE / "music" / t["file"])
     return t
@@ -496,10 +640,19 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
 def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR) -> list[dict]:
     pulses = np.array(music["pulses"], dtype=float)
     ibi = float(np.median(np.diff(pulses))) if len(pulses) > 3 else 0.75
-    usable = [s for s in scenes if not s.get("skip") and s["dur"] >= 0.70]
+    min_keep = 0.55 if RELAX else 0.70
+    usable = [s for s in scenes if not s.get("skip") and s["dur"] >= min_keep]
     if not usable:
         raise SystemExit("No usable scenes after filtering")
-    usable_by_spec = sorted(usable, key=lambda s: s["spectacle"], reverse=True)
+    if ALT_SCENES:
+        # Different selection on retry-tier 3: prefer higher-motion mid-trailer scenes.
+        mot = sorted(usable, key=lambda s: s.get("motion") or 0)
+        drop_n = max(1, len(mot) // 3)
+        prefer = set(id(s) for s in mot[drop_n:])
+        usable = [s for s in usable if id(s) in prefer] or usable
+        usable_by_spec = sorted(usable, key=lambda s: (s.get("motion") or 0) * 0.5 + (s.get("spectacle") or 0), reverse=True)
+    else:
+        usable_by_spec = sorted(usable, key=lambda s: s["spectacle"], reverse=True)
 
     body = target - END_CARD
 
@@ -1988,6 +2141,17 @@ def _frame(path: Path, t: float) -> np.ndarray | None:
     return a
 
 
+def _frame_rgb(path: Path, t: float) -> np.ndarray | None:
+    p = QA / f"_xrgb_{abs(hash((str(path), round(t, 3))))}.png"
+    subprocess.call(["ffmpeg", "-y", "-ss", f"{t:.3f}", "-i", str(path), "-frames:v", "1", str(p)],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if not p.exists():
+        return None
+    a = np.array(Image.open(p).convert("RGB"))
+    p.unlink(missing_ok=True)
+    return a
+
+
 def _corr(a: np.ndarray, b: np.ndarray) -> float:
     a = a.ravel() - a.mean()
     b = b.ravel() - b.mean()
@@ -2093,7 +2257,8 @@ def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
     for ln in r.stderr.splitlines():
         if "mean_volume" in ln:
             mv = float(ln.split("mean_volume:")[1].split()[0])
-    checks["audio"] = {"ok": mv is not None and mv > -35, "mean_volume_db": mv}
+    audio_lim = -42 if RELAX else -35
+    checks["audio"] = {"ok": mv is not None and mv > audio_lim, "mean_volume_db": mv, "limit_db": audio_lim}
     # 5. no shake: high-frequency jitter of global motion inside shots
     jit = []
     for it in body[:8]:
@@ -2114,7 +2279,33 @@ def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
         dx = np.array([v[0] for v in sh_]); dy = np.array([v[1] for v in sh_])
         jit.append(float(np.std(np.diff(dx)) + np.std(np.diff(dy))))
     jm = float(np.median(jit)) if jit else 0.0
-    checks["no_shake"] = {"ok": jm < 4.0, "jitter_px_median": round(jm, 2), "stabilized": STABILIZE, "shots": len(jit)}
+    shake_lim = 6.0 if RELAX else 4.0
+    checks["no_shake"] = {"ok": jm < shake_lim, "jitter_px_median": round(jm, 2),
+                          "stabilized": STABILIZE, "shots": len(jit), "limit_px": shake_lim}
+    # 6. HARD: no logo / title / date / credit / empty-dark card in any selected shot.
+    # Never relaxed. Sample the mezzanine at each EDL source time (the footage itself).
+    logo_hits = []
+    for it in body:
+        src0 = float(it.get("src_start") or 0)
+        src1 = float(it.get("src_end") or src0)
+        vis = float(it.get("visible") or max(0.01, src1 - src0))
+        t0 = float(it.get("t0") or 0)
+        for frac in (0.15, 0.50, 0.85):
+            t_out = t0 + frac * vis
+            if DROP_T is not None and abs(t_out - DROP_T) < 0.45:
+                continue  # intentional drop flash, not a card
+            t_src = src0 + frac * max(0.01, src1 - src0)
+            fr = _frame_rgb(mezz, t_src)
+            if fr is None:
+                continue
+            reasons, st = classify_shot(fr)
+            if reasons:
+                logo_hits.append({"scene": it.get("scene"), "t_src": round(t_src, 2),
+                                  "t_out": round(t_out, 2), "reasons": reasons,
+                                  "luma": round(st["luma"], 1)})
+                break  # one hit per shot is enough
+    checks["no_logo"] = {"ok": not logo_hits, "shots_flagged": len(logo_hits), "flags": logo_hits[:8]}
+    # Hard rules (no_crop, caption/layout, no_logo) are never relaxed.
     for k, v in checks.items():
         if not v.get("ok"):
             issues.append(f"QA {k} failed: {v}")
@@ -2175,11 +2366,31 @@ def main():
     ap.add_argument("--item-id", default="", help="Queue item id (music picker seed)")
     ap.add_argument("--energy", action="store_true", help="Force energy edit (auto for anime/movie)")
     ap.add_argument("--qa-json", default=None, help="Write the combined QA report here")
+    ap.add_argument("--relax", action="store_true",
+                    help="Retry tier 3: relax ONLY non-hard thresholds (shake/audio/min-dur). "
+                         "Never relaxes no-crop, layout, or no-logo/title.")
+    ap.add_argument("--alt-scenes", action="store_true",
+                    help="Retry tier 3: prefer a different (higher-motion) scene set")
+    ap.add_argument("--exclude-music", default="",
+                    help="Comma-separated music filenames to skip when --music auto")
+    ap.add_argument("--music-salt", default="",
+                    help="Salt the auto music picker (used on retry to get a different track)")
+    ap.add_argument("--open-skip", type=float, default=None,
+                    help="Override opening trailer skip seconds (default 7)")
+    ap.add_argument("--end-skip", type=float, default=None,
+                    help="Override ending trailer skip seconds (default 10)")
     args = ap.parse_args()
-    global END_STILL, ENERGY
+    global END_STILL, ENERGY, RELAX, ALT_SCENES, TRAILER_OPEN_SKIP, TRAILER_END_SKIP
     ENERGY = bool(args.energy or (args.pillar or "").lower() in ("anime", "movie"))
+    RELAX = bool(args.relax)
+    ALT_SCENES = bool(args.alt_scenes)
+    if args.open_skip is not None:
+        TRAILER_OPEN_SKIP = float(args.open_skip)
+    if args.end_skip is not None:
+        TRAILER_END_SKIP = float(args.end_skip)
     if args.pillar and args.music == "auto":
-        tr = pick_music(args.pillar, args.item_id)
+        excl = [x.strip() for x in (args.exclude_music or "").split(",") if x.strip()]
+        tr = pick_music(args.pillar, args.item_id, exclude=excl, salt=args.music_salt or "")
         args.music = tr["path"]
         WORK.mkdir(parents=True, exist_ok=True)
         (WORK / "music_credit.json").write_text(json.dumps(tr, indent=2, ensure_ascii=False))

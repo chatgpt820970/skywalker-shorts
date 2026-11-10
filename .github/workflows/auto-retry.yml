@@ -1,0 +1,57 @@
+name: auto-retry
+
+# When a render run finishes, re-dispatch any item left in retry_queued
+# (the in-job 3-attempt ladder already ran). This is the last automatic
+# chance. If that re-dispatch also fails, render_item writes status=failed
+# and the run concludes failure, which wakes BIBI.
+on:
+  workflow_run:
+    workflows: ["render"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out latest main (results may have been pushed after the triggering SHA)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 20
+      - name: Re-dispatch retry_queued items once
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git pull --ff-only -q || true
+          python3 - << 'PY'
+          import glob, json, os, subprocess, sys
+          ids = []
+          for p in glob.glob("results/*.json"):
+              try:
+                  r = json.load(open(p))
+              except Exception:
+                  continue
+              if r.get("status") == "retry_queued":
+                  auto = int(r.get("auto_retries") or 0)
+                  mx = int(r.get("max_auto_retries") or 1)
+                  if auto < mx:
+                      ids.append(r["id"])
+          if not ids:
+              print("no retry_queued items")
+              sys.exit(0)
+          # bump the counter now so a second workflow_run cannot loop forever
+          # if the dispatched run is slow to start; render_item also reads this.
+          # We do not commit here (contents: read). The dispatched run increments
+          # auto_retries when it writes its result.
+          print("dispatching", ids)
+          cmd = ["gh", "workflow", "run", "render.yml",
+                 "-f", f"ids={','.join(ids)}",
+                 "-f", "retry_failed=true",
+                 "-f", f"max={len(ids)}"]
+          subprocess.check_call(cmd)
+          PY
