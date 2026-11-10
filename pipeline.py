@@ -90,6 +90,8 @@ ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
 TARGET_DUR = 32.0
+MIN_OUTPUT_DUR = 20.0   # hard floor: never publish shorter
+MIN_UNIQUE_DUR = 25.0   # aim; relaxed to MIN_OUTPUT_DUR only on --relax
 END_CARD = 2.4
 END_STILL = 52.0           # Godzilla lightning still (mezzanine time)
 HOOK_TEXT = "The reason why the whole world is talking about Godzilla"
@@ -368,6 +370,37 @@ def _sample_frames(mezz: Path, start: float, dur: float, n: int = 6) -> list[np.
     return frames
 
 
+def _sample_timed(mezz: Path, start: float, dur: float, n: int = 6) -> list[tuple[float, np.ndarray]]:
+    """Like _sample_frames, but keep the timestamp next to each RGB frame."""
+    dur = max(0.01, float(dur))
+    start = max(0.0, float(start))
+    end = start + dur
+    times = [start + 0.02]
+    if n > 2:
+        times += [start + dur * i / (n - 1) for i in range(1, n - 1)]
+    times.append(max(start, end - 0.02))
+    out_t = []
+    for t in times:
+        t = float(min(max(start, t), max(start, end - 0.001)))
+        if not out_t or abs(t - out_t[-1]) >= 0.03:
+            out_t.append(t)
+    try:
+        import scene_filter as _sf
+        got = _sf.grab_times(mezz, out_t)
+        if got:
+            return got
+    except Exception:
+        pass
+    frames = _sample_frames(mezz, start, dur, n=n)
+    if not frames:
+        return []
+    if len(frames) == len(out_t):
+        return list(zip(out_t, frames))
+    # Best-effort pairing when the decoder dropped a sample.
+    step = dur / max(len(frames) - 1, 1)
+    return [(start + i * step, fr) for i, fr in enumerate(frames)]
+
+
 def _resize_for_class(arr: np.ndarray, width: int = 480) -> np.ndarray:
     """Downscale a frame for logo/title classification (keeps aspect)."""
     a = np.asarray(arr)
@@ -542,16 +575,25 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
         # Sample at >= 4 fps so short title flashes / black frames cannot slip between ticks.
         try:
             import scene_filter as _sf_fps
-            qc_fps = float(getattr(_sf_fps, "QC_FPS", 4.0))
+            qc_fps = float(getattr(_sf_fps, "QC_FPS", 4.0)) * 2.0  # 8 fps: split on text flashes
         except Exception:
-            qc_fps = 4.0
+            qc_fps = 8.0
         n_samp = max(5, int(round(float(s["dur"]) * qc_fps)) + 1)
-        frames = _sample_frames(mezz, s["start"], s["dur"], n=n_samp)
-        # also pin the first and last instants so a short logo transition cannot be missed
-        extra = _sample_frames(mezz, s["start"], min(0.12, max(s["dur"] * 0.15, 0.04)), n=1)
-        extra += _sample_frames(mezz, max(s["start"], s["end"] - 0.08), 0.08, n=1)
+        timed = _sample_timed(mezz, s["start"], s["dur"], n=n_samp)
+        extra = _sample_timed(mezz, s["start"], min(0.12, max(s["dur"] * 0.15, 0.04)), n=1)
+        extra += _sample_timed(mezz, max(s["start"], s["end"] - 0.08), 0.08, n=1)
         if extra:
-            frames = extra[:1] + frames + extra[1:]
+            timed = extra[:1] + timed + extra[1:]
+        # de-dupe by timestamp
+        seen_t = []
+        uniq = []
+        for t, fr in timed:
+            if seen_t and abs(t - seen_t[-1]) < 0.02:
+                continue
+            seen_t.append(t)
+            uniq.append((t, fr))
+        timed = uniq
+        frames = [fr for _t, fr in timed]
         if not frames:
             s.update(score=0, skip=True, reason="no_frames", motion=0,
                      luma=0, black=1, spectacle=0, skin=0, graphic=1,
@@ -603,6 +645,94 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
         reason = card_reason
         if (not skip) and s["dur"] < 0.55:
             skip, reason = True, "too_short"
+        # Drop only the dirty slices (text/logo/black), keep the clean leftovers
+        # as their own shots instead of throwing the whole scene-detect cut away.
+        if skip and reason not in ("too_short", "no_frames") and timed:
+            try:
+                import scene_filter as _sf_split
+                hard_rs = set(LOGO_REASONS)
+                samples_td = []
+                for t, fr in timed:
+                    rs, _st = classify_shot(fr)
+                    try:
+                        rs = list(dict.fromkeys(rs + _sf_split.detect_frame(fr)))
+                    except Exception:
+                        pass
+                    samples_td.append((float(t), any(r in hard_rs for r in rs)))
+                runs = _sf_split.clean_intervals(float(s["start"]), float(s["end"]), samples_td, min_dur=0.55)
+            except Exception:
+                runs = []
+            if len(runs) == 1:
+                a, b = runs[0]
+                s = dict(s)
+                s["start"], s["end"], s["dur"] = round(a, 3), round(b, 3), round(b - a, 3)
+                s["split_from"] = True
+                skip, reason, card_reason = False, "", ""
+                frames = [fr for t, fr in timed if a - 0.02 <= t <= b + 0.02] or frames
+                print(f"  scene {s['id']:02d} kept clean {s['start']:.2f}-{s['end']:.2f} (dropped dirty slices)")
+            elif len(runs) > 1:
+                print(f"  scene {s['id']:02d} split into {len(runs)} clean sub-shots "
+                      + ", ".join(f"{a:.2f}-{b:.2f}" for a, b in runs))
+                for i, (a, b) in enumerate(runs):
+                    piece = dict(s)
+                    if i:
+                        piece["id"] = int(s["id"]) * 1000 + i
+                        piece["parent_id"] = s["id"]
+                    piece["start"], piece["end"], piece["dur"] = round(a, 3), round(b, 3), round(b - a, 3)
+                    piece["split_from"] = True
+                    pframes = [fr for t, fr in timed if a - 0.02 <= t <= b + 0.02] or frames
+                    if not pframes or piece["dur"] < 0.55:
+                        continue
+                    mid_u8 = pframes[len(pframes) // 2]
+                    arrs_p = [f.astype(np.float32) for f in pframes]
+                    diffs_p = [np.mean(np.abs(arrs_p[j] - arrs_p[j - 1])) for j in range(1, len(arrs_p))]
+                    motion_p = float(np.mean(diffs_p)) if diffs_p else float(motion)
+                    luma_p = float(arrs_p[len(arrs_p) // 2].mean())
+                    midp = arrs_p[len(arrs_p) // 2]
+                    black_p = float((midp.mean(axis=2) < 18).mean())
+                    rp, gp, bp = midp[:, :, 0], midp[:, :, 1], midp[:, :, 2]
+                    skin_p = float((((rp > 80) & (rp > gp) & (gp > bp * 0.7) & (rp - bp > 15)).mean()))
+                    try:
+                        import similarity as _sim_p
+                        fp_p = _sim_p.fingerprint_frame(mid_u8)
+                    except Exception:
+                        fp_p = {"phash": 0, "hist": []}
+                    try:
+                        import scene_filter as _sf_p
+                        sharp_p = _sf_p.sharpness(mid_u8)
+                        interest_p = _sf_p.visual_interest(mid_u8)
+                        faces_p = _sf_p.face_or_character_score(mid_u8, YUNET_MODEL if YUNET_MODEL.exists() else None)
+                        bright_p = _sf_p.brightness_score(float(luma_p))
+                    except Exception:
+                        sharp_p, interest_p, faces_p, bright_p = sharp, interest, faces, bright
+                    spectacle_p = (
+                        motion_p * 0.45
+                        + min(sharp_p, 800.0) / 80.0 * 12.0
+                        + interest_p * 0.30
+                        + faces_p * 28.0
+                        + bright_p * 18.0
+                        + float(midp.std()) * 0.25
+                        + (1.0 - black_p) * 6.0
+                        + (1.0 - skin_p) * 4.0
+                    )
+                    piece.update(
+                        score=float(spectacle_p), skip=False, reason="",
+                        motion=float(motion_p), luma=float(luma_p), black=float(black_p),
+                        spectacle=float(spectacle_p), skin=float(skin_p), graphic=0.0,
+                        card_reason="",
+                        sharp=float(sharp_p), interest=float(interest_p), faces=float(faces_p),
+                        bright=float(bright_p),
+                        uniq=int(st.get("uniq") or 0), textish=float(st.get("horiz") or 0),
+                        sat=float(st.get("sat") or 0), flatg=float(st.get("flatg") or 0),
+                        phash=int(fp_p.get("phash") or 0), hist=list(fp_p.get("hist") or []),
+                    )
+                    out.append(piece)
+                    print(
+                        f"  scene {piece['id']:02d} {piece['start']:6.2f}-{piece['end']:6.2f} "
+                        f"({piece['dur']:.2f}s) mot={motion_p:5.1f} faces={faces_p:.2f} "
+                        f"spec={spectacle_p:6.1f} OK (sub-shot)"
+                    )
+                continue
         # Auto-shift +4.5s when a hard card might be followed by usable footage.
         if skip and reason not in ("too_short", "no_frames"):
             try:
@@ -834,6 +964,24 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
 # ---------------------------------------------------------------------------
 # 4. Edit plan
 # ---------------------------------------------------------------------------
+def _require_min_duration(acc: float, *, where: str = "") -> None:
+    """Fail closed: never hand a stub EDL to render/publish."""
+    need = MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR
+    prefix = f"{where}: " if where else ""
+    if acc + 1e-6 < MIN_OUTPUT_DUR:
+        raise SystemExit(
+            f"{prefix}only {acc:.1f}s of unique clean shots "
+            f"(need ≥{MIN_OUTPUT_DUR:.0f}s, aim 25-32s); "
+            f"not repeating shots and not publishing a short cut"
+        )
+    if acc + 1e-6 < need:
+        raise SystemExit(
+            f"{prefix}only {acc:.1f}s of unique clean shots "
+            f"(need ≥{need:.0f}s, aim 25-32s); "
+            f"not repeating shots and not publishing a short cut"
+        )
+
+
 def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
               transcript: dict | None = None) -> list[dict]:
     """Pick a unique, tension-building cut list targeting 25–32s.
@@ -877,7 +1025,7 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
     # is only added later if we still have a unique unused frame.
     MIN_SHOT = 1.5
     MAX_SHOT = 3.5
-    MIN_UNIQUE = 25.0
+    MIN_UNIQUE = MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR
     body = float(target)
 
     def dur_for(t, n):
@@ -1094,16 +1242,15 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         "unique_duration": round(acc, 3),
         "target": float(target),
         "min_unique": MIN_UNIQUE,
+        "min_output": MIN_OUTPUT_DUR,
         "short_unique": bool(acc + 1e-6 < MIN_UNIQUE),
         "n_shots": len(edl),
     }
-    if acc + 1e-6 < MIN_UNIQUE:
-        print(f"WARNING: only {acc:.1f}s of unique clean shots (need ≥{MIN_UNIQUE:.0f}s); "
-              f"not repeating shots to pad")
     try:
         (WORK / "plan_meta.json").write_text(json.dumps(meta, indent=2))
     except Exception:
         pass
+    _require_min_duration(acc)
     return edl
 
 
@@ -2489,8 +2636,12 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
 # 7. QA
 # ---------------------------------------------------------------------------
 def apply_qc_blacklist(scenes: list[dict], edl: list[dict], blacklist: list[dict]) -> int:
-    """Mark source scenes that landed on failing output frames so we can re-slice."""
-    ids = set()
+    """Punch out only the failing slice of a source scene, then re-slice.
+
+    A logo flash at one output timestamp must not discard the whole shot
+    (that is how Fool Night / Matt Damon collapsed to a few seconds).
+    """
+    punches: dict = {}
     for hit in blacklist or []:
         t = float(hit.get("t") or 0)
         for it in edl:
@@ -2498,15 +2649,58 @@ def apply_qc_blacklist(scenes: list[dict], edl: list[dict], blacklist: list[dict
                 continue
             t0, t1 = float(it["t0"]), float(it["t1"])
             if t0 - 0.08 <= t < t1 + 0.08:
-                ids.add(it["scene"])
+                vis = max(0.01, float(it.get("visible") or (t1 - t0)))
+                src_t = float(it.get("src_start") or 0) + (t - t0)
+                punches.setdefault(it["scene"], []).append(float(src_t))
     marked = 0
-    for s in scenes:
-        if s.get("id") in ids and not s.get("skip"):
+    extras = []
+    by_id = {s.get("id"): s for s in scenes}
+    for sid, times in punches.items():
+        s = by_id.get(sid)
+        if not s or s.get("skip"):
+            continue
+        windows = []
+        for src_t in times:
+            windows.append((src_t - 0.28, src_t + 0.28))
+        windows.sort()
+        merged = []
+        for a, b in windows:
+            if not merged or a > merged[-1][1]:
+                merged.append([a, b])
+            else:
+                merged[-1][1] = max(merged[-1][1], b)
+        start, end = float(s["start"]), float(s["end"])
+        remaining = []
+        cursor = start
+        for a, b in merged:
+            a, b = max(start, a), min(end, b)
+            if a - cursor >= 0.55:
+                remaining.append((cursor, a))
+            cursor = max(cursor, b)
+        if end - cursor >= 0.55:
+            remaining.append((cursor, end))
+        if not remaining:
             s["skip"] = True
             s["reason"] = s["card_reason"] = "qc_blacklist"
             s["score"] = 0
             marked += 1
-            print(f"  QC blacklist scene {s['id']} {s['start']:.2f}-{s['end']:.2f}")
+            print(f"  QC blacklist scene {s['id']} {s['start']:.2f}-{s['end']:.2f} (entire shot)")
+            continue
+        a0, b0 = remaining[0]
+        s["start"], s["end"], s["dur"] = round(a0, 3), round(b0, 3), round(b0 - a0, 3)
+        s["trimmed_qc"] = True
+        marked += 1
+        print(f"  QC punch scene {s['id']} -> {s['start']:.2f}-{s['end']:.2f}")
+        for j, (a, b) in enumerate(remaining[1:], start=1):
+            ns = dict(s)
+            ns["id"] = int(s["id"]) * 1000 + 100 + j
+            ns["parent_id"] = s.get("parent_id", s["id"])
+            ns["start"], ns["end"], ns["dur"] = round(a, 3), round(b, 3), round(b - a, 3)
+            ns["skip"] = False
+            ns["reason"] = ns["card_reason"] = ""
+            extras.append(ns)
+            print(f"  QC kept leftover scene {ns['id']} {ns['start']:.2f}-{ns['end']:.2f}")
+    scenes.extend(extras)
     return marked
 
 
@@ -2854,8 +3048,8 @@ def main():
     ap.add_argument("--energy", action="store_true", help="Force energy edit (auto for anime/movie)")
     ap.add_argument("--qa-json", default=None, help="Write the combined QA report here")
     ap.add_argument("--relax", action="store_true",
-                    help="Retry tier 3: relax ONLY non-hard thresholds (shake/audio/min-dur). "
-                         "Never relaxes no-crop, layout, or no-logo/title.")
+                    help="Retry tier 3: relax ONLY non-hard thresholds (shake/audio; aim 25s->20s). "
+                         "Never relaxes the 20s duration floor, no-crop, layout, or no-logo/title.")
     ap.add_argument("--alt-scenes", action="store_true",
                     help="Retry tier 3: prefer a different (higher-motion) scene set")
     ap.add_argument("--exclude-music", default="",
@@ -3109,6 +3303,19 @@ def main():
     if ENERGY:
         edl = apply_energy(edl, scenes, music)
         edl = repair_unique_edl(edl, scenes, transcript)
+        acc_after = float(edl[-1]["t1"]) if edl else 0.0
+        try:
+            (WORK / "plan_meta.json").write_text(json.dumps({
+                "unique_duration": round(acc_after, 3),
+                "target": float(TARGET_DUR),
+                "min_unique": MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR,
+                "min_output": MIN_OUTPUT_DUR,
+                "short_unique": bool(acc_after + 1e-6 < (MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR)),
+                "n_shots": len([x for x in edl if x.get("scene") != "end"]),
+            }, indent=2))
+        except Exception:
+            pass
+        _require_min_duration(acc_after, where="after energy/uniqueness repair")
         (WORK / "music.json").write_text(json.dumps({k: v for k, v in music.items() if k != "abs_beats"}, indent=2))
     for item in edl:
         extra = ""
@@ -3175,8 +3382,12 @@ def main():
             if ENERGY:
                 edl = apply_energy(edl, scenes, music)
                 edl = repair_unique_edl(edl, scenes, transcript if "transcript" in dir() else None)
+                acc_rs = float(edl[-1]["t1"]) if edl else 0.0
+                _require_min_duration(acc_rs, where="re-slice after energy/repair")
         except SystemExit as e:
-            print(f"  re-plan failed: {e}; keeping previous cut")
+            print(f"  re-plan failed: {e}; refusing to keep a previous short or dirty cut")
+            issues.append(str(e))
+            qc = {"ok": False, "issues": list(qc.get("issues") or []) + [str(e)], "blacklist": []}
             break
         (WORK / "edl.json").write_text(json.dumps(edl, indent=2, default=str))
         for pth in CLIPS.glob("clip_*.mp4"):
@@ -3215,9 +3426,24 @@ def main():
         report["warnings"] = list(report.get("warnings") or [])
         if meta.get("short_unique"):
             msg = (f"only {meta.get('unique_duration')}s of unique clean shots "
-                   f"(need ≥{meta.get('min_unique')}s); not repeating shots to pad")
-            report["warnings"].append(msg)
-            print("WARNING:", msg)
+                   f"(need ≥{meta.get('min_unique')}s, aim 25-32s); "
+                   f"not repeating shots and not publishing a short cut")
+            issues.append(msg)
+            print("ERROR:", msg)
+    try:
+        out_dur = ffprobe_dur(out)
+    except Exception:
+        out_dur = 0.0
+    aim = MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR
+    if out_dur + 1e-6 < MIN_OUTPUT_DUR:
+        issues.append(
+            f"duration {out_dur:.2f}s below hard minimum {MIN_OUTPUT_DUR:.0f}s (aim 25-32s)"
+        )
+    elif out_dur + 1e-6 < aim:
+        issues.append(
+            f"duration {out_dur:.2f}s below target {aim:.0f}s (aim 25-32s)"
+        )
+    report["issues"] = issues
     if args.qa_json:
         Path(args.qa_json).write_text(json.dumps(report, indent=2, default=str))
     print("OUT", out, f"{ffprobe_dur(out):.2f}s", "size", out.stat().st_size)

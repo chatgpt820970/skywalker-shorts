@@ -79,10 +79,27 @@ def download_url(url, dest):
         return True, url
     return False, f"direct mp4 {url}: curl exit {r.returncode} {(r.stderr or '')[-200:]}"
 
-def download_fallback(src):
+def _src_key(info: str) -> str:
+    return (info or "").rstrip("/").split("/")[-1].split("?")[0].lower()
+
+
+def _is_skipped(info, skip) -> bool:
+    if not info:
+        return False
+    skip = set(skip or [])
+    if info in skip:
+        return True
+    key = _src_key(info)
+    return any(_src_key(s) == key and key for s in skip)
+
+
+def download_fallback(src, skip=None):
     errors = []
     used = None
+    skip = set(skip or [])
     for u in item.get("fallback_mp4", []) or []:
+        if _is_skipped(u, skip) or _is_skipped(f"gh:{u}", skip):
+            continue
         ok, info = download_url(u, src)
         if ok:
             return info, []
@@ -116,9 +133,55 @@ def download_fallback(src):
         errors.append("gh sources " + g + " " + (r.stderr.strip().splitlines() or ["?"])[-1][:200])
     return None, errors
 
-def download_source(src, force_fallback=False):
+
+def _stem_tokens(name: str) -> set[str]:
+    stem = (name or "").rsplit(".", 1)[0].lower()
+    for junk in ("h264", "trailer", "teaser", "official", "src", "video", "4k"):
+        stem = stem.replace(junk, " ")
+    parts = [x for x in stem.replace("-", "_").replace(".", "_").split("_") if len(x) >= 3]
+    return set(parts)
+
+
+def list_source_siblings():
+    """Other official trailers/teasers already uploaded to the sources release."""
+    repo = os.environ.get("GITHUB_REPOSITORY", "chatgpt820970/skywalker-shorts")
+    r = subprocess.run(
+        ["gh", "release", "view", "sources", "-R", repo, "--json", "assets"],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        return []
+    try:
+        assets = [a.get("name") for a in (json.loads(r.stdout).get("assets") or []) if a.get("name")]
+    except Exception:
+        return []
+    seeds = []
+    if item.get("fallback_asset"):
+        seeds.append(item["fallback_asset"])
+    for u in item.get("fallback_mp4") or []:
+        seeds.append(u.rstrip("/").split("/")[-1])
+    tokens = set()
+    for s in seeds:
+        tokens |= _stem_tokens(s)
+    for part in str(item.get("id") or "").lower().split("-"):
+        if len(part) >= 4 and part.isalpha():
+            tokens.add(part)
+    already = set(seeds)
+    out = []
+    for name in assets:
+        if name in already or not str(name).lower().endswith(".mp4"):
+            continue
+        if tokens & _stem_tokens(name):
+            out.append(
+                f"https://github.com/{repo}/releases/download/sources/{name}"
+            )
+    return out
+
+
+def download_source(src, force_fallback=False, skip=None):
     errors, used = [], None
-    if not force_fallback and item.get("source_url"):
+    skip = set(skip or [])
+    if not force_fallback and item.get("source_url") and item.get("source_url") not in skip:
         for attempt in range(2):
             ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
             r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
@@ -130,10 +193,36 @@ def download_source(src, force_fallback=False):
                 return item["source_url"], []
             errors.append("yt-dlp: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
             time.sleep(5)
-    used, ferr = download_fallback(src)
+    used, ferr = download_fallback(src, skip=skip)
     errors.extend(ferr)
-    if used:
+    if used and not _is_skipped(used, skip):
         return used, errors
+    # Other official trailers / teasers listed on the item, then sibling
+    # assets already sitting on the sources release.
+    extras = []
+    for u in item.get("alt_source_urls") or []:
+        extras.append(("alt", u))
+    for u in list_source_siblings():
+        extras.append(("sibling", u))
+    for kind, u in extras:
+        if not u or _is_skipped(u, skip) or _is_skipped(f"gh:{u}", skip):
+            continue
+        if "youtube.com" in u or "youtu.be" in u:
+            src.unlink(missing_ok=True)
+            ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+            r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
+                                "-4", "--user-agent", ua,
+                                "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
+                                "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
+                                u], capture_output=True, text=True)
+            if r.returncode == 0 and _ok_src(src):
+                return u, errors
+            errors.append("yt-dlp alt: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
+            continue
+        ok, info = download_url(u, src)
+        if ok:
+            return info, errors
+        errors.append(info)
     # Optional last-resort: official/legal Pexels clip if a key is already in the env.
     # Never required; never committed.
     pex = _try_pexels(src)
@@ -237,43 +326,74 @@ def upscale(src, out_1080, final):
     fw, fh = probe_wh(final)
     return fw, fh, up
 
+def _is_short_failure(reason, qa) -> bool:
+    blob = " ".join([
+        str(reason or ""),
+        " ".join(str(x) for x in (qa or {}).get("issues") or []),
+        str((qa or {}).get("unique_duration") or ""),
+    ]).lower()
+    keys = (
+        "hard minimum", "unique clean shots", "aim 25-32", "below target",
+        "too short", "short unique", "not publishing a short cut",
+        "duration ",
+    )
+    return any(k in blob for k in keys)
+
+
 def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_music=None, music_salt=""):
     src = OUT / f"{iid}_src.mp4"
     print(f"=== attempt {n}: force_fallback={force_fallback} relax={relax} alt_scenes={alt_scenes} ===", flush=True)
-    used, errors = download_source(src, force_fallback=force_fallback)
-    if not used:
-        reason = "download failed: " + " | ".join(errors)
-        return False, {"attempt": n, "ok": False, "error": reason, "source": None, "music": None}
+    tried = []
+    last = None
+    src_i = 0
+    while True:
+        used, errors = download_source(src, force_fallback=force_fallback, skip=tried)
+        if not used:
+            if last:
+                return False, last
+            reason = "download failed: " + " | ".join(errors)
+            return False, {"attempt": n, "ok": False, "error": reason, "source": None, "music": None}
+        if _is_skipped(used, tried):
+            if last:
+                return False, last
+            return False, {"attempt": n, "ok": False, "error": "no unused official source left",
+                           "source": used, "music": None}
+        tried.append(used)
+        src_i += 1
+        print(f"  source {src_i}: {used}", flush=True)
 
-    out = OUT / f"{iid}_1080.mp4"
-    qa_json = OUT / f"{iid}_qa.json"
-    work = OUT / f"work_{iid}"
-    # unique names per attempt so a failed leftover is not reused
-    if n > 1:
-        out = OUT / f"{iid}_1080_a{n}.mp4"
-        qa_json = OUT / f"{iid}_qa_a{n}.json"
-        work = OUT / f"work_{iid}_a{n}"
-        # keep using the same src path (already written)
-    rc, qa, credit, checks = run_pipeline(
-        src, out, qa_json, work,
-        relax=relax, alt_scenes=alt_scenes,
-        exclude_music=exclude_music, music_salt=music_salt,
-    )
-    if rc != 0 or not out.exists():
-        reason = f"pipeline/QA failed (exit {rc}): " + "; ".join((qa.get("issues") or [])[:5])[:800]
-        if not reason.endswith(")") and not qa.get("issues"):
-            reason = f"pipeline/QA failed (exit {rc})"
-        return False, {"attempt": n, "ok": False, "error": reason, "source": used,
-                       "music": credit.get("file"), "qa": checks}
-    try:
-        final = OUT / f"render-{iid}.mp4"
-        fw, fh, up = upscale(src, out, final)
-        extra = publish(final, fw, fh, up, used, checks, credit, qa)
-    except Exception as e:
-        return False, {"attempt": n, "ok": False, "error": f"upscale/release failed: {e}",
-                       "source": used, "music": credit.get("file"), "qa": checks}
-    extra.update({"attempt": n, "ok": True, "error": None})
-    return True, extra
+        out = OUT / f"{iid}_1080.mp4"
+        qa_json = OUT / f"{iid}_qa.json"
+        work = OUT / f"work_{iid}"
+        suffix = n if src_i == 1 else f"{n}s{src_i}"
+        if n > 1 or src_i > 1:
+            out = OUT / f"{iid}_1080_a{suffix}.mp4"
+            qa_json = OUT / f"{iid}_qa_a{suffix}.json"
+            work = OUT / f"work_{iid}_a{suffix}"
+        rc, qa, credit, checks = run_pipeline(
+            src, out, qa_json, work,
+            relax=relax, alt_scenes=alt_scenes,
+            exclude_music=exclude_music, music_salt=music_salt,
+        )
+        if rc != 0 or not out.exists():
+            reason = f"pipeline/QA failed (exit {rc}): " + "; ".join((qa.get("issues") or [])[:5])[:800]
+            if not reason.endswith(")") and not qa.get("issues"):
+                reason = f"pipeline/QA failed (exit {rc})"
+            last = {"attempt": n, "ok": False, "error": reason, "source": used,
+                    "music": credit.get("file"), "qa": checks}
+            if _is_short_failure(reason, qa):
+                print(f"  source too short / under duration gate; trying next official trailer", flush=True)
+                continue
+            return False, last
+        try:
+            final = OUT / f"render-{iid}.mp4"
+            fw, fh, up = upscale(src, out, final)
+            extra = publish(final, fw, fh, up, used, checks, credit, qa)
+        except Exception as e:
+            return False, {"attempt": n, "ok": False, "error": f"upscale/release failed: {e}",
+                           "source": used, "music": credit.get("file"), "qa": checks}
+        extra.update({"attempt": n, "ok": True, "error": None})
+        return True, extra
 
 def main():
     prev = read_prev()

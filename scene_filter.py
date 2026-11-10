@@ -275,7 +275,7 @@ def _typo_residual(rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Luma morphological residual (dark-on-light and light-on-dark type)."""
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
     hats = []
-    for k in (13, 25, 41):
+    for k in (7, 9, 13, 25, 41):
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
         opened = cv2.morphologyEx(gray, cv2.MORPH_OPEN, kernel)
         closed = cv2.morphologyEx(gray, cv2.MORPH_CLOSE, kernel)
@@ -357,7 +357,7 @@ def _residual_text_lines(gray: np.ndarray, res: np.ndarray, ign: np.ndarray) -> 
     H, W = gray.shape
     hits = []
     seen: set[tuple[int, int, int, int]] = set()
-    for thr in (22, 28, 36, 55, 80, 110):
+    for thr in (16, 22, 28, 36, 55, 80, 110):
         raw = ((res >= thr) & (~ign)).astype(np.uint8) * 255
         k = cv2.getStructuringElement(cv2.MORPH_RECT, (max(11, W // 36), 2))
         closed = cv2.morphologyEx(raw, cv2.MORPH_CLOSE, k)
@@ -370,7 +370,7 @@ def _residual_text_lines(gray: np.ndarray, res: np.ndarray, ign: np.ndarray) -> 
             ar = bw / max(bh, 1)
             hfrac = bh / H
             wfrac = bw / W
-            if hfrac < 0.055 or ar > 9.5:
+            if hfrac < 0.035 or ar > 10.5:
                 continue
             # body/ground edges along the very bottom of the plate
             if y > 0.78 * H and hfrac < 0.12:
@@ -385,8 +385,10 @@ def _residual_text_lines(gray: np.ndarray, res: np.ndarray, ign: np.ndarray) -> 
             if not ok or nrun < 3 or not (0.10 <= cov <= 0.55) or band < 0.40:
                 continue
             glyphs = _glyph_count_in_box(gray[y:y + bh, x:x + bw], res[y:y + bh, x:x + bw])
-            # require real letterforms, not ropes / arms / foliage
-            if glyphs < 4:
+            # require real letterforms, not ropes / arms / foliage.
+            # Thin serif captions can fragment into fewer boxes; a high
+            # column-run count still means readable type.
+            if glyphs < 4 and not (glyphs >= 3 and nrun >= 6):
                 continue
             seen.add(key)
             hits.append({
@@ -650,6 +652,117 @@ def _baseline_glyph_lines(gray: np.ndarray, ign: np.ndarray) -> list[dict]:
     return hits
 
 
+
+def _bright_serif_lines(gray: np.ndarray, ign: np.ndarray) -> list[dict]:
+    """Thin light-on-dark serif captions (e.g. 'In exchange for 10 million yen').
+
+    Residual-close can miss low-contrast serifs; bright ink on a darker
+    field still forms a long baseline of similar-height glyphs.
+    """
+    H, W = gray.shape
+    hits = []
+    # Unsharp residual boosts thin strokes without needing a huge hat kernel.
+    blur = cv2.GaussianBlur(gray, (0, 0), 1.15)
+    boost = cv2.subtract(gray, blur)
+    ink = ((gray >= 168) | (boost >= 18)) & (gray >= 140) & (~ign)
+    if not (0.004 <= float(ink.mean()) <= 0.28):
+        return hits
+    n, _lab, st, _ = cv2.connectedComponentsWithStats(ink.astype(np.uint8), 8)
+    glyphs = []
+    for i in range(1, n):
+        x, y, bw, bh, area = st[i]
+        if area < 10 or bh < 5 or bw < 2:
+            continue
+        if bh > int(H * 0.16) or bw > int(W * 0.40):
+            continue
+        ar = bw / max(bh, 1)
+        if 0.10 <= ar <= 3.6:
+            glyphs.append((x, y, bw, bh, area))
+    if len(glyphs) < 8:
+        return hits
+    bases = np.array([g[1] + g[3] for g in glyphs], dtype=np.float32)
+    heights = np.array([g[3] for g in glyphs], dtype=np.float32)
+    order = np.argsort(bases)
+    rows: list[list] = []
+    cur = [glyphs[order[0]]]
+    last = bases[order[0]]
+    medh = float(np.median(heights))
+    for idx in order[1:]:
+        b = bases[idx]
+        if b - last > max(medh * 0.70, 6):
+            rows.append(cur)
+            cur = [glyphs[idx]]
+        else:
+            cur.append(glyphs[idx])
+        last = b
+    rows.append(cur)
+    for r in rows:
+        if len(r) < 8:
+            continue
+        hs = np.array([c[3] for c in r], dtype=np.float32)
+        if float(np.std(hs) / max(float(np.mean(hs)), 1)) > 0.48:
+            continue
+        xs = min(c[0] for c in r)
+        xe = max(c[0] + c[2] for c in r)
+        span = (xe - xs) / W
+        ys = min(c[1] for c in r)
+        ye = max(c[1] + c[3] for c in r)
+        hfrac = (ye - ys) / H
+        pack = sum(c[2] for c in r) / max(xe - xs, 1)
+        if (ye - ys) > 2.4 * float(np.median(hs)):
+            continue
+        # Long thin caption line — not a speckled foliage band.
+        if span >= 0.34 and 0.018 <= hfrac <= 0.14 and pack >= 0.28:
+            hits.append({
+                "box": (int(xs), int(ys), int(xe - xs), int(ye - ys)),
+                "n": len(r),
+                "span": round(float(span), 3),
+            })
+    return hits
+
+
+def clean_intervals(start: float, end: float, samples: list[tuple[float, bool]],
+                    min_dur: float = 0.55) -> list[tuple[float, float]]:
+    """Keep only the clean stretches of a shot.
+
+    `samples` is [(t, is_dirty), ...] inside [start, end]. Each sample owns
+    the half-gap to its neighbors, so a logo flash drops a slice instead of
+    the whole scene-detect cut.
+    """
+    start, end = float(start), float(end)
+    if end - start < float(min_dur):
+        if samples and not any(d for _t, d in samples):
+            return [(start, end)]
+        return []
+    if not samples:
+        return [(start, end)]
+    samples = sorted(((float(t), bool(d)) for t, d in samples), key=lambda x: x[0])
+    bounds = [start]
+    for i in range(len(samples) - 1):
+        mid = 0.5 * (samples[i][0] + samples[i + 1][0])
+        bounds.append(min(end, max(start, mid)))
+    bounds.append(end)
+    runs: list[tuple[float, float]] = []
+    run_a = None
+    run_b = start
+    for i, (_t, dirty) in enumerate(samples):
+        a = max(start, min(bounds[i], end))
+        b = max(start, min(bounds[i + 1], end))
+        if b <= a + 1e-4:
+            continue
+        if not dirty:
+            if run_a is None:
+                run_a = a
+            run_b = b
+        elif run_a is not None:
+            if run_b - run_a >= float(min_dur):
+                runs.append((round(run_a, 3), round(run_b, 3)))
+            run_a = None
+    if run_a is not None and run_b - run_a >= float(min_dur):
+        runs.append((round(run_a, 3), round(run_b, 3)))
+    return runs
+
+
 def detect_overlay_text(frame: np.ndarray) -> list[str]:
     """Stylized titles, date cards, and significant readable text over footage.
 
@@ -671,6 +784,9 @@ def detect_overlay_text(frame: np.ndarray) -> list[str]:
     if _is_text_page(gray, ign):
         reasons.append("text_page")
     if _baseline_glyph_lines(gray, ign):
+        if "text_overlay" not in reasons:
+            reasons.append("text_overlay")
+    if _bright_serif_lines(gray, ign):
         if "text_overlay" not in reasons:
             reasons.append("text_overlay")
     return list(dict.fromkeys(reasons))

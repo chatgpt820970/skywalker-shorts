@@ -27,6 +27,21 @@ import scene_filter
 
 W1080, H1080 = 1080, 1920
 W4K, H4K = 2160, 3840
+MIN_DURATION = 20.0
+AIM_DURATION = 25.0
+AIM_DURATION_MAX = 32.0
+
+
+def duration_issue(dur: float) -> str | None:
+    """Hard floor: anything under 20s must fail QC and must never be released."""
+    try:
+        d = float(dur or 0)
+    except (TypeError, ValueError):
+        d = 0.0
+    if d + 1e-6 < MIN_DURATION:
+        return (f"duration {d:.2f}s below hard minimum {MIN_DURATION:.0f}s "
+                f"(aim {AIM_DURATION:.0f}-{AIM_DURATION_MAX:.0f}s)")
+    return None
 
 
 def _probe(path: Path) -> dict:
@@ -239,6 +254,9 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
     if vol is None or vol <= -35:
         issues.append(f"audio silent or missing (mean_volume={vol})")
     dur = meta["dur"] or 0
+    di = duration_issue(dur)
+    if di:
+        issues.append(di)
     # 4 fps so short typography / black flashes between 1s ticks cannot slip through.
     try:
         step = 1.0 / float(scene_filter.QC_FPS)
