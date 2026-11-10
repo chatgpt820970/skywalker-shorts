@@ -1,0 +1,29 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Hook,Anton,78,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,7,3,8,50,50,110,1
+Style: HookY,Anton,78,&H004AD2FF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,7,3,8,50,50,110,1
+Style: Stat,Anton,92,&H004AD2FF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,8,4,8,50,50,110,1
+Style: StatSub,Archivo Black,42,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,1,0,1,5,3,8,50,50,110,1
+Style: Fact,Anton,70,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,7,3,8,50,50,110,1
+Style: Title,Anton,86,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,8,4,8,50,50,110,1
+Style: Cta,Anton,82,&H004AD2FF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,8,4,8,50,50,110,1
+Style: EndMain,Anton,96,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,8,4,8,50,50,200,1
+Style: EndSub,Bebas Neue,64,&H004AD2FF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,2,0,1,6,3,8,50,50,200,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.00,0:00:02.70,Hook,,0,0,0,,{\fad(0,180)\t(0,160,\fscx120\fscy120)\t(160,300,\fscx100\fscy100)}THIS MOVIE JUST BROKE\N{\c&H4AD2FF&}A 22-YEAR US RECORD
+Dialogue: 0,0:00:02.70,0:00:06.40,Stat,,0,0,0,,{\fad(0,180)\t(0,160,\fscx120\fscy120)\t(160,300,\fscx100\fscy100)}$31.6 MILLION\N{\fnArchivo Black\fs42\c&HFFFFFF&}NORTH AMERICAN OPENING
+Dialogue: 0,0:00:06.40,0:00:11.20,Fact,,0,0,0,,{\fad(0,180)\t(0,160,\fscx120\fscy120)\t(160,300,\fscx100\fscy100)}BIGGEST JAPANESE\NLIVE-ACTION US DEBUT
+Dialogue: 0,0:00:11.20,0:00:16.80,Title,,0,0,0,,{\fad(0,180)\t(0,160,\fscx120\fscy120)\t(160,300,\fscx100\fscy100)}GODZILLA MINUS ZERO
+Dialogue: 0,0:00:16.80,0:00:22.50,Fact,,0,0,0,,{\fad(0,180)\t(0,160,\fscx120\fscy120)\t(160,300,\fscx100\fscy100)}IT JUST MADE HISTORY
+Dialogue: 0,0:00:22.50,0:00:29.40,Cta,,0,0,0,,{\fad(0,180)\t(0,160,\fscx120\fscy120)\t(160,300,\fscx100\fscy100)}NOW IN THEATERS
+Dialogue: 0,0:00:30.38,0:00:32.79,EndMain,,0,0,0,,{\fad(0,180)\t(0,160,\fscx118\fscy118)\t(160,300,\fscx100\fscy100)}GODZILLA MINUS ZERO\N{\fnBebas Neue\fs64\c&H4AD2FF&}NOW IN THEATERS

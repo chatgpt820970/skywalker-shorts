@@ -1,0 +1,13 @@
+Music used in /workspace/skywalker/test_v2.mp4
+
+Track: Impact Prelude
+Artist: Kevin MacLeod (incompetech.com)
+License: Creative Commons Attribution 4.0 (CC BY 4.0)
+https://incompetech.com/music/royalty-free/
+
+If this Short is uploaded to YouTube, the description must credit:
+Music: Impact Prelude by Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+Mixkit trailer tracks were also downloaded as alternatives (Mixkit License, no attribution required, YouTube-ok). Impact Prelude was chosen because it is a real orchestral/cinematic trailer cue with a clear climax, not a generic "games" bed.

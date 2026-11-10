@@ -1,0 +1,7 @@
+scenedetect[opencv]
+librosa
+numpy
+opencv-python-headless
+Pillow
+onnxruntime
+rembg
