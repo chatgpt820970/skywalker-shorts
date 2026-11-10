@@ -290,6 +290,14 @@ def snap_window(src_start: float, visible: float, scene_start: float, scene_end:
     b = _snap_end(b)
     a = min(max(a, S), E - min_vis)
     b = min(max(b, a + min_vis), E)
+    # If a spoken line already started inside the window and finishes a little
+    # later but still inside the scene, extend so we don't end mid-sentence.
+    for w in words or []:
+        w0, w1 = float(w["start"]), float(w["end"])
+        if a < w0 < b < w1 <= E and (w1 - a) <= max(visible + 0.45, min_vis):
+            b = w1
+    a = min(max(a, S), E - min_vis)
+    b = min(max(b, a + min_vis), E)
     return round(a, 3), round(max(min_vis, b - a), 3)
 
 
@@ -345,6 +353,7 @@ def map_words_to_output(edl: list[dict], words: list[dict]) -> list[dict]:
                 "t0": float(t0), "t1": float(t1),
                 "word": w.get("word") or "",
                 "src_start": w0, "src_end": w1,
+                "clip": it.get("i"),
             })
             break
     return mapped
@@ -353,6 +362,9 @@ def map_words_to_output(edl: list[dict], words: list[dict]) -> list[dict]:
 def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float = 3.6,
                  max_gap: float = 0.45) -> list[dict]:
     """Pack mapped words into readable lower-third cues. One cue per spoken breath."""
+    # MUST sort by output time. Words arrive in source order, but the EDL
+    # can place a later trailer line earlier in the short.
+    mapped_words = sorted(mapped_words or [], key=lambda w: (float(w.get("t0") or 0), float(w.get("t1") or 0)))
     cues: list[dict] = []
     buf: list[dict] = []
 
@@ -381,12 +393,18 @@ def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float =
         gap = float(w["t0"]) - float(buf[-1]["t1"])
         trial = " ".join((x.get("word") or "").strip() for x in buf + [w])
         dur = float(w["t1"]) - float(buf[0]["t0"])
-        if gap > max_gap or len(trial) > max_chars or dur > max_dur:
+        same_clip = buf[-1].get("clip") == w.get("clip")
+        if (not same_clip) or gap > max_gap or len(trial) > max_chars or dur > max_dur:
             flush()
             buf.append(w)
         else:
             buf.append(w)
     flush()
+    # Don't let a hold-over run into the next cue.
+    for i in range(len(cues) - 1):
+        cues[i]["t1"] = round(min(float(cues[i]["t1"]), float(cues[i + 1]["t0"]) - 0.04), 3)
+        if cues[i]["t1"] <= cues[i]["t0"]:
+            cues[i]["t1"] = round(cues[i]["t0"] + 0.20, 3)
     return cues
 
 

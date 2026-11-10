@@ -140,6 +140,27 @@ def test_map_words_and_caption_cues():
     assert captions.generate_lines("hook", "X", 32.0, dialogue=None) == []
 
 
+def test_caption_cues_sort_by_output_time():
+    """Words are produced in source order; cues must follow the output timeline."""
+    mapped = [
+        {"t0": 9.8, "t1": 10.2, "word": "settle", "clip": 5},
+        {"t0": 10.2, "t1": 10.6, "word": "down", "clip": 5},
+        {"t0": 5.5, "t1": 5.9, "word": "Coconut", "clip": 2},
+        {"t0": 6.0, "t1": 6.4, "word": "beer", "clip": 2},
+        {"t0": 13.0, "t1": 13.4, "word": "lonely", "clip": 6},
+        {"t0": 6.5, "t1": 6.9, "word": "HAVE", "clip": 3},  # next clip, must not join beer
+    ]
+    cues = dialogue.caption_cues(mapped)
+    texts = [c["text"] for c in cues]
+    starts = [c["t0"] for c in cues]
+    assert starts == sorted(starts)
+    joined = " | ".join(texts)
+    assert "Coconut beer" in joined
+    assert "settle down" in joined
+    assert not any("settle" in c and "Coconut" in c for c in texts)
+    assert not any("beer" in c and "HAVE" in c for c in texts)
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_") and callable(v)]
     failed = 0
