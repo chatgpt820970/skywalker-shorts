@@ -1,11 +1,23 @@
 {
   "id": "20261111-0630-hungergames",
-  "status": "failed",
-  "detail": "pipeline/QA failed (exit 1): ",
-  "at": "2026-11-10 14:18 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42784333217",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-10 14:41 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42786641539",
   "slot": "2026-11-11T06:30:00+05:30",
   "title": "The reason why Haymitch was never the same after this 💀 | Haymitch enters the Quarter Quell | #edit",
-  "qa": {},
-  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/hungergames_trailer_h264.mp4"
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261111-0630-hungergames",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261111-0630-hungergames/render-20261111-0630-hungergames.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true
+  },
+  "drop_t": 11.517,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/hungergames_trailer_h264.mp4",
+  "music": "ncs_adrenaline.mp3",
+  "music_credit": "Song: Slowboy, Zeli - Adrenaline\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/adrenaline\nWatch: http://ncs.lnk.to/adrenalineAT/youtube",
+  "description_final": "The reason why Haymitch was never the same after this. Haymitch enters the Quarter Quell from the official The Hunger Games: Sunrise on the Reaping trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=lYXtL5TreOE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #hungergames\n\nMusic:\nSong: Slowboy, Zeli - Adrenaline\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/adrenaline\nWatch: http://ncs.lnk.to/adrenalineAT/youtube"
 }
