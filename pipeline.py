@@ -460,7 +460,10 @@ def classify_shot(arr: np.ndarray) -> tuple[list[str], dict]:
     horiz = float(ndimage.binary_opening(hard_in, structure=np.ones((1, 9))).mean()) if hard_in.size else 0.0
     mx, mn = a.max(axis=2), a.min(axis=2)
     sat = np.where(mx > 1, (mx - mn) / np.maximum(mx, 1), 0)
-    sat_frac = float((sat > 0.45).mean())
+    # Count saturation only on VISIBLE pixels (max channel >= 48). Near-black pixels in
+    # dim warm/teal-graded story shots (Nolan interiors, candlelight) have noisy, high
+    # chroma ratios and were wrongly flagged as a saturated logo animation.
+    sat_frac = float(((sat > 0.45) & (mx >= 48)).mean())
     small = ndimage.zoom(a, (0.25, 0.25, 1), order=1)
     qs = (small // 48).astype(np.int32)
     keys = qs[:, :, 0] * 64 + qs[:, :, 1] * 8 + qs[:, :, 2]
