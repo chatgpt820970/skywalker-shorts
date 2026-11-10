@@ -226,15 +226,25 @@ def stabilize(src: Path, dst: Path, trf: Path) -> Path:
 # ---------------------------------------------------------------------------
 def detect_scenes(mezz: Path) -> list[dict]:
     csv_dir = WORK / "scenes.csv"
-    csv_path = csv_dir / "mezzanine-Scenes.csv"
+    csv_dir.mkdir(parents=True, exist_ok=True)
+    # PySceneDetect names the CSV after the input stem (mezzanine_stab, not always mezzanine).
+    def _csv():
+        exact = csv_dir / f"{mezz.stem}-Scenes.csv"
+        if exact.exists():
+            return exact
+        hits = sorted(csv_dir.glob("*-Scenes.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+        return hits[0] if hits else exact
+    csv_path = _csv()
     if not csv_path.exists():
-        csv_dir.mkdir(parents=True, exist_ok=True)
         run([
             sys.executable, "-m", "scenedetect",
             "-i", str(mezz),
             "detect-content", "--threshold", "27",
             "list-scenes", "-o", str(csv_dir),
         ])
+        csv_path = _csv()
+    if not csv_path.exists():
+        raise FileNotFoundError(f"PySceneDetect wrote no *Scenes.csv under {csv_dir} for {mezz}")
     scenes = []
     import csv
     with open(csv_path) as f:
