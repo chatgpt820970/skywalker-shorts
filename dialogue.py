@@ -62,6 +62,34 @@ def _load_model():
     return _MODEL
 
 
+
+def _load_audio_16k(path: Path) -> "np.ndarray":
+    """16 kHz mono float32 via ffmpeg, then librosa/soundfile. Never uses PyAV."""
+    import os, tempfile
+    path = Path(path)
+    fd, name = tempfile.mkstemp(prefix="sky_whisper_", suffix=".wav")
+    os.close(fd)
+    tmp = Path(name)
+    try:
+        r = run_ffmpeg([
+            "ffmpeg", "-y", "-i", str(path),
+            "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", str(tmp),
+        ])
+        if r.returncode != 0 or not tmp.exists() or tmp.stat().st_size < 1000:
+            raise RuntimeError((r.stderr or "ffmpeg audio extract failed")[-400:])
+        try:
+            import librosa
+            y, _sr = librosa.load(str(tmp), sr=16000, mono=True)
+        except Exception:
+            import soundfile as sf
+            y, _sr = sf.read(str(tmp), dtype="float32")
+            if y.ndim > 1:
+                y = y.mean(axis=1)
+        return y.astype("float32")
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
 def transcribe_source(path: Path, cache: Path | None = None) -> dict:
     """Word-level transcript of the trailer audio. Cached as JSON next to the work dir."""
     path = Path(path)
@@ -79,9 +107,13 @@ def transcribe_source(path: Path, cache: Path | None = None) -> dict:
             cache.write_text(json.dumps({**empty, "source": str(path)}, indent=2))
         return empty
     try:
+        # Decode with ffmpeg → numpy. faster-whisper's av.open(..., metadata_errors=)
+        # crashes on some PyAV/Python combos (seen on 3.13), and trailers are mp4s
+        # librosa/soundfile cannot open directly.
         model = _load_model()
+        audio = _load_audio_16k(path)
         segments, info = model.transcribe(
-            str(path),
+            audio,
             word_timestamps=True,
             vad_filter=True,
             beam_size=5,
