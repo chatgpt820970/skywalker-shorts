@@ -1,0 +1,11 @@
+{
+  "id": "20261111-0630-hungergames",
+  "status": "failed",
+  "detail": "pipeline/QA failed (exit 1): ",
+  "at": "2026-11-10 14:01 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/42782681465",
+  "slot": "2026-11-11T06:30:00+05:30",
+  "title": "The reason why Haymitch was never the same after this 💀 | Haymitch enters the Quarter Quell | #edit",
+  "qa": {},
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/hungergames_trailer_h264.mp4"
+}
