@@ -23,10 +23,11 @@
    "trending"
   ],
   "target_dur": 32,
-  "status": "queued",
+  "status": "retired",
   "market": "US/UK",
   "demo": true,
   "fallback_release": "sources",
-  "fallback_asset": "foolnight_trailer.mp4"
+  "fallback_asset": "foolnight_trailer.mp4",
+  "retired_reason": "Demo only (slot passed, not an upload). Fool Night trailer has burned-in text cards/logos across most shots, so too little clean footage under the no-card hard rule; stop re-rendering it."
  }
 ]
