@@ -413,6 +413,11 @@ def classify_shot(arr: np.ndarray) -> tuple[list[str], dict]:
         reasons.append("flat_card")
     if flatg >= 0.90 and uniq <= 24 and luma >= 30 and strong <= 0.04:
         reasons.append("flat_card")
+    # vertical saturated color bars / logo-animation streaks (date cards, Netflix intro)
+    col_std = float(L.mean(axis=0).std())
+    row_std = float(L.mean(axis=1).std())
+    if sat_frac >= 0.70 and col_std > 25 and col_std > 2.0 * (row_std + 1):
+        reasons.append("logo_animation")
     # unique, stable order
     reasons = list(dict.fromkeys(reasons))
     stats = {
@@ -479,6 +484,11 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
             out.append(s)
             continue
         frames = _sample_frames(mezz, s["start"], s["dur"], n=5)
+        # also pin the first and last instants so a short logo transition cannot be missed
+        extra = _sample_frames(mezz, s["start"], min(0.12, max(s["dur"] * 0.15, 0.04)), n=1)
+        extra += _sample_frames(mezz, max(s["start"], s["end"] - 0.08), 0.08, n=1)
+        if extra:
+            frames = extra[:1] + frames + extra[1:]
         if not frames:
             s.update(score=0, skip=True, reason="no_frames", motion=0,
                      luma=0, black=1, spectacle=0, skin=0, graphic=1,
@@ -519,6 +529,19 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
             f"skin={skin:.2f} spec={spectacle:6.1f} "
             f"{'SKIP '+reason if skip else 'OK'}"
         )
+    # Short scene sandwiched between two logo/title/dark cards is almost certainly a card transition
+    cardish = set(LOGO_REASONS + ("open_window", "end_window", "card_transition"))
+    for i, s in enumerate(out):
+        if s.get("skip") or s["dur"] > 1.4:
+            continue
+        prev = out[i - 1] if i else None
+        nxt = out[i + 1] if i + 1 < len(out) else None
+        if prev and nxt and prev.get("skip") and nxt.get("skip"):
+            if (prev.get("reason") in cardish) and (nxt.get("reason") in cardish):
+                s["skip"] = True
+                s["reason"] = s["card_reason"] = "card_transition"
+                s["score"] = 0
+                print(f"  scene {s['id']:02d} {s['start']:6.2f}-{s['end']:6.2f} SKIP card_transition")
     return out
 
 
