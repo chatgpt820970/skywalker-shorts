@@ -112,11 +112,15 @@ def transcribe_source(path: Path, cache: Path | None = None) -> dict:
         # librosa/soundfile cannot open directly.
         model = _load_model()
         audio = _load_audio_16k(path)
+        # Names from the queue item (e.g. "Haymitch", "Peddi") so whisper does
+        # not caption "Hey Mitch" / "Aponga Games".
+        prompt = (os.environ.get("SKY_WHISPER_PROMPT") or "").strip()[:600] or None
         segments, info = model.transcribe(
             audio,
             word_timestamps=True,
             vad_filter=True,
             beam_size=5,
+            initial_prompt=prompt,
         )
         words, segs = [], []
         for seg in segments:
@@ -508,9 +512,13 @@ def map_words_to_output(edl: list[dict], words: list[dict]) -> list[dict]:
                 "word": w.get("word") or "",
                 "src_start": w0, "src_end": w1,
                 "clip": it.get("i"),
+                "prob": float(w.get("prob", 1.0) if w.get("prob") is not None else 1.0),
             })
             break
     return mapped
+
+
+MIN_WORD_PROB = float(os.environ.get("SKY_MIN_WORD_PROB", "0.2"))
 
 
 def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float = 3.6,
@@ -528,6 +536,12 @@ def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float =
         text = " ".join((w.get("word") or "").strip() for w in buf).strip()
         text = " ".join(text.split())
         if not text:
+            buf.clear()
+            return
+        # Word-accurate or nothing: a cue containing a word whisper itself is
+        # unsure of (likely misheard name) is dropped instead of shown wrong.
+        if min(float(w.get("prob", 1.0)) for w in buf) < MIN_WORD_PROB:
+            print(f"  dropped low-confidence cue: {text!r}")
             buf.clear()
             return
         t0 = float(buf[0]["t0"])

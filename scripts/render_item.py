@@ -296,6 +296,12 @@ def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, excl
     if music_salt:
         cmd += ["--music-salt", music_salt]
     env = dict(os.environ, SKY_WORK=str(work), SKY_ROOT=str(OUT))
+    if not env.get("SKY_WHISPER_PROMPT"):
+        # Character/film names help whisper spell them right in the subtitles.
+        names = item.get("whisper_prompt") or (
+            (item.get("description") or "").split("\n")[0] + " " +
+            " ".join(t for t in (item.get("tags") or []) if t not in ("edit", "shorts", "trending")))
+        env["SKY_WHISPER_PROMPT"] = names.strip()[:600]
     # fresh work dir per attempt so reused scenes/edl cannot leak
     if work.exists():
         import shutil
