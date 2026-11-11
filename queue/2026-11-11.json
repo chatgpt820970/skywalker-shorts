@@ -1,113 +1,121 @@
 [
- {
-  "id": "20261111-0630-hungergames",
-  "slot": "2026-11-11T06:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=lYXtL5TreOE",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/hungergames_trailer_h264.mp4"
-  ],
-  "template": "whitebar",
-  "hook": "The reason why Haymitch was never the same after this",
-  "words": "THE HUNGER",
-  "title": "The reason why Haymitch was never the same after this 💀 | Haymitch enters the Quarter Quell | #edit",
-  "description": "The reason why Haymitch was never the same after this. Haymitch enters the Quarter Quell from the official The Hunger Games: Sunrise on the Reaping trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=lYXtL5TreOE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #hungergames",
-  "tags": [
-   "hungergames",
-   "sunriseonthereaping",
-   "haymitch",
-   "josephzada",
-   "lionsgate",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK",
-  "fallback_release": "sources",
-  "fallback_asset": "hungergames_trailer_h264.mp4"
- },
- {
-  "id": "20261111-1230-peddi",
-  "slot": "2026-11-11T12:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=noatJVfA22U",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/peddi_trailer_h264.mp4"
-  ],
-  "template": "whitebar",
-  "hook": "The reason why Peddi playground ka hero ban gaya",
-  "words": "PEDDI",
-  "title": "The reason why Peddi playground ka hero ban gaya 💀 | Ram Charan as the crossover athlete | #edit",
-  "description": "The reason why Peddi playground ka hero ban gaya. Ram Charan as the crossover athlete from the official Peddi trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=noatJVfA22U). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #peddi #ramcharan #janhvikapoor",
-  "tags": [
-   "peddi",
-   "ramcharan",
-   "janhvikapoor",
-   "bollywood",
-   "tollywood",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "IN",
-  "fallback_release": "sources",
-  "fallback_asset": "peddi_trailer_h264.mp4"
- },
- {
-  "id": "20261111-1730-fockerinlaw",
-  "slot": "2026-11-11T17:30:00+05:30",
-  "pillar": "funny",
-  "source_url": "https://www.youtube.com/watch?v=vyISuWUWcFs",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Greg Focker can never relax",
-  "words": "FOCKER-IN-LAW",
-  "title": "The reason why Greg Focker can never relax 💀 | Greg meets the new in-laws | #edit",
-  "description": "The reason why Greg Focker can never relax. Greg meets the new in-laws from the official Focker-In-Law trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=vyISuWUWcFs). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #fockerinlaw",
-  "tags": [
-   "fockerinlaw",
-   "meettheparents",
-   "benstiller",
-   "robertdeniro",
-   "comedy",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK"
- },
- {
-  "id": "20261111-2230-maatrubhumi",
-  "slot": "2026-11-11T22:30:00+05:30",
-  "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=fA8-gXDoAk8",
-  "fallback_mp4": [],
-  "alt_source_urls": [
-   "https://www.youtube.com/watch?v=4HlRYUXOZc4"
-  ],
-  "template": "whitebar",
-  "hook": "The reason why Salman ki Maatrubhumi sabko hit karti hai",
-  "words": "MAATRUBHUMI",
-  "title": "The reason why Salman ki Maatrubhumi sabko hit karti hai 💀 | The soldier who never backs down | #edit",
-  "description": "The reason why Salman ki Maatrubhumi sabko hit karti hai. The soldier who never backs down from the official Maatrubhumi: May War Rest In Peace trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=fA8-gXDoAk8). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #maatrubhumi #salmankhan #bollywood",
-  "tags": [
-   "maatrubhumi",
-   "salmankhan",
-   "chitrangadasingh",
-   "bollywood",
-   "celebrity",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "IN"
- }
+  {
+    "id": "20261111-0630-hungergames",
+    "slot": "2026-11-11T06:30:00+05:30",
+    "pillar": "movie",
+    "source_url": "https://www.youtube.com/watch?v=lYXtL5TreOE",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/hungergames_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Haymitch was never the same after this",
+    "words": "THE HUNGER",
+    "title": "The reason why Haymitch was never the same after this 💀 | Haymitch enters the Quarter Quell | #edit",
+    "description": "The reason why Haymitch was never the same after this. Haymitch enters the Quarter Quell from the official The Hunger Games: Sunrise on the Reaping trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=lYXtL5TreOE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #hungergames",
+    "tags": [
+      "hungergames",
+      "sunriseonthereaping",
+      "haymitch",
+      "josephzada",
+      "lionsgate",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK",
+    "fallback_release": "sources",
+    "fallback_asset": "hungergames_trailer_h264.mp4"
+  },
+  {
+    "id": "20261111-1230-peddi",
+    "slot": "2026-11-11T12:30:00+05:30",
+    "pillar": "movie",
+    "source_url": "https://www.youtube.com/watch?v=noatJVfA22U",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/peddi_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Peddi playground ka hero ban gaya",
+    "words": "PEDDI",
+    "title": "The reason why Peddi playground ka hero ban gaya 💀 | Ram Charan as the crossover athlete | #edit",
+    "description": "The reason why Peddi playground ka hero ban gaya. Ram Charan as the crossover athlete from the official Peddi trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=noatJVfA22U). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #peddi #ramcharan #janhvikapoor",
+    "tags": [
+      "peddi",
+      "ramcharan",
+      "janhvikapoor",
+      "bollywood",
+      "tollywood",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "IN",
+    "fallback_release": "sources",
+    "fallback_asset": "peddi_trailer_h264.mp4"
+  },
+  {
+    "id": "20261111-1730-fockerinlaw",
+    "slot": "2026-11-11T17:30:00+05:30",
+    "pillar": "funny",
+    "source_url": "https://www.youtube.com/watch?v=vyISuWUWcFs",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fockerinlaw_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Greg Focker can never relax",
+    "words": "FOCKER-IN-LAW",
+    "title": "The reason why Greg Focker can never relax 💀 | Greg meets the new in-laws | #edit",
+    "description": "The reason why Greg Focker can never relax. Greg meets the new in-laws from the official Focker-In-Law trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=vyISuWUWcFs). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #fockerinlaw",
+    "tags": [
+      "fockerinlaw",
+      "meettheparents",
+      "benstiller",
+      "robertdeniro",
+      "comedy",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK",
+    "fallback_release": "sources",
+    "fallback_asset": "fockerinlaw_trailer_h264.mp4"
+  },
+  {
+    "id": "20261111-2230-maatrubhumi",
+    "slot": "2026-11-11T22:30:00+05:30",
+    "pillar": "celeb",
+    "source_url": "https://www.youtube.com/watch?v=fA8-gXDoAk8",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/maatrubhumi_trailer_h264.mp4"
+    ],
+    "alt_source_urls": [
+      "https://www.youtube.com/watch?v=4HlRYUXOZc4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Salman ki Maatrubhumi sabko hit karti hai",
+    "words": "MAATRUBHUMI",
+    "title": "The reason why Salman ki Maatrubhumi sabko hit karti hai 💀 | The soldier who never backs down | #edit",
+    "description": "The reason why Salman ki Maatrubhumi sabko hit karti hai. The soldier who never backs down from the official Maatrubhumi: May War Rest In Peace trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=fA8-gXDoAk8). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #maatrubhumi #salmankhan #bollywood",
+    "tags": [
+      "maatrubhumi",
+      "salmankhan",
+      "chitrangadasingh",
+      "bollywood",
+      "celebrity",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "IN",
+    "fallback_release": "sources",
+    "fallback_asset": "maatrubhumi_trailer_h264.mp4"
+  }
 ]
