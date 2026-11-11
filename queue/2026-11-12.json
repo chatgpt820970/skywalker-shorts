@@ -1,100 +1,116 @@
 [
- {
-  "id": "20261112-0630-avengersdoomsday",
-  "slot": "2026-11-12T06:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=irVNGjRFZGk",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Doctor Doom terrifies every Avenger",
-  "words": "AVENGERS DOOMSDAY",
-  "title": "The reason why Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
-  "description": "The reason why Doctor Doom terrifies every Avenger. Doctor Doom arrives from the official Avengers: Doomsday trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=irVNGjRFZGk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #avengersdoomsday",
-  "tags": [
-   "avengersdoomsday",
-   "doctordoom",
-   "marvel",
-   "mcu",
-   "robertdowneyjr",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK"
- },
- {
-  "id": "20261112-1230-rajasaab",
-  "slot": "2026-11-12T12:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=wT4HcYAeV5U",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Raja Saab sabko hypnotise kar deta hai",
-  "words": "RAJA SAAB",
-  "title": "The reason why Raja Saab sabko hypnotise kar deta hai 💀 | Prabhas as the exorcist | #edit",
-  "description": "The reason why Raja Saab sabko hypnotise kar deta hai. Prabhas as the exorcist from the official The RajaSaab trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=wT4HcYAeV5U). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #therajasaab #prabhas #tollywood",
-  "tags": [
-   "therajasaab",
-   "prabhas",
-   "tollywood",
-   "bollywood",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "IN"
- },
- {
-  "id": "20261112-1730-therampartsofice",
-  "slot": "2026-11-12T17:30:00+05:30",
-  "pillar": "romance",
-  "source_url": "https://www.youtube.com/watch?v=sWvfeHOkAOU",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Koyuki finally smiled",
-  "words": "THE RAMPARTS",
-  "title": "The reason why Koyuki finally smiled 💀 | Koyuki lets someone in | #edit",
-  "description": "The reason why Koyuki finally smiled. Koyuki lets someone in from the official The Ramparts of Ice: Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=sWvfeHOkAOU). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #therampartsofice",
-  "tags": [
-   "therampartsofice",
-   "romanceanime",
-   "netflixanime",
-   "koyuki",
-   "shoujo",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK"
- },
- {
-  "id": "20261112-2230-shahrukhkhan",
-  "slot": "2026-11-12T22:30:00+05:30",
-  "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=COv52Qyctws",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why SRK ka Jawan still hits different",
-  "words": "JAWAN",
-  "title": "The reason why SRK ka Jawan still hits different 💀 | Shah Rukh Khan takes on the system | #edit",
-  "description": "The reason why SRK ka Jawan still hits different. Shah Rukh Khan takes on the system from the official Jawan trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=COv52Qyctws). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jawan #shahrukhkhan #srk",
-  "tags": [
-   "jawan",
-   "shahrukhkhan",
-   "srk",
-   "bollywood",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "IN"
- }
+  {
+    "id": "20261112-0630-avengersdoomsday",
+    "slot": "2026-11-12T06:30:00+05:30",
+    "pillar": "movie",
+    "source_url": "https://www.youtube.com/watch?v=irVNGjRFZGk",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/avengersdoomsday_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Doctor Doom terrifies every Avenger",
+    "words": "AVENGERS DOOMSDAY",
+    "title": "The reason why Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
+    "description": "The reason why Doctor Doom terrifies every Avenger. Doctor Doom arrives from the official Avengers: Doomsday trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=irVNGjRFZGk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #avengersdoomsday",
+    "tags": [
+      "avengersdoomsday",
+      "doctordoom",
+      "marvel",
+      "mcu",
+      "robertdowneyjr",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK",
+    "fallback_release": "sources",
+    "fallback_asset": "avengersdoomsday_trailer_h264.mp4"
+  },
+  {
+    "id": "20261112-1230-rajasaab",
+    "slot": "2026-11-12T12:30:00+05:30",
+    "pillar": "movie",
+    "source_url": "https://www.youtube.com/watch?v=wT4HcYAeV5U",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/rajasaab_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Raja Saab sabko hypnotise kar deta hai",
+    "words": "RAJA SAAB",
+    "title": "The reason why Raja Saab sabko hypnotise kar deta hai 💀 | Prabhas as the exorcist | #edit",
+    "description": "The reason why Raja Saab sabko hypnotise kar deta hai. Prabhas as the exorcist from the official The RajaSaab trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=wT4HcYAeV5U). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #therajasaab #prabhas #tollywood",
+    "tags": [
+      "therajasaab",
+      "prabhas",
+      "tollywood",
+      "bollywood",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "IN",
+    "fallback_release": "sources",
+    "fallback_asset": "rajasaab_trailer_h264.mp4"
+  },
+  {
+    "id": "20261112-1730-therampartsofice",
+    "slot": "2026-11-12T17:30:00+05:30",
+    "pillar": "romance",
+    "source_url": "https://www.youtube.com/watch?v=sWvfeHOkAOU",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/therampartsofice_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Koyuki finally smiled",
+    "words": "THE RAMPARTS",
+    "title": "The reason why Koyuki finally smiled 💀 | Koyuki lets someone in | #edit",
+    "description": "The reason why Koyuki finally smiled. Koyuki lets someone in from the official The Ramparts of Ice: Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=sWvfeHOkAOU). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #therampartsofice",
+    "tags": [
+      "therampartsofice",
+      "romanceanime",
+      "netflixanime",
+      "koyuki",
+      "shoujo",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK",
+    "fallback_release": "sources",
+    "fallback_asset": "therampartsofice_trailer_h264.mp4"
+  },
+  {
+    "id": "20261112-2230-shahrukhkhan",
+    "slot": "2026-11-12T22:30:00+05:30",
+    "pillar": "celeb",
+    "source_url": "https://www.youtube.com/watch?v=COv52Qyctws",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/shahrukhkhan_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why SRK ka Jawan still hits different",
+    "words": "JAWAN",
+    "title": "The reason why SRK ka Jawan still hits different 💀 | Shah Rukh Khan takes on the system | #edit",
+    "description": "The reason why SRK ka Jawan still hits different. Shah Rukh Khan takes on the system from the official Jawan trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=COv52Qyctws). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jawan #shahrukhkhan #srk",
+    "tags": [
+      "jawan",
+      "shahrukhkhan",
+      "srk",
+      "bollywood",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "IN",
+    "fallback_release": "sources",
+    "fallback_asset": "shahrukhkhan_trailer_h264.mp4"
+  }
 ]
