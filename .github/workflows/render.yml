@@ -114,6 +114,7 @@ jobs:
           pattern: result-*
       - name: Commit results/<id>.json
         run: |
+          mkdir -p art results
           find art -path '*/results/*.json' -exec cp {} results/ \;
           git config user.name "skywalker-render"
           git config user.email "actions@users.noreply.github.com"
