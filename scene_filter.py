@@ -793,7 +793,13 @@ def detect_overlay_text(frame: np.ndarray) -> list[str]:
 
 
 def detect_frame(frame: np.ndarray) -> list[str]:
-    """Return rejection reasons for a single frame (may be empty)."""
+    """Return rejection reasons for a single frame (may be empty).
+
+    Hard: empty_dark (black/fade filler), text_overlay (any title / logo
+    wordmark / date / rating / credits typography, via the PP-OCRv3 DB
+    detector in text_det.py), OCR date/title words when an OCR engine exists.
+    Soft (never a reject on their own): dark, red_solid.
+    """
     reasons: list[str] = []
     if is_empty_dark(frame):
         reasons.append("empty_dark")
@@ -802,12 +808,14 @@ def detect_frame(frame: np.ndarray) -> list[str]:
         reasons.append("dark")
     if is_red_or_solid(frame):
         reasons.append("red_solid")
-    if is_text_card(frame):
-        reasons.append("text_card")
     try:
+        import text_det
+        hit, _info = text_det.has_overlay_text(_rgb(active_picture(frame)))
+        if hit:
+            reasons.append("text_overlay")
+    except Exception as e:  # model missing must never silently pass text
+        print(f"  text_det unavailable: {e}")
         reasons.extend(detect_overlay_text(frame))
-    except Exception:
-        pass
     try:
         hit, why = ocr_title_hit(frame)
         if hit and why:

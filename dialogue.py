@@ -409,14 +409,30 @@ def segment_for_word(word: dict, segments: list[dict]) -> dict | None:
 
 
 def word_line_is_complete(word: dict, item: dict, segments: list[dict], slack: float = 0.10) -> bool:
-    """True if the word's full whisper line sits inside the clip (or there is no line)."""
+    """True if the spoken WORD itself is fully audible inside the clip.
+
+    The old rule required the whole whisper line to fit inside the clip.
+    Trailer shots are 1-3s and lines run across cuts, so ~35 real words per
+    short were dropped and QA failed with "no dialogue subtitles". Showing
+    exactly the words that are heard is still word-accurate; only a word the
+    cut slices in half is dropped.
+    """
     a = float(item.get("src_start") or 0)
     b = a + float(item.get("visible") or 0)
+    w0 = float(word.get("src_start") or word.get("start") or 0)
+    w1 = float(word.get("src_end") or word.get("end") or 0)
+    if not (w0 >= a - slack and w1 <= b + slack):
+        return False
     seg = segment_for_word(word, segments)
     if not seg:
-        # bare word: keep only if the word itself is fully inside
-        return float(word.get("src_start") or word.get("start") or 0) >= a - slack and                float(word.get("src_end") or word.get("end") or 0) <= b + slack
-    return float(seg["start"]) >= a - slack and float(seg["end"]) <= b + slack
+        return True
+    s0, s1 = float(seg["start"]), float(seg["end"])
+    if s0 >= a - slack and s1 <= b + slack:
+        return True
+    # Line runs across the cut: keep the heard words when most of the line is heard,
+    # drop stray 1-word fragments of a line that is mostly in another shot.
+    overlap = max(0.0, min(b, s1) - max(a, s0))
+    return overlap >= 0.5 * max(0.01, s1 - s0)
 
 
 def drop_incomplete_lines(mapped: list[dict], edl: list[dict], segments: list[dict]) -> list[dict]:

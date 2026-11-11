@@ -102,6 +102,38 @@ def _frame_at(path: Path, t: float) -> np.ndarray | None:
         return None
     return cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)
 
+# Hard cards only: logo / title / date / overlay typography / empty near-black.
+# Cinematic darkness or saturated lighting in real story footage is NOT a fail.
+HARD = {
+    "centered_logo", "logo_animation", "graphic_blob", "text_card",
+    "flat_card", "title_card", "title_logo", "text_overlay", "text_page",
+    "date_card", "logo", "near_black", "empty_dark",
+}
+
+
+def frame_reasons(plate: np.ndarray) -> list[str]:
+    """The single hard-card detector shared by scene screening and final QC.
+
+    pipeline.screen_rendered_clips() runs this exact function on every rendered
+    clip BEFORE stitching, so text/logo/black shots are cut out of the edit
+    instead of only being flagged on the finished video.
+    """
+    reasons: list[str] = []
+    if plate is None or not getattr(plate, "size", 0):
+        return reasons
+    try:
+        import pipeline
+        rs2, _ = pipeline.classify_shot(plate)
+        reasons.extend(r for r in rs2 if r in HARD)
+    except Exception:
+        pass
+    try:
+        sf = scene_filter.detect_frame(plate)
+        reasons.extend(r for r in sf if r in HARD)
+    except Exception:
+        pass
+    return list(dict.fromkeys(reasons))
+
 
 def _banner_visible(frame: np.ndarray, layout: dict | None) -> bool:
     if not layout:
@@ -301,29 +333,7 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
                     plate = scene_filter.active_picture(plate)
                 except Exception:
                     pass
-        # Hard cards only: logo / title / date / overlay typography / empty near-black.
-        # Cinematic darkness or saturated lighting in real story footage is NOT a fail.
-        # (Fool Night and other thrillers are full of dark story frames.)
-        HARD = {
-            "centered_logo", "logo_animation", "graphic_blob", "text_card",
-            "flat_card", "title_card", "title_logo", "text_overlay", "text_page",
-            "date_card", "logo", "near_black", "empty_dark",
-        }
-        reasons = []
-        if plate.size:
-            try:
-                import pipeline
-                rs2, _ = pipeline.classify_shot(plate)
-                reasons.extend(r for r in rs2 if r in HARD)
-            except Exception:
-                rs2 = []
-            try:
-                sf = scene_filter.detect_frame(plate)
-                # typography / empty-dark hits; ignore lone cinematic "dark" / "red_solid"
-                reasons.extend(r for r in sf if r in HARD)
-            except Exception:
-                pass
-            reasons = list(dict.fromkeys(reasons))
+        reasons = frame_reasons(plate)
         if reasons:
             blacklist.append({"t": round(float(t), 2), "reasons": reasons})
         if _banner_visible(fr, layout):

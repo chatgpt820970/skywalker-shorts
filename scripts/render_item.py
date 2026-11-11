@@ -395,6 +395,21 @@ def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_m
         extra.update({"attempt": n, "ok": True, "error": None})
         return True, extra
 
+JOB_T0 = time.monotonic()
+# render.yml job cap is 120 min; stop starting new attempts well before it so the
+# result json is always written (no more silent cancel at the job timeout).
+JOB_BUDGET_S = float(os.environ.get("SKY_JOB_BUDGET_MIN", "95")) * 60.0
+
+
+def _budget_left_for(next_est_s: float) -> bool:
+    used = time.monotonic() - JOB_T0
+    ok = used + next_est_s * 1.1 <= JOB_BUDGET_S
+    if not ok:
+        print(f"::warning::time budget: {used/60:.1f} min used, next attempt ~{next_est_s/60:.1f} min "
+              f"would pass the {JOB_BUDGET_S/60:.0f} min budget; skipping further attempts", flush=True)
+    return ok
+
+
 def main():
     prev = read_prev()
     auto_retries = int(prev.get("auto_retries") or 0)
@@ -410,7 +425,9 @@ def main():
 
     attempts_log = []
     # Attempt 1: normal
+    t_a = time.monotonic()
     ok, info = attempt(1, force_fallback=False)
+    est = time.monotonic() - t_a
     attempts_log.append({k: info.get(k) for k in ("attempt", "ok", "error", "source", "music")})
     if ok:
         write("done", info["detail"], auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
@@ -420,7 +437,11 @@ def main():
         return 0
 
     # Attempt 2: sources-release fallback mp4
+    if not _budget_left_for(est):
+        return _give_up(attempts_log, auto_retries)
+    t_a = time.monotonic()
     ok, info = attempt(2, force_fallback=True)
+    est = max(est, time.monotonic() - t_a)
     attempts_log.append({k: info.get(k) for k in ("attempt", "ok", "error", "source", "music")})
     if ok:
         write("done", info["detail"] + " (retry: sources fallback)", auto_retries=auto_retries,
@@ -431,6 +452,8 @@ def main():
         return 0
 
     # Attempt 3: fallback + different music + alt scenes + relaxed non-hard thresholds
+    if not _budget_left_for(est):
+        return _give_up(attempts_log, auto_retries)
     excl = list(dict.fromkeys([m for m in prior_music + [attempts_log[0].get("music"), attempts_log[1].get("music")] if m]))
     ok, info = attempt(3, force_fallback=True, relax=True, alt_scenes=True,
                        exclude_music=excl, music_salt=f"retry3-{auto_retries}")
@@ -443,12 +466,16 @@ def main():
                           "music", "music_credit", "description_final")})
         return 0
 
+    return _give_up(attempts_log, auto_retries)
+
+
+def _give_up(attempts_log, auto_retries):
     last = attempts_log[-1].get("error") or "unknown failure"
     # All 3 in-job attempts failed. If we still have an outer auto-retry, queue it
     # and exit 0 so this run does not wake BIBI yet.
     if auto_retries < MAX_AUTO_RETRIES:
         write("retry_queued",
-              f"all 3 in-job attempts failed; auto-retry {auto_retries + 1}/{MAX_AUTO_RETRIES} will be dispatched: {last}"[:800],
+              f"all {len(attempts_log)} in-job attempt(s) failed; auto-retry {auto_retries + 1}/{MAX_AUTO_RETRIES} will be dispatched: {last}"[:800],
               auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
               attempts=attempts_log, last_error=last)
         print(f"::warning::{iid}: queued outer auto-retry ({auto_retries + 1}/{MAX_AUTO_RETRIES})")

@@ -484,32 +484,15 @@ def classify_shot(arr: np.ndarray) -> tuple[list[str], dict]:
     # near-black / empty filler (not just a dark story beat with visible content)
     if luma < 12 or vdark > 0.92 or (black > 0.90 and bright < 0.08) or (luma < 14 and bright < 0.12):
         reasons.append("near_black")
-    # compact graphic on a dark field (studio mark)
-    if dark >= 0.70 and bright <= 0.28 and inC >= 0.50 and (bbox < 0.60 or uniq <= 24 or (ystd < 0.20 and xstd < 0.22)):
-        reasons.append("centered_logo")
-    # saturated smooth logo animation (Netflix N + color bars) — needs a visible mark
-    if sat_frac >= 0.80 and flatg >= 0.78 and strong <= 0.02 and dark >= 0.35 and bright >= 0.18:
-        reasons.append("logo_animation")
-    # large smooth brand-color field on a dark card
-    if blob_frac >= 0.18 and flatg >= 0.80 and strong <= 0.03 and dark >= 0.50 and sat_frac >= 0.25:
-        reasons.append("graphic_blob")
-    if blob_frac >= 0.28 and flatg >= 0.90 and hf < 3.0 and strong <= 0.015 and dark >= 0.40:
-        reasons.append("graphic_blob")
-    # typography / title / date / coming-soon / credit cards (not busy footage with signs)
-    if uniq <= 16 and horiz >= 0.06:
-        reasons.append("text_card")
-    if horiz >= 0.045 and flatg >= 0.82 and strong <= 0.04:
-        reasons.append("text_card")
-    # flat white or plain-color title card
-    if flatg >= 0.88 and luma >= 200 and horiz >= 0.02:
+    # Plain solid-colour frame (fade card / flash). Real story shots always have
+    # texture, so require an almost uniform picture, not just "flat gradients".
+    if flatg >= 0.97 and float(L.std()) < 10.0 and strong <= 0.005:
         reasons.append("flat_card")
-    if flatg >= 0.90 and uniq <= 24 and luma >= 30 and strong <= 0.04:
-        reasons.append("flat_card")
-    # vertical saturated color bars / logo-animation streaks (date cards, Netflix intro)
-    col_std = float(L.mean(axis=0).std())
-    row_std = float(L.mean(axis=1).std())
-    if sat_frac >= 0.70 and col_std > 25 and col_std > 2.0 * (row_std + 1):
-        reasons.append("logo_animation")
+    # Text / logo / title / date / rating / credits are detected by the neural
+    # scene-text detector in scene_filter.detect_frame (text_det.py). The old
+    # pixel heuristics here (centered_logo, logo_animation, graphic_blob,
+    # text_card) fired on faces and dim warm shots and missed big titles like
+    # "THIS NOVEMBER", so they are no longer hard rejects.
     # unique, stable order
     reasons = list(dict.fromkeys(reasons))
     stats = {
@@ -1213,9 +1196,7 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             room_a = sc["dur"] >= vis + 0.22
             room_b = nxt["dur"] >= slots[i + 1][0] + 0.22
             if room_a and room_b:
-                if i == 0:
-                    trans_out, td = "flash", 0.12
-                elif i % 3 == 0:
+                if i % 3 == 0 and i > 0:
                     trans_out, td = ("whip_left" if (i // 3) % 2 == 0 else "whip_right"), 0.16
         src_start = float(src_start)
         src_end = float(sc["end"])
@@ -2244,6 +2225,113 @@ def render_all_clips(mezz: Path, edl: list[dict], crop_h: int) -> list[Path]:
     return paths
 
 
+SCREEN_ROUNDS = 4  # cheap clip-level re-slices before stitch/mux
+
+
+def _replan(scenes: list[dict], music: dict, transcript: dict | None) -> list[dict]:
+    edl = plan_edit(scenes, music, TARGET_DUR, transcript=transcript)
+    edl = finalize_edl_for_template(edl, music, TARGET_DUR)
+    if ENERGY:
+        edl = apply_energy(edl, scenes, music)
+        edl = repair_unique_edl(edl, scenes, transcript)
+        acc = float(edl[-1]["t1"]) if edl else 0.0
+        _require_min_duration(acc, where="re-slice after clip screening")
+        try:
+            (WORK / "plan_meta.json").write_text(json.dumps({
+                "unique_duration": round(acc, 3), "target": float(TARGET_DUR),
+                "min_unique": MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR,
+                "min_output": MIN_OUTPUT_DUR,
+                "short_unique": bool(acc + 1e-6 < (MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR)),
+                "n_shots": len([x for x in edl if x.get("scene") != "end"]),
+            }, indent=2))
+        except Exception:
+            pass
+    return edl
+
+
+def screen_rendered_clips(paths: list[Path], edl: list[dict]) -> tuple[list[dict], bool]:
+    """Run auto_qc's exact hard-card detector on every rendered clip plate.
+
+    Returns (blacklist in output time, end_card_dirty).
+    """
+    import auto_qc
+    step = 1.0 / float(getattr(_sf_mod(), "QC_FPS", 4.0))
+    hits: list[dict] = []
+    end_dirty = False
+    for pth, it in zip(paths, edl):
+        if not Path(pth).exists():
+            continue
+        try:
+            d = ffprobe_dur(Path(pth))
+        except Exception:
+            continue
+        times = []
+        t = 0.04
+        while t < d - 0.02:
+            times.append(round(t, 3))
+            t += step
+        if d > 0.12:
+            times.append(round(d - 0.05, 3))
+        try:
+            grabbed = _sf_mod().grab_times(Path(pth), times)
+        except Exception:
+            grabbed = []
+        speed = float(it.get("speed") or 1.0) or 1.0
+        for ct, fr in grabbed:
+            if fr is None:
+                continue
+            try:
+                plate = _sf_mod().active_picture(fr)
+            except Exception:
+                plate = fr
+            rs = auto_qc.frame_reasons(plate)
+            if not rs:
+                continue
+            if it.get("scene") == "end":
+                end_dirty = True
+                break
+            hits.append({"t": round(float(it["t0"]) + min(ct, float(it.get("visible") or ct)) * speed, 3),
+                         "reasons": rs, "scene": it.get("scene")})
+    return hits, end_dirty
+
+
+def _sf_mod():
+    import scene_filter as _sf
+    return _sf
+
+
+def render_screened(mezz: Path, edl: list[dict], scenes: list[dict], music: dict,
+                    transcript: dict | None, crop_h: int, scored_path: Path | None = None) -> tuple[list[dict], list[Path]]:
+    """Render clips, cut any shot with text/logo/black out of the edit, re-plan, repeat."""
+    for rnd in range(SCREEN_ROUNDS + 1):
+        for p in CLIPS.glob("clip_*.mp4"):
+            p.unlink()
+        paths = render_all_clips(mezz, edl, crop_h)
+        hits, end_dirty = screen_rendered_clips(paths, edl)
+        if end_dirty and edl and edl[-1].get("scene") == "end":
+            print("  screen: end still has text/logo/black -> dropping end card")
+            edl.pop()
+            paths.pop()
+        if not hits:
+            print(f"  screen round {rnd}: all clips clean")
+            return edl, paths
+        for h in hits[:12]:
+            print(f"  screen hit t={h['t']:.2f}s scene {h['scene']}: {','.join(h['reasons'])}")
+        if rnd >= SCREEN_ROUNDS:
+            print(f"  screen: {len(hits)} dirty frame(s) left after {SCREEN_ROUNDS} rounds; final QC decides")
+            return edl, paths
+        body = [x for x in edl if x.get("scene") != "end"]
+        marked = apply_qc_blacklist(scenes, body, hits)
+        if marked <= 0:
+            return edl, paths
+        print(f"=== 5b. Screen re-slice {rnd + 1}: cut {marked} dirty shot(s) out of the edit ===")
+        if scored_path is not None:
+            scored_path.write_text(json.dumps(scenes, indent=2, default=str))
+        edl = _replan(scenes, music, transcript)
+        (WORK / "edl.json").write_text(json.dumps(edl, indent=2, default=str))
+    return edl, paths
+
+
 def _choose_end_still(edl: list[dict], mezz: Path) -> float | None:
     """Pick a mid-frame from an unused unique source range, or None to skip."""
     import similarity as sim
@@ -2581,15 +2669,9 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
     }
     (WORK / "layout.json").write_text(json.dumps(layout))
     fx = ""
-    if ENERGY and DROP_T is not None:
-        D = float(DROP_T)
-        # Temporary punch-in of the WHOLE bar+frame block (not a source crop).
-        # 1.12x at the drop, decays to 1.0 in 0.35s (<= 0.4s hard cap).
-        z = f"if(between(in/{FPS},{D:.3f},{D + 0.35:.3f}),1+0.12*(1-(in/{FPS}-{D:.3f})/0.35),1)"
-        fx = (f",zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS}"
-              f",drawbox=x=0:y=0:w=iw:h=ih:color=white@1.0:t=fill:enable='between(t,{D:.3f},{D + 0.05:.3f})'"
-              f",drawbox=x=0:y=0:w=iw:h=ih:color=white@0.55:t=fill:enable='between(t,{D + 0.05:.3f},{D + 0.10:.3f})'"
-              f",drawbox=x=0:y=0:w=iw:h=ih:color=white@0.25:t=fill:enable='between(t,{D + 0.10:.3f},{D + 0.15:.3f})'")
+    # HARD RULES: never crop (no punch-in zoompan) and no flat white/black
+    # frames (the old full-frame white flash at DROP_T hid the hook bar and was
+    # flagged as a flat card by auto_qc, which then punched good scenes out).
     # Lower-third captions live in the black under the plate, never on the footage
     # and never as a Skywalker watermark (watermark is forbidden).
     ass_extra = ""
@@ -2731,6 +2813,8 @@ def run_auto_qc(path: Path) -> dict:
         auto_qc.write_report(WORK / "auto_qc.json", report)
         print("auto_qc:", "OK" if report.get("ok") else report.get("issues"),
               f"blacklist={len(report.get('blacklist') or [])}")
+        for h in (report.get("blacklist") or [])[:12]:
+            print(f"  auto_qc hit t={h.get('t')}s: {','.join(h.get('reasons') or [])}")
         return report
     except Exception as e:
         print(f"auto_qc skipped: {e}")
@@ -3348,9 +3432,7 @@ def main():
 
     print("=== 5. Render plates ===")
     # clear old clips
-    for p in CLIPS.glob("clip_*.mp4"):
-        p.unlink()
-    paths = render_all_clips(mezz, edl, crop[1])
+    edl, paths = render_screened(mezz, edl, scenes, music, transcript, crop[1], scored_path)
 
     print("=== 6. Stitch ===")
     twork = template_work()
@@ -3381,7 +3463,7 @@ def main():
     qc = run_auto_qc(out)
     report["auto_qc"] = {k: qc.get(k) for k in ("ok", "issues", "blacklist", "meta", "mean_volume_db",
                                                  "banner_hits", "caption_hits", "checked") if k in qc}
-    for qc_i in range(3):
+    for qc_i in range(2):
         if qc.get("ok") or not qc.get("blacklist"):
             break
         marked = apply_qc_blacklist(scenes, edl, qc.get("blacklist") or [])
@@ -3404,9 +3486,7 @@ def main():
             qc = {"ok": False, "issues": list(qc.get("issues") or []) + [str(e)], "blacklist": []}
             break
         (WORK / "edl.json").write_text(json.dumps(edl, indent=2, default=str))
-        for pth in CLIPS.glob("clip_*.mp4"):
-            pth.unlink()
-        paths = render_all_clips(mezz, edl, crop[1])
+        edl, paths = render_screened(mezz, edl, scenes, music, transcript, crop[1], scored_path)
         silent = template_work() / "silent.mp4"
         stitch(paths, edl, silent)
         silent_dur = ffprobe_dur(silent)

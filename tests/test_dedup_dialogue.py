@@ -197,12 +197,14 @@ def test_fit_dialogue_drops_line_that_cannot_fit():
     outside = (a + vis) <= 10.05 or a >= 14.45
     if not (fully or outside):
         edl = [{"i": 0, "scene": 1, "src_start": a, "visible": vis}]
-        mapped = [{"t0": 0.0, "t1": 0.2, "word": "long", "clip": 0, "src_start": 10.0, "src_end": 10.4}]
+        # the word itself (10.0-14.5) is cut by the window, so it must not be captioned
+        mapped = [{"t0": 0.0, "t1": 0.2, "word": "long", "clip": 0, "src_start": 10.0, "src_end": 14.5}]
         assert dialogue.drop_incomplete_lines(mapped, edl, tr["segments"]) == []
 
 
 def test_drop_incomplete_lines_from_captions():
-    edl = [{"i": 0, "scene": 1, "src_start": 10.0, "visible": 1.8, "t0": 0.0, "t1": 1.8}]
+    # Clip hears only 0.9s of a 2.4s line: fragment is dropped.
+    edl = [{"i": 0, "scene": 1, "src_start": 10.0, "visible": 0.9, "t0": 0.0, "t1": 0.9}]
     segs = [{"start": 10.0, "end": 12.4, "text": "You can do better than me."}]
     mapped = [
         {"t0": 0.0, "t1": 0.4, "word": "You", "clip": 0, "src_start": 10.0, "src_end": 10.4},
@@ -210,8 +212,8 @@ def test_drop_incomplete_lines_from_captions():
     ]
     kept = dialogue.drop_incomplete_lines(mapped, edl, segs)
     assert kept == []
-    # Fully covered line is kept
-    edl[0]["visible"] = 2.5
+    # Most of the line is heard (1.8/2.4s): the fully-audible words are kept.
+    edl[0]["visible"] = 1.8
     kept = dialogue.drop_incomplete_lines(mapped, edl, segs)
     assert [w["word"] for w in kept] == ["You", "can"]
 
