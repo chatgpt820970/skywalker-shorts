@@ -296,7 +296,13 @@ def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, excl
     if music_salt:
         cmd += ["--music-salt", music_salt]
     env = dict(os.environ, SKY_WORK=str(work), SKY_ROOT=str(OUT))
-    if not env.get("SKY_WHISPER_PROMPT"):
+    if (item.get("market") or "").upper() == "IN" or item.get("dialogue_lang") in ("hi", "te", "ta"):
+        # Hindi/South dubs: whisper-small output was garbled ("पेवरेट ग्रिकेट").
+        # medium + forced language is far closer to the real lines (~3 min CPU).
+        env["SKY_WHISPER_MODEL"] = item.get("whisper_model") or "medium"
+        env["SKY_WHISPER_LANG"] = item.get("dialogue_lang") or "hi"
+        env.setdefault("SKY_WHISPER_PROMPT", "")
+    if not env.get("SKY_WHISPER_PROMPT") and "SKY_WHISPER_PROMPT" not in env:
         # Character/film names help whisper spell them right in the subtitles.
         names = item.get("whisper_prompt") or (
             (item.get("description") or "").split("\n")[0] + " " +

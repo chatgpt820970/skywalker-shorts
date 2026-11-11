@@ -121,6 +121,7 @@ def transcribe_source(path: Path, cache: Path | None = None) -> dict:
             vad_filter=True,
             beam_size=5,
             initial_prompt=prompt,
+            language=(os.environ.get("SKY_WHISPER_LANG") or None),
         )
         words, segs = [], []
         for seg in segments:
@@ -536,6 +537,11 @@ def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float =
         text = " ".join((w.get("word") or "").strip() for w in buf).strip()
         text = " ".join(text.split())
         if not text:
+            buf.clear()
+            return
+        # Hallucinated junk (Arabic/CJK glyphs, U+FFFD) on music beds is never shown.
+        if any(("\u0600" <= ch <= "\u06ff") or ("\u4e00" <= ch <= "\u9fff") or ch == "\ufffd" for ch in text):
+            print(f"  dropped junk cue: {text!r}")
             buf.clear()
             return
         # Word-accurate or nothing: a cue containing a word whisper itself is

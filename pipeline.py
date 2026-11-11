@@ -2295,6 +2295,21 @@ def screen_rendered_clips(paths: list[Path], edl: list[dict]) -> tuple[list[dict
     return hits, end_dirty
 
 
+def _cap_total(edl: list[dict], paths: list[Path], cap: float = 32.0) -> tuple[list[dict], list[Path]]:
+    """Drop the end still (then trailing shots) if the cut would run past the 32s cap."""
+    def total():
+        return float(edl[-1]["t1"]) if edl else 0.0
+    if edl and edl[-1].get("scene") == "end" and total() > cap + 0.05:
+        print(f"  cap: {total():.2f}s > {cap:.0f}s -> dropping end still")
+        edl.pop(); paths.pop()
+    while len(edl) > 2 and total() > cap + 0.05 and float(edl[-2]["t1"]) >= MIN_UNIQUE_DUR:
+        print(f"  cap: {total():.2f}s > {cap:.0f}s -> dropping last shot {edl[-1].get('scene')}")
+        edl.pop(); paths.pop()
+    if edl:
+        edl[-1]["trans_out"] = "cut"
+    return edl, paths
+
+
 def _sf_mod():
     import scene_filter as _sf
     return _sf
@@ -2314,7 +2329,7 @@ def render_screened(mezz: Path, edl: list[dict], scenes: list[dict], music: dict
             paths.pop()
         if not hits:
             print(f"  screen round {rnd}: all clips clean")
-            return edl, paths
+            return _cap_total(edl, paths)
         for h in hits[:12]:
             print(f"  screen hit t={h['t']:.2f}s scene {h['scene']}: {','.join(h['reasons'])}")
         if rnd >= SCREEN_ROUNDS:
@@ -3201,6 +3216,12 @@ def main():
         TARGET_DUR = float(args.target_dur)
     if args.end_card is not None:
         END_CARD = float(args.end_card)
+    # Hard rule: finished Short is 25-32s INCLUDING the end still. The planner
+    # overshoots its body target by ~1-3s on beat snapping (Peddi came out 35.8s),
+    # so plan the body short enough that body + end still lands <= 32s.
+    MAX_TOTAL_DUR = 32.0
+    TARGET_DUR = max(MIN_UNIQUE_DUR + 0.5, min(TARGET_DUR, MAX_TOTAL_DUR) - END_CARD - 1.5)
+    print(f"  body target {TARGET_DUR:.1f}s (+{END_CARD:.1f}s end still, cap {MAX_TOTAL_DUR:.0f}s)")
     PLATE_H_TARGET = even(args.plate_h) if args.plate_h else 0
     STABILIZE = not args.no_stabilize
     OVERLAY_TEXT = False  # never burn type onto the footage
