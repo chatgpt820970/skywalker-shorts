@@ -1,102 +1,114 @@
 [
- {
-  "id": "20261113-0630-dunepartthree",
-  "slot": "2026-11-13T06:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=uJqaGLmZpGo",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Paul Atreides became the villain",
-  "words": "DUNE PART",
-  "title": "The reason why Paul Atreides became the villain 💀 | Emperor Paul's final war | #edit",
-  "description": "The reason why Paul Atreides became the villain. Emperor Paul's final war from the official Dune: Part Three trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=uJqaGLmZpGo). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dunepartthree",
-  "tags": [
-   "dunepartthree",
-   "dune",
-   "paulatreides",
-   "timotheechalamet",
-   "zendaya",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK"
- },
- {
-  "id": "20261113-1230-war2",
-  "slot": "2026-11-13T12:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=mjBym9uKth4",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why War 2 ka shadow kabhi nahi rukta",
-  "words": "WAR 2",
-  "title": "The reason why War 2 ka shadow kabhi nahi rukta 💀 | Hrithik and NTR go to war | #edit",
-  "description": "The reason why War 2 ka shadow kabhi nahi rukta. Hrithik Roshan and NTR go to war from the official War 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=mjBym9uKth4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #war2 #hrithikroshan #ntr",
-  "tags": [
-   "war2",
-   "hrithikroshan",
-   "ntr",
-   "yrf",
-   "bollywood",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "IN"
- },
- {
-  "id": "20261113-1730-apothecarydiaries",
-  "slot": "2026-11-13T17:30:00+05:30",
-  "pillar": "romance",
-  "source_url": "https://www.youtube.com/watch?v=2KBxrmKh-M0",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Jinshi can't stop looking at Maomao",
-  "words": "THE APOTHECARY",
-  "title": "The reason why Jinshi can't stop looking at Maomao 💀 | Maomao and Jinshi | #edit",
-  "description": "The reason why Jinshi can't stop looking at Maomao. Maomao and Jinshi from the official The Apothecary Diaries Season 3 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2KBxrmKh-M0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #apothecarydiaries",
-  "tags": [
-   "apothecarydiaries",
-   "maomao",
-   "jinshi",
-   "kusuriyanohitorigoto",
-   "netflix",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK"
- },
- {
-  "id": "20261113-2230-blackclover",
-  "slot": "2026-11-13T22:30:00+05:30",
-  "pillar": "anime",
-  "source_url": "https://www.youtube.com/watch?v=BwdMT-OiARI",
-  "fallback_mp4": [],
-  "template": "whitebar",
-  "hook": "The reason why Asta never gives up",
-  "words": "BLACK CLOVER",
-  "title": "The reason why Asta never gives up 💀 | Asta's anti-magic returns | #edit",
-  "description": "The reason why Asta never gives up. Asta's anti-magic returns from the official Black Clover Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=BwdMT-OiARI). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #blackclover",
-  "tags": [
-   "blackclover",
-   "asta",
-   "blackcloverseason2",
-   "crunchyroll",
-   "animeedit",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 32,
-  "status": "queued",
-  "market": "US/UK"
- }
+  {
+    "id": "20261113-0630-dunepartthree",
+    "slot": "2026-11-13T06:30:00+05:30",
+    "pillar": "movie",
+    "source_url": "https://www.youtube.com/watch?v=uJqaGLmZpGo",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dunepartthree_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Paul Atreides became the villain",
+    "words": "DUNE PART",
+    "title": "The reason why Paul Atreides became the villain 💀 | Emperor Paul's final war | #edit",
+    "description": "The reason why Paul Atreides became the villain. Emperor Paul's final war from the official Dune: Part Three trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=uJqaGLmZpGo). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dunepartthree",
+    "tags": [
+      "dunepartthree",
+      "dune",
+      "paulatreides",
+      "timotheechalamet",
+      "zendaya",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK",
+    "fallback_release": "sources",
+    "fallback_asset": "dunepartthree_trailer_h264.mp4"
+  },
+  {
+    "id": "20261113-1230-war2",
+    "slot": "2026-11-13T12:30:00+05:30",
+    "pillar": "movie",
+    "source_url": "https://www.youtube.com/watch?v=mjBym9uKth4",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/war2_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why War 2 ka shadow kabhi nahi rukta",
+    "words": "WAR 2",
+    "title": "The reason why War 2 ka shadow kabhi nahi rukta 💀 | Hrithik and NTR go to war | #edit",
+    "description": "The reason why War 2 ka shadow kabhi nahi rukta. Hrithik Roshan and NTR go to war from the official War 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=mjBym9uKth4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #war2 #hrithikroshan #ntr",
+    "tags": [
+      "war2",
+      "hrithikroshan",
+      "ntr",
+      "yrf",
+      "bollywood",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "IN",
+    "fallback_release": "sources",
+    "fallback_asset": "war2_trailer_h264.mp4"
+  },
+  {
+    "id": "20261113-1730-apothecarydiaries",
+    "slot": "2026-11-13T17:30:00+05:30",
+    "pillar": "romance",
+    "source_url": "https://www.youtube.com/watch?v=2KBxrmKh-M0",
+    "fallback_mp4": [],
+    "template": "whitebar",
+    "hook": "The reason why Jinshi can't stop looking at Maomao",
+    "words": "THE APOTHECARY",
+    "title": "The reason why Jinshi can't stop looking at Maomao 💀 | Maomao and Jinshi | #edit",
+    "description": "The reason why Jinshi can't stop looking at Maomao. Maomao and Jinshi from the official The Apothecary Diaries Season 3 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2KBxrmKh-M0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #apothecarydiaries",
+    "tags": [
+      "apothecarydiaries",
+      "maomao",
+      "jinshi",
+      "kusuriyanohitorigoto",
+      "netflix",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK"
+  },
+  {
+    "id": "20261113-2230-blackclover",
+    "slot": "2026-11-13T22:30:00+05:30",
+    "pillar": "anime",
+    "source_url": "https://www.youtube.com/watch?v=BwdMT-OiARI",
+    "fallback_mp4": [
+      "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/blackclover_trailer_h264.mp4"
+    ],
+    "template": "whitebar",
+    "hook": "The reason why Asta never gives up",
+    "words": "BLACK CLOVER",
+    "title": "The reason why Asta never gives up 💀 | Asta's anti-magic returns | #edit",
+    "description": "The reason why Asta never gives up. Asta's anti-magic returns from the official Black Clover Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=BwdMT-OiARI). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #blackclover",
+    "tags": [
+      "blackclover",
+      "asta",
+      "blackcloverseason2",
+      "crunchyroll",
+      "animeedit",
+      "edit",
+      "shorts",
+      "trending"
+    ],
+    "target_dur": 32,
+    "status": "queued",
+    "market": "US/UK",
+    "fallback_release": "sources",
+    "fallback_asset": "blackclover_trailer_h264.mp4"
+  }
 ]
