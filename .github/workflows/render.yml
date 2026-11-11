@@ -89,6 +89,41 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SKY_WHISPER_MODEL: small
         run: python3 scripts/render_item.py "${{ matrix.id }}"
+      - name: Telegram preview (only after QA passed)
+        if: success()
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ID: ${{ matrix.id }}
+        run: |
+          st=$(python3 -c "import json,sys;print(json.load(open('results/'+sys.argv[1]+'.json')).get('status',''))" "$ID" 2>/dev/null || true)
+          if [ "$st" != "done" ]; then echo "QA not passed (status=$st): no Telegram preview"; exit 0; fi
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then echo "Telegram secrets not set: skipping"; exit 0; fi
+          master="out/render-$ID.mp4"
+          [ -f "$master" ] || { echo "master $master missing"; exit 0; }
+          # 4K master stays untouched for YouTube; this is a separate small copy.
+          ffmpeg -hide_banner -loglevel error -y -i "$master" -vf "scale=1080:1920:flags=lanczos" \
+            -c:v libx264 -preset veryfast -crf 22 -maxrate 4M -bufsize 8M -pix_fmt yuv420p \
+            -c:a aac -b:a 128k -movflags +faststart preview.mp4
+          sz=$(stat -c %s preview.mp4)
+          if [ "$sz" -ge 50000000 ]; then
+            ffmpeg -hide_banner -loglevel error -y -i "$master" -vf "scale=1080:1920:flags=lanczos" \
+              -c:v libx264 -preset veryfast -crf 26 -maxrate 2M -bufsize 4M -pix_fmt yuv420p \
+              -c:a aac -b:a 128k -movflags +faststart preview.mp4
+            sz=$(stat -c %s preview.mp4)
+          fi
+          echo "preview size $sz bytes"
+          [ "$sz" -lt 50000000 ] || { echo "preview still >= 50MB, not sending"; exit 0; }
+          title=$(python3 -c "import json,glob,sys
+          for f in glob.glob('queue/*.json'):
+              for it in json.load(open(f)):
+                  if it.get('id')==sys.argv[1]: print(it.get('title','')[:900]); raise SystemExit" "$ID" 2>/dev/null || true)
+          curl -sS --fail-with-body -o /tmp/tg.json -w "telegram http %{http_code}\n" \
+            -F chat_id="$TELEGRAM_CHAT_ID" -F video=@preview.mp4 -F supports_streaming=true \
+            -F caption="Skywalker ready (QA passed): $ID
+          $title" \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo" || { echo "Telegram send failed"; head -c 300 /tmp/tg.json; exit 1; }
       - name: Upload result
         if: always()
         uses: actions/upload-artifact@v4
