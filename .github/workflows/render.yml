@@ -73,18 +73,20 @@ jobs:
             faster-whisper-small-int8-
             faster-whisper-
       - name: Install ffmpeg + deps
+        timeout-minutes: 20
         run: |
-          for i in 1 2 3; do
-            if sudo apt-get update -qq && sudo apt-get install -y -qq -o Acquire::Retries=5 --fix-missing ffmpeg; then break; fi
-            echo "apt attempt $i failed (mirror/DNS flake); retrying in 20s"; sleep 20
-          done
-          command -v ffmpeg >/dev/null || echo "apt ffmpeg unavailable; will use static build"
-          if ! ffmpeg -hide_banner -filters 2>/dev/null | grep -q vidstabdetect; then
-            echo "System ffmpeg lacks vidstab; installing static GPL build"
-            curl -fsSL -o /tmp/ffmpeg.txz "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
+          # Static GPL build first (has vidstab, no apt mirrors needed); apt only as fallback.
+          if curl -fsSL --retry 5 --retry-delay 10 --max-time 300 -o /tmp/ffmpeg.txz "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"; then
             mkdir -p /tmp/ff && tar -xJf /tmp/ffmpeg.txz -C /tmp/ff --strip-components=1
             sudo install -m 0755 /tmp/ff/ffmpeg /tmp/ff/ffprobe /usr/local/bin/
             hash -r
+          fi
+          if ! ffmpeg -hide_banner -filters 2>/dev/null | grep -q vidstabdetect; then
+            echo "static ffmpeg unavailable; trying apt"
+            for i in 1 2 3; do
+              if timeout 300 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq -o Acquire::Retries=3 ffmpeg; then break; fi
+              echo "apt attempt $i failed; retrying in 20s"; sleep 20
+            done
           fi
           ffmpeg -hide_banner -filters | grep -q vidstabdetect || { echo "ffmpeg still lacks vidstab"; exit 1; }
           pip install -q -r requirements.txt "yt-dlp[default]"
