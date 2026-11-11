@@ -1,0 +1,35 @@
+{
+  "id": "20261111-1730-fockerinlaw",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: download failed: ",
+  "at": "2026-11-11 17:35 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43017046278",
+  "slot": "2026-11-11T17:30:00+05:30",
+  "title": "The reason why Greg Focker can never relax 💀 | Greg meets the new in-laws | #edit",
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "download failed: yt-dlp: ERROR: [youtube] vyISuWUWcFs: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://git | yt-dlp: ERROR: [youtube] vyISuWUWcFs: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://git",
+      "source": null,
+      "music": null
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "download failed: ",
+      "source": null,
+      "music": null
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "download failed: ",
+      "source": null,
+      "music": null
+    }
+  ],
+  "last_error": "download failed: "
+}
