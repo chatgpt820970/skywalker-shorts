@@ -1,0 +1,150 @@
+{
+  "id": "demo-superman",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-12 22:11 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43255993480",
+  "slot": null,
+  "title": "David Corenswet is the new Superman #superman #davidcorenswet #superhero",
+  "hook": "Superman is not playing games",
+  "description": "Superman is not playing games. A look at the tension between humanity and the new Man of Steel as he returns to Metropolis. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #davidcorenswet #superhero #shorts #edit",
+  "tags": [
+    "superman",
+    "davidcorenswet",
+    "superhero",
+    "dc",
+    "jamesgunn",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Superman still saves everyone",
+    "title": "Superman still saves everyone | Superman returns to Metropolis | #edit",
+    "description": "Superman still saves everyone. Superman returns to Metropolis from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+    "tags": [
+      "superman",
+      "dc",
+      "davidcorenswet",
+      "jamesgunn",
+      "superhero",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "bold claim",
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "s": 13.7,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "s": 1.3,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "s": 18.1,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_closeeyes.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-demo-superman",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-demo-superman/render-demo-superman.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 10.466,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+  "music": "sw_closeeyes.mp3",
+  "music_credit": "Song: DVRST - Close Eyes",
+  "description_final": "Superman is not playing games. A look at the tension between humanity and the new Man of Steel as he returns to Metropolis. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #davidcorenswet #superhero #shorts #edit\n\nMusic:\nSong: DVRST - Close Eyes",
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 27.333,
+      "audio": true
+    },
+    "lufs": -10.7,
+    "subtitle_cues": 3,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook_english": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 6.0,
+        "metadata": 10.0
+      },
+      "reasons": [
+        "Hook bar is clear, legible English correctly positioned on top of the uncropped landscape footage.",
+        "Footage is clean without logos, title cards, or watermarks.",
+        "Subtitles are missing from the lower black canvas area across all sampled frames."
+      ],
+      "low": []
+    }
+  }
+}
