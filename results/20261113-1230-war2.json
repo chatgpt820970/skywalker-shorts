@@ -1,0 +1,83 @@
+{
+  "id": "20261113-1230-war2",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
+  "at": "2026-11-12 20:10 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43223814811",
+  "slot": "2026-11-13T12:30:00+05:30",
+  "title": "When two legends go to war 💀 | Hrithik and NTR Face Off | #edit",
+  "hook": "When two legends go to war",
+  "description": "When two legends go to war. Witness the ultimate face off from the official War 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=mjBym9uKth4). All rights to the film/series belong to their owners; short commentary edit.\n#shorts #edit #war2 #hrithikroshan #ntr #bollywoodedits",
+  "tags": [
+    "war2",
+    "hrithikroshan",
+    "ntr",
+    "yrf",
+    "bollywood",
+    "edit",
+    "shorts",
+    "trending",
+    "bollywoodedits"
+  ],
+  "queue_meta": {
+    "hook": "The reason why War 2's shadow never stops",
+    "title": "The reason why War 2's shadow never stops 💀 | Hrithik and NTR go to war | #edit",
+    "description": "The reason why War 2's shadow never stops. Hrithik Roshan and NTR go to war from the official War 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=mjBym9uKth4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #war2 #hrithikroshan #ntr",
+    "tags": [
+      "war2",
+      "hrithikroshan",
+      "ntr",
+      "yrf",
+      "bollywood",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "gemini_calls": [
+    {
+      "purpose": "meta",
+      "model": "gemini-3.5-flash",
+      "s": 35.8,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "s": 19.5,
+      "ok": true
+    }
+  ],
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 4.33, 'stabilized': True, 'shots': 7, 'limit_px': 4.0}",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/war2_trailer_h264.mp4",
+      "music": "sw_fearsong.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [1920, 1080], 'letterbox_free': [1920, 804], 'plate': [1080, 452], 'letterbox_rows_black': True, 'frame_corr_median': 0.914, 'edge_corr_median': 0.923, 'shift_px_median': 3.15, 'pairs': 6}; QA no_shake failed: {'ok': False, 'jitter_px_median': 7.76, 'stabilized': True, 'shots': 7, 'limit_px': 4.0}",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/war2_trailer_h264.mp4",
+      "music": "sw_fearsong.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/war2_trailer_h264.mp4",
+      "music": "sw_hukum.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written"
+}
