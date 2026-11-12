@@ -4,10 +4,20 @@ name: auto-retry
 # (the in-job 3-attempt ladder already ran). This is the last automatic
 # chance. If that re-dispatch also fails, render_item writes status=failed
 # and the run concludes failure, which wakes BIBI.
+# It also self-heals cancelled render/publish runs (manual or other-bot cancels):
+# scripts/heal_cancelled.py re-dispatches cancelled items unless superseded by a
+# newer run, already done, retired, or cancelled 3+ times; publish is idempotent.
 on:
   workflow_run:
-    workflows: ["render"]
+    workflows: ["render", "publish"]
     types: [completed]
+  schedule:
+    - cron: "25,55 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: auto-retry
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -23,6 +33,7 @@ jobs:
           ref: main
           fetch-depth: 20
       - name: Re-dispatch retry_queued items once
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'render'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -55,3 +66,9 @@ jobs:
                  "-f", f"max={len(ids)}"]
           subprocess.check_call(cmd)
           PY
+
+      - name: Self-heal cancelled render/publish runs
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/heal_cancelled.py
