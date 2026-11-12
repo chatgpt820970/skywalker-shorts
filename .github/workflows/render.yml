@@ -43,7 +43,7 @@ jobs:
           IDS: ${{ github.event.inputs.ids }}
           MAX_PER_RUN: ${{ github.event.inputs.max || '3' }}
           RETRY_FAILED: ${{ github.event.inputs.retry_failed || 'false' }}
-          RENDER_AHEAD_HOURS: "3"
+          RENDER_AHEAD_HOURS: "6"
         run: python3 scripts/plan.py
 
   render:

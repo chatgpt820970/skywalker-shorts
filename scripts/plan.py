@@ -2,7 +2,7 @@
 """Pick which queue items to render this run (only due + still queued; capped).
 
 A push that adds many ideas therefore renders only what is due soon, never all at once.
-Cron pre-renders each slot ~2 hours before upload (ahead window is 3 hours so a
+Cron pre-renders each slot ~2 hours before upload (ahead window is 6 hours so a skipped cron cannot miss a slot; a
 75-minute render is finished about 2 hours before the slot). Done items are never
 re-rendered. Items in retry_queued are left to the auto-retry workflow unless stale.
 """
