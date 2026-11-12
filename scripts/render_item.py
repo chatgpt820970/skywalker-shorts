@@ -43,6 +43,86 @@ _hook_errs = hook_text.check_item_hook_fields(item)
 if _hook_errs:
     sys.exit("English-only hook/title failed: " + "; ".join(_hook_errs))
 
+import gate
+import gemini
+import sky_ai
+
+os.environ.setdefault("SKY_GEMINI_BUDGET_FILE", str(OUT / f"gemini_budget_{iid}.json"))
+QUEUE_META = {k: item.get(k) for k in ("hook", "title", "description", "tags")}
+GEMINI_META = None
+OUT_RES = int(item.get("out_res") or os.environ.get("SKY_OUT_RES") or 2160)
+
+
+def fetch_music_library():
+    """Download the trending-song mp3s from the 'music' release into music/lib (CI only, cheap)."""
+    lp = REPO / "music" / "library.json"
+    if not lp.exists():
+        return 0
+    lib = json.loads(lp.read_text())
+    ldir = REPO / (lib.get("dir") or "music/lib")
+    ldir.mkdir(parents=True, exist_ok=True)
+    have = {p.name for p in ldir.glob("*.mp3")}
+    need = [t["file"] for t in lib.get("tracks") or [] if t["file"] not in have]
+    if need:
+        repo = os.environ.get("GITHUB_REPOSITORY", "chatgpt820970/skywalker-shorts")
+        args = ["gh", "release", "download", lib.get("release") or "music", "-R", repo, "-D", str(ldir), "--clobber"]
+        for f in need:
+            args += ["-p", f]
+        r = subprocess.run(args, capture_output=True, text=True)
+        if r.returncode != 0:
+            print("music library download failed (falling back to credits.json):", (r.stderr or "")[-300:])
+    n = len(list(ldir.glob("*.mp3")))
+    print(f"music library: {n} track(s) in {ldir}")
+    return n
+
+
+def recent_music(window=None):
+    """Songs used by the last N renders (by slot), so a song never repeats within N videos."""
+    try:
+        window = window or int(json.loads((REPO / "music" / "library.json").read_text()).get("no_repeat_window") or 8)
+    except Exception:
+        window = window or 8
+    rows = []
+    for p in glob.glob(str(RES / "*.json")):
+        try:
+            r = json.loads(Path(p).read_text())
+        except Exception:
+            continue
+        if r.get("id") == iid or r.get("status") != "done" or not r.get("music"):
+            continue
+        rows.append((r.get("slot") or r.get("at") or "", r["music"]))
+    rows.sort()
+    return [m for _, m in rows[-window:]]
+
+
+def apply_gemini_meta():
+    """Gemini writes hook/title/description/hashtags (validated); queue text stays as fallback."""
+    global GEMINI_META
+    if os.environ.get("SKY_GEMINI_META", "1") == "0" or not gemini.available():
+        return
+    meta = sky_ai.write_meta(item, gemini.load_trends(REPO))
+    if not meta:
+        print("gemini meta: keeping queue hook/title")
+        return
+    trial = dict(item, hook=meta["hook"], title=meta["title"])
+    if hook_text.check_item_hook_fields(trial):
+        print("gemini meta failed English check; keeping queue text")
+        return
+    src_line = ""
+    for ln in (item.get("description") or "").split("\n"):
+        if ln.startswith("Source:"):
+            src_line = ln
+    if not src_line and item.get("source_url"):
+        src_line = (f"Source: official trailer ({item['source_url']}). All rights to the film/series belong to "
+                    f"their owners; short commentary edit.")
+    tags = list(dict.fromkeys(meta["hashtags"] + [t for t in (item.get("tags") or [])[:2]]))
+    desc = meta["description"].rstrip() + " Edit by Skywalker.\n" + src_line + "\n" + " ".join("#" + t for t in tags[:6])
+    item["hook"], item["title"], item["description"] = meta["hook"], meta["title"], desc.strip()
+    item["tags"] = list(dict.fromkeys((item.get("tags") or []) + meta["hashtags"]))[:12]
+    GEMINI_META = meta
+    print(f"gemini meta: hook={meta['hook']!r} title={meta['title']!r}")
+
+
 def now():
     return datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
 
@@ -57,7 +137,14 @@ def read_prev():
 
 def write(status, detail, **extra):
     r = {"id": iid, "status": status, "detail": detail, "at": now(), "run_url": run_url,
-         "slot": item.get("slot"), "title": item.get("title"), **extra}
+         "slot": item.get("slot"), "title": item.get("title"), "hook": item.get("hook"),
+         "description": item.get("description"), "tags": item.get("tags"),
+         "queue_meta": QUEUE_META if GEMINI_META else None, "gemini_meta": bool(GEMINI_META),
+         "gemini_calls": gemini._budget().get("log", []), **extra}
+    prev = read_prev()
+    for k in ("buffer_post_id", "buffer_status", "buffer_due_at", "buffer_posted_at", "youtube_url"):
+        if prev.get(k) and k not in r:
+            r[k] = prev[k]  # never lose the Buffer record (idempotency)
     (RES / f"{iid}.json").write_text(json.dumps(r, indent=2, ensure_ascii=False))
     print(json.dumps(r, indent=2, ensure_ascii=False))
     return r
@@ -301,11 +388,12 @@ def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, excl
         cmd += ["--relax"]
     if alt_scenes:
         cmd += ["--alt-scenes"]
-    if exclude_music:
-        cmd += ["--exclude-music", ",".join(exclude_music)]
+    excl_all = list(dict.fromkeys(list(exclude_music or []) + list(RECENT_MUSIC or [])))
+    if excl_all:
+        cmd += ["--exclude-music", ",".join(excl_all)]
     if music_salt:
         cmd += ["--music-salt", music_salt]
-    env = dict(os.environ, SKY_WORK=str(work), SKY_ROOT=str(OUT))
+    env = dict(os.environ, SKY_WORK=str(work), SKY_ROOT=str(OUT), SKY_MARKET=(item.get("market") or "").upper())
     if (item.get("market") or "").upper() == "IN" or item.get("dialogue_lang") in ("hi", "te", "ta"):
         # Hindi/South dubs: whisper-small output was garbled ("पेवरेट ग्रिकेट").
         # medium + forced language is far closer to the real lines (~3 min CPU).
@@ -407,16 +495,35 @@ def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_m
                 print(f"  source too short / under duration gate; trying next official trailer", flush=True)
                 continue
             return False, last
+        gem_qc = None
+        if gemini.available() and gemini.budget_left() > 0:
+            try:
+                gem_qc = sky_ai.qc_judge(out, work, item.get("hook", ""), item.get("title", ""),
+                                         item.get("description", ""))
+            except Exception as e:
+                print("gemini QC skipped:", e)
+        if gem_qc is not None:
+            print("gemini QC:", json.dumps(gem_qc, ensure_ascii=False))
+            if not gem_qc.get("pass"):
+                return False, {"attempt": n, "ok": False, "source": used, "music": credit.get("file"), "qa": checks,
+                               "error": "gemini QC reject: " + "; ".join(gem_qc.get("reasons") or gem_qc.get("low") or ["?"])[:600]}
         try:
             final = OUT / f"render-{iid}.mp4"
             fw, fh, up = upscale(src, out, final)
+            g = gate.run_gate(final, qa_obj=qa, checks=checks, item=item, work=work, gemini_qc=gem_qc, out_res=OUT_RES)
+            print("publish gate:", json.dumps(g, ensure_ascii=False, default=str))
+            if not g["ok"]:
+                return False, {"attempt": n, "ok": False, "source": used, "music": credit.get("file"), "qa": checks,
+                               "gate": g, "error": "publish gate failed: " + "; ".join(g["failures"])[:600]}
             extra = publish(final, fw, fh, up, used, checks, credit, qa)
+            extra["gate"] = g
         except Exception as e:
             return False, {"attempt": n, "ok": False, "error": f"upscale/release failed: {e}",
                            "source": used, "music": credit.get("file"), "qa": checks}
         extra.update({"attempt": n, "ok": True, "error": None})
         return True, extra
 
+RECENT_MUSIC = []
 JOB_T0 = time.monotonic()
 # render.yml job cap is 120 min; stop starting new attempts well before it so the
 # result json is always written (no more silent cancel at the job timeout).
@@ -445,6 +552,14 @@ def main():
         if a.get("music"):
             prior_music.append(a["music"])
 
+    fetch_music_library()
+    recent = recent_music()
+    if recent:
+        print("music: skipping songs used in the last renders:", recent)
+    apply_gemini_meta()
+    global RECENT_MUSIC
+    RECENT_MUSIC = recent
+
     attempts_log = []
     # Attempt 1: normal
     t_a = time.monotonic()
@@ -455,7 +570,7 @@ def main():
         write("done", info["detail"], auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
               attempts=attempts_log, last_error=None, **{k: v for k, v in info.items()
                 if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
-                         "music", "music_credit", "description_final")})
+                         "music", "music_credit", "description_final", "gate")})
         return 0
 
     # Attempt 2: sources-release fallback mp4
@@ -470,7 +585,7 @@ def main():
               max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=None,
               **{k: v for k, v in info.items()
                  if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
-                          "music", "music_credit", "description_final")})
+                          "music", "music_credit", "description_final", "gate")})
         return 0
 
     # Attempt 3: fallback + different music + alt scenes + relaxed non-hard thresholds
@@ -485,7 +600,7 @@ def main():
               max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=None,
               **{k: v for k, v in info.items()
                  if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
-                          "music", "music_credit", "description_final")})
+                          "music", "music_credit", "description_final", "gate")})
         return 0
 
     return _give_up(attempts_log, auto_retries)

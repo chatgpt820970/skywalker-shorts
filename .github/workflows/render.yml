@@ -90,10 +90,16 @@ jobs:
           fi
           ffmpeg -hide_banner -filters | grep -q vidstabdetect || { echo "ffmpeg still lacks vidstab"; exit 1; }
           pip install -q -r requirements.txt "yt-dlp[default]"
+      - uses: actions/cache@v4
+        with:
+          path: music/lib
+          key: music-lib-${{ hashFiles('music/library.json') }}
+          restore-keys: music-lib-
       - name: Render ${{ matrix.id }}
         env:
           GH_TOKEN: ${{ github.token }}
           SKY_WHISPER_MODEL: small
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 scripts/render_item.py "${{ matrix.id }}"
       - name: Upload result
         if: always()
@@ -106,6 +112,8 @@ jobs:
             out/work_${{ matrix.id }}/qa/qa_all.jpg
             out/work_${{ matrix.id }}_a3/qa/qa_extra.json
             out/work_${{ matrix.id }}_a3/qa/qa_all.jpg
+            out/work_${{ matrix.id }}*/gem_qc_sheet.jpg
+            out/gemini_budget_${{ matrix.id }}.json
           if-no-files-found: ignore
 
   commit-results:
