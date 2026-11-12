@@ -93,6 +93,8 @@
   "pillar": "romance",
   "source_url": "https://www.youtube.com/watch?v=2KBxrmKh-M0",
   "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_cr_trailer_h264.mp4",
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_s3_trailer_h264.mp4",
    "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_trailer_h264.mp4"
   ],
   "template": "whitebar",
@@ -114,7 +116,11 @@
   "status": "queued",
   "market": "US/UK",
   "fallback_release": "sources",
-  "fallback_asset": "apothecarydiaries_trailer_h264.mp4"
+  "fallback_asset": "apothecarydiaries_cr_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=XYNGkSvFT8c",
+   "https://www.youtube.com/watch?v=9aFlpf00KZs"
+  ]
  },
  {
   "id": "20261113-2230-blackclover",
