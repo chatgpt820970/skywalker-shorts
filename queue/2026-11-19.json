@@ -1,0 +1,124 @@
+[
+ {
+  "id": "20261119-0630-tronares",
+  "slot": "2026-11-19T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=YShVEXb7-ic",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/tronares_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why the Grid came for us",
+  "words": "TRON: ARES",
+  "title": "The reason why the Grid came for us 💀 | Ares enters the real world | #edit",
+  "description": "The reason why the Grid came for us. Ares enters the real world from the official Tron: Ares trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=YShVEXb7-ic). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #tronares #tron",
+  "tags": [
+   "tronares",
+   "tron",
+   "jaredleto",
+   "disney",
+   "scifi",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "tronares_trailer_h264.mp4"
+ },
+ {
+  "id": "20261119-1230-jollyllb3",
+  "slot": "2026-11-19T12:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=eSgJ8PfSUSk",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/jollyllb3_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why two Jollys collide in court",
+  "words": "JOLLY LLB 3",
+  "title": "The reason why two Jollys collide in court 💀 | Akshay vs Arshad in court | #edit",
+  "description": "The reason why two Jollys collide in court. Akshay vs Arshad in court from the official Jolly LLB 3 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=eSgJ8PfSUSk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jollyllb3 #akshaykumar",
+  "tags": [
+   "jollyllb3",
+   "akshaykumar",
+   "arshadwarsi",
+   "bollywood",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "jollyllb3_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=O_-1uoQ39pc"
+  ]
+ },
+ {
+  "id": "20261119-1730-wickedforgood",
+  "slot": "2026-11-19T17:30:00+05:30",
+  "pillar": "romance",
+  "source_url": "https://www.youtube.com/watch?v=R2Xubj7lazE",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/wickedforgood_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why Elphaba had to let go",
+  "words": "WICKED: FOR GOOD",
+  "title": "The reason why Elphaba had to let go 💀 | Elphaba and Fiyero's last choice | #edit",
+  "description": "The reason why Elphaba had to let go. Elphaba and Fiyero's last choice from the official Wicked: For Good trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=R2Xubj7lazE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #wickedforgood #wicked",
+  "tags": [
+   "wickedforgood",
+   "wicked",
+   "arianagrande",
+   "cynthiaerivo",
+   "musical",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "wickedforgood_trailer_h264.mp4"
+ },
+ {
+  "id": "20261119-2230-chainsawman",
+  "slot": "2026-11-19T22:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=tAzAhDNdehs",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/chainsawman_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why Denji fell for Reze",
+  "words": "REZE ARC",
+  "title": "The reason why Denji fell for Reze 💀 | Denji meets Reze | #edit",
+  "description": "The reason why Denji fell for Reze. Denji meets Reze from the official Chainsaw Man – The Movie: Reze Arc trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=tAzAhDNdehs). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #chainsawman #rezearc",
+  "tags": [
+   "chainsawman",
+   "rezearc",
+   "denji",
+   "reze",
+   "anime",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "chainsawman_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=EPaoHkV0dYw"
+  ]
+ }
+]

@@ -1,0 +1,119 @@
+[
+ {
+  "id": "20261118-0630-avatarfireandash",
+  "slot": "2026-11-18T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=nb_fFj_0rq8",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/avatarfireandash_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why Pandora is burning",
+  "words": "FIRE AND ASH",
+  "title": "The reason why Pandora is burning 💀 | The Ash People attack | #edit",
+  "description": "The reason why Pandora is burning. The Ash People attack from the official Avatar: Fire and Ash trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=nb_fFj_0rq8). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #avatarfireandash #avatar",
+  "tags": [
+   "avatarfireandash",
+   "avatar",
+   "jamescameron",
+   "pandora",
+   "scifi",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "avatarfireandash_trailer_h264.mp4"
+ },
+ {
+  "id": "20261118-1230-dhurandhar",
+  "slot": "2026-11-18T12:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=BKOVzHcjEIo",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dhurandhar_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why nobody can stop Ranveer",
+  "words": "DHURANDHAR",
+  "title": "The reason why nobody can stop Ranveer 💀 | Ranveer Singh goes undercover | #edit",
+  "description": "The reason why nobody can stop Ranveer. Ranveer Singh goes undercover from the official Dhurandhar trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=BKOVzHcjEIo). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dhurandhar #ranveersingh",
+  "tags": [
+   "dhurandhar",
+   "ranveersingh",
+   "adityadhar",
+   "bollywood",
+   "action",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "dhurandhar_trailer_h264.mp4"
+ },
+ {
+  "id": "20261118-1730-freakierfriday",
+  "slot": "2026-11-18T17:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=IyJzhtJEtoU",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/freakierfriday_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why this swap went wrong",
+  "words": "FREAKIER FRIDAY",
+  "title": "The reason why this swap went wrong 💀 | Mom and daughter swap again | #edit",
+  "description": "The reason why this swap went wrong. Mom and daughter swap again from the official Freakier Friday trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=IyJzhtJEtoU). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #freakierfriday #lindsaylohan",
+  "tags": [
+   "freakierfriday",
+   "lindsaylohan",
+   "jamieleecurtis",
+   "disney",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "freakierfriday_trailer_h264.mp4"
+ },
+ {
+  "id": "20261118-2230-jananayagan",
+  "slot": "2026-11-18T22:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=fJaAYcERf3Y",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/jananayagan_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why Thalapathy Vijay rules every frame",
+  "words": "JANA NAYAGAN",
+  "title": "The reason why Thalapathy Vijay rules every frame 💀 | Vijay's last roar | #edit",
+  "description": "The reason why Thalapathy Vijay rules every frame. Vijay's last roar from the official Jana Nayagan trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=fJaAYcERf3Y). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jananayagan #thalapathyvijay",
+  "tags": [
+   "jananayagan",
+   "thalapathyvijay",
+   "vijay",
+   "anirudh",
+   "kollywood",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "jananayagan_trailer_h264.mp4",
+  "dialogue_lang": "ta"
+ }
+]
