@@ -25,6 +25,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -q "yt-dlp[default]"
       - name: Analyze trends
+        timeout-minutes: 12
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 scripts/trends.py

@@ -23,7 +23,7 @@ def yt_search_sample():
     for q in ("bollywood movie edit shorts", "south movie edit shorts", "hollywood movie edit shorts phonk"):
         try:
             r = subprocess.run(["yt-dlp", "--flat-playlist", "-J", "--no-warnings", f"ytsearch8:{q}"],
-                               capture_output=True, text=True, timeout=90)
+                               capture_output=True, text=True, timeout=45)
             if r.returncode == 0:
                 for e in json.loads(r.stdout).get("entries") or []:
                     out.append({"q": q, "title": e.get("title"), "channel": e.get("channel"),
@@ -83,7 +83,7 @@ Return JSON with keys:
 "avoid": [3-6 things that hurt retention],
 "top_channels": [up to 8 channel names or handles with one-line why],
 "our_insights": [3-5 notes on what works/doesn't for our own videos based on views]"""
-    data = gemini.generate_json(prompt, purpose="trends-json", temperature=0.4, timeout=150)
+    data = gemini.generate_json(prompt, purpose="trends-json", temperature=0.4, timeout=90)
     if not isinstance(data, dict):
         print("::warning::trends synthesis failed; keeping previous trends/latest.json")
         return 0 if (REPO / "trends" / "latest.json").exists() else 1

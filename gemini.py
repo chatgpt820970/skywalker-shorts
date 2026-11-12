@@ -82,8 +82,12 @@ def generate_json(prompt: str, images: list | None = None, *, purpose: str = "",
     b["calls"] = b.get("calls", 0) + 1
     _save_budget(b)
     delay = 4.0
+    deadline = time.time() + float(os.environ.get("GEMINI_DEADLINE_S", "300"))
     for model in _models():
         for _try in range(2):
+            if time.time() > deadline:
+                print(f"  gemini[{purpose}]: deadline reached; using heuristics")
+                return None
             b = _budget()
             if b.get("http", 0) >= mx_http:
                 print(f"  gemini[{purpose}]: http budget exhausted")
@@ -135,7 +139,7 @@ def load_trends(repo: Path) -> dict:
         return {}
 
 
-def generate_text(prompt: str, *, purpose: str = "", search: bool = False, timeout: float = 150.0) -> str | None:
+def generate_text(prompt: str, *, purpose: str = "", search: bool = False, timeout: float = 90.0) -> str | None:
     """Free-text call, optionally grounded with Google Search (used by the trends job). Never raises."""
     if not available():
         return None
@@ -149,9 +153,13 @@ def generate_text(prompt: str, *, purpose: str = "", search: bool = False, timeo
         payload["tools"] = [{"google_search": {}}]
     key = os.environ["GEMINI_API_KEY"]
     delay = 5.0
-    plan = [(m, True) for m in _models()[:2]] if search else []
-    plan += [(m, False) for m in _models() for _ in range(2)]
+    plan = [(m, True) for m in _models()[:1]] if search else []
+    plan += [(m, False) for m in _models()]
+    deadline = time.time() + float(os.environ.get("GEMINI_DEADLINE_S", "300"))
     for model, with_search in plan:
+        if time.time() > deadline:
+            print(f"  gemini[{purpose}]: deadline reached; giving up")
+            return None
         p2 = dict(payload)
         if not with_search:
             p2.pop("tools", None)
