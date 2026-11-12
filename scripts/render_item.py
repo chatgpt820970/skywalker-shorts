@@ -33,6 +33,16 @@ for f in sorted(glob.glob(str(REPO / "queue" / "*.json"))):
 if item is None:
     sys.exit(f"item {iid} not found")
 
+# Hard rule: white-bar hook and title must be pure English (no Hindi/Hinglish).
+# Body subtitles may still follow the trailer audio. Fail before any download
+# so a bad hook is never baked into a render; do not write results/<id>.json
+# so the next cron can pick the item up after the queue text is fixed.
+sys.path.insert(0, str(REPO))
+import hook_text
+_hook_errs = hook_text.check_item_hook_fields(item)
+if _hook_errs:
+    sys.exit("English-only hook/title failed: " + "; ".join(_hook_errs))
+
 def now():
     return datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
 

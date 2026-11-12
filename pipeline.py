@@ -40,6 +40,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+import hook_text
+
 import cv2
 import librosa
 import numpy as np
@@ -3236,6 +3238,9 @@ def main():
             HOOK_TEXT = "\x00"  # force a fresh split for a new hook
         HOOK_LINES = hook_lines(args.hook)
         HOOK_TEXT = args.hook
+        _hook_errs = hook_text.hook_language_errors(HOOK_TEXT, label="hook")
+        if _hook_errs:
+            sys.exit("English-only hook failed: " + "; ".join(_hook_errs))
     if args.ken_burns is not None:
         ZOOM = float(args.ken_burns)
     if args.logo:

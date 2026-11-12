@@ -4,12 +4,13 @@ Pipeline for the YouTube channel Skywalker (@Skywalker-k3i).
 
 ## Who does what
 - **GitHub Actions (this repo):** downloads sources, edits (scene cuts, beat sync, stabilize, grade), renders templates, QA, 4K upscale, and publishes Release assets.
-- **Helper bot:** fills `queue/` with trending topics and hooks, builds and fixes the workflows and code.
+- **Helper bot:** fills `queue/` with trending topics and hooks, builds and fixes the workflows and code. Hooks and YouTube titles must be written in pure English (no Hindi/Hinglish, no Devanagari); `hook_text.py` rejects anything else at render time.
 - **BIBI:** checks frames, uploads through YouTube Studio, watches copyright, and runs analytics every 3 days.
 
 ## HARD RULES
 - NEVER crop the source frame. The full original aspect ratio must be visible.
 - whitebar (default): a tight white caption bar (bold black italic hook, ~30px padding) sits directly on top of the full frame (1080 wide), with no gap. Bar + frame form one block centered vertically on a black 1080x1920 canvas.
+- Hook language: the white top-bar hook, the YouTube title, and the hook sentence in the description must be pure English only. No Hindi, no Hinglish, no Devanagari (never lines like "sabko hypnotise kar deta hai" or "playground ka hero ban gaya"). Film titles and character names may stay as they are. `hook_text.py` enforces this when a Short is rendered. Body subtitles may follow the trailer audio, including Hindi; do not rewrite those into English just to match the hook.
 - depthtext: big 3D words behind the subject. postcard: a logo + name + hook header directly above the clip. Same no-crop rule.
 - Nothing is written on the footage itself. Stabilized, no shake.
 - Never include studio/distributor logo intros (Netflix N, Warner, Lionsgate, Marvel, etc.), title cards, rating cards, coming-soon/date cards, credits, or near-black empty filler. Only real story/character footage. A small corner watermark that is part of the original frame may stay (do not crop it out).
@@ -18,6 +19,8 @@ Pipeline for the YouTube channel Skywalker (@Skywalker-k3i).
 
 ## Queue item schema (queue/<date>.json, a list)
 {id, slot, source_url, template, hook, words, title, description, tags, target_dur}
+
+`hook` and `title` are English-only (emoji and `#edit`-style tags in the title are fine). The first sentence of `description` should repeat the English hook.
 
 Usage: `python pipeline.py --template whitebar|depthtext|postcard --out out.mp4 ...` (see `--help`).
 
@@ -31,7 +34,7 @@ Usage: `python pipeline.py --template whitebar|depthtext|postcard --out out.mp4 
 
 ## Dialogue, subtitles, uniqueness
 - Original trailer audio is kept. When actors speak, dialogue is at ~1.3 volume and the music is ducked to ~0.22 (`sidechaincompress`, with a volume-envelope fallback). Non-speech shots keep music at ~0.65. A beat drop on the reveal is still allowed.
-- Lower-thirds are word-accurate subtitles of what is actually said, transcribed with local `faster-whisper` (no paid API, no committed secrets). Generic filler captions are never used. The white top hook bar is unchanged. Subtitles sit in the bottom black and cover the whole video wherever there is dialogue.
+- Lower-thirds are word-accurate subtitles of what is actually said, transcribed with local `faster-whisper` (no paid API, no committed secrets). Generic filler captions are never used. The white top hook bar is unchanged and must stay English-only. Subtitles sit in the bottom black and cover the whole video wherever there is dialogue. Subtitle language follows the trailer audio and may be Hindi; that is separate from the hook.
 - Every cut must be unique: a used source range `[s, e]` blocks `[s-6, e+6]`, and visually similar shots (pHash / histogram) are rejected. Auto-QC fails the render if the output still has near-duplicate shots.
 - Prefer shots that contain a complete spoken line; cuts are snapped so a word is never sliced in half.
 
