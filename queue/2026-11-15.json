@@ -4,7 +4,9 @@
   "slot": "2026-11-15T06:30:00+05:30",
   "pillar": "movie",
   "source_url": "https://www.youtube.com/watch?v=CL1EFACsWag",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/werwulf_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why nobody leaves the village after dark",
   "words": "WERWULF",
@@ -22,14 +24,18 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "werwulf_trailer_h264.mp4"
  },
  {
   "id": "20261115-1230-mahavatarnarsimha",
   "slot": "2026-11-15T12:30:00+05:30",
   "pillar": "movie",
   "source_url": "https://www.youtube.com/watch?v=p7eE_dn9u4k",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mahavatarnarsimha_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why Mahavatar Narsimha stays in everyone's heart",
   "words": "NARSIMHA",
@@ -46,14 +52,18 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "IN"
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "mahavatarnarsimha_trailer_h264.mp4"
  },
  {
   "id": "20261115-1730-jumanji",
   "slot": "2026-11-15T17:30:00+05:30",
   "pillar": "funny",
   "source_url": "https://www.youtube.com/watch?v=zhApeaHMvfs",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/jumanji_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why nobody wants to play Jumanji again",
   "words": "JUMANJI OPEN",
@@ -71,14 +81,18 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "jumanji_trailer_h264.mp4"
  },
  {
   "id": "20261115-2230-dragonballsuper",
   "slot": "2026-11-15T22:30:00+05:30",
   "pillar": "anime",
   "source_url": "https://www.youtube.com/watch?v=i2iicVzWa5A",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dragonballsuper_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why even Goku fears Beerus",
   "words": "DRAGON BALL",
@@ -96,6 +110,8 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "dragonballsuper_trailer_h264.mp4"
  }
 ]

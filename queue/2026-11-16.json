@@ -4,7 +4,9 @@
   "slot": "2026-11-16T06:30:00+05:30",
   "pillar": "movie",
   "source_url": "https://www.youtube.com/watch?v=Pu0pH5BuCPM",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/godzillaminuszero_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why the whole world is talking about Godzilla",
   "words": "GODZILLA MINUS",
@@ -22,14 +24,18 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "godzillaminuszero_trailer_h264.mp4"
  },
  {
   "id": "20261116-1230-housefull5",
   "slot": "2026-11-16T12:30:00+05:30",
   "pillar": "movie",
   "source_url": "https://www.youtube.com/watch?v=xGQuT1wm2qk",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/housefull5_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why the chaos in Housefull 5 never stops",
   "words": "HOUSEFULL 5",
@@ -46,14 +52,18 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "IN"
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "housefull5_trailer_h264.mp4"
  },
  {
   "id": "20261116-1730-wildhorsenine",
   "slot": "2026-11-16T17:30:00+05:30",
   "pillar": "funny",
   "source_url": "https://www.youtube.com/watch?v=Haw_sznA5aQ",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/wildhorsenine_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why this spy mission is pure chaos",
   "words": "WILD HORSE",
@@ -71,14 +81,18 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "wildhorsenine_trailer_h264.mp4"
  },
  {
   "id": "20261116-2230-alluarjun",
   "slot": "2026-11-16T22:30:00+05:30",
   "pillar": "celeb",
   "source_url": "https://www.youtube.com/watch?v=1kVK0MZlbI4",
-  "fallback_mp4": [],
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/alluarjun_trailer_h264.mp4"
+  ],
   "template": "whitebar",
   "hook": "The reason why Pushpa's rule never stopped",
   "words": "PUSHPA 2",
@@ -95,6 +109,8 @@
   ],
   "target_dur": 32,
   "status": "queued",
-  "market": "IN"
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "alluarjun_trailer_h264.mp4"
  }
 ]
