@@ -1,12 +1,12 @@
 {
   "id": "20261112-0630-avengersdoomsday",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
-  "at": "2026-11-12 05:10 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43114981821",
+  "status": "failed",
+  "detail": "pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
+  "at": "2026-11-12 06:02 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43121787465",
   "slot": "2026-11-12T06:30:00+05:30",
   "title": "The reason why Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
@@ -28,7 +28,7 @@
       "ok": false,
       "error": "pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/avengersdoomsday_trailer_h264.mp4",
-      "music": "ncs_adrenaline.mp3"
+      "music": "ncs_godless.mp3"
     }
   ],
   "last_error": "pipeline/QA failed (exit 1): auto_qc: lower-third captions not visible; auto_qc: speech detected but no dialogue subtitles were written"
