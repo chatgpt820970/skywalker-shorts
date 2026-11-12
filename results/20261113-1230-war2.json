@@ -144,5 +144,9 @@
     "lufs": -7.6,
     "subtitle_cues": 1,
     "gemini_qc": "skipped (unavailable/budget) - heuristic gate only"
-  }
+  },
+  "buffer_post_id": "6af5f6903d86e25353f2e05d",
+  "buffer_status": "scheduled",
+  "buffer_due_at": "2026-11-13T07:00:00.000Z",
+  "buffer_created_at": "2026-11-12 22:55 IST"
 }
