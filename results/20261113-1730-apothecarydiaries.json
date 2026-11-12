@@ -1,13 +1,13 @@
 {
   "id": "20261113-1730-apothecarydiaries",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): only 13.9s of unique clean shots (need ≥20s, aim 25-32s); not repeating shots and not publishing a short cut",
-  "at": "2026-11-12 19:23 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43223814811",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-12 20:41 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43239882163",
   "slot": "2026-11-13T17:30:00+05:30",
-  "title": "Why Jinshi can't stop looking 💀 | Maomao and Jinshi | #edit",
-  "hook": "Why Jinshi can't stop looking",
-  "description": "Why Jinshi can't stop looking. This scene is from the official The Apothecary Diaries Season 3 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2KBxrmKh-M0). All rights to the film/series belong to their owners; short commentary edit.\n#shorts #edit #apothecarydiaries #maomao #jinshi #animeedit",
+  "title": "Why Jinshi cannot stop watching her 💀 | Maomao and Jinshi | #edit",
+  "hook": "Why Jinshi cannot stop watching her",
+  "description": "Why Jinshi cannot stop watching her. Experience this moment from the official The Apothecary Diaries trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2KBxrmKh-M0). All rights to the film/series belong to their owners; short commentary edit.\n#shorts #edit #apothecarydiaries #maomao #jinshi",
   "tags": [
     "apothecarydiaries",
     "maomao",
@@ -16,8 +16,7 @@
     "netflix",
     "edit",
     "shorts",
-    "trending",
-    "animeedit"
+    "trending"
   ],
   "queue_meta": {
     "hook": "The reason why Jinshi can't stop looking at Maomao",
@@ -39,40 +38,96 @@
     {
       "purpose": "meta",
       "model": "gemini-3.5-flash",
-      "s": 57.4,
+      "s": 6.6,
       "ok": true
     },
     {
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
-      "s": 12.5,
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "s": 34.6,
       "ok": true
     }
   ],
-  "auto_retries": 0,
+  "backup_item": null,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
       "attempt": 1,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 22.3s of unique clean shots (need ≥25s, aim 25-32s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_trailer_h264.mp4",
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_cr_trailer_h264.mp4",
       "music": "sw_memoryreboot.mp3"
-    },
-    {
-      "attempt": 2,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 22.3s of unique clean shots (need ≥25s, aim 25-32s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_trailer_h264.mp4",
-      "music": "sw_memoryreboot.mp3"
-    },
-    {
-      "attempt": 3,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 13.9s of unique clean shots (need ≥20s, aim 25-32s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_trailer_h264.mp4",
-      "music": "sw_saiyaara.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): only 13.9s of unique clean shots (need ≥20s, aim 25-32s); not repeating shots and not publishing a short cut"
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261113-1730-apothecarydiaries",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261113-1730-apothecarydiaries/render-20261113-1730-apothecarydiaries.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/apothecarydiaries_cr_trailer_h264.mp4",
+  "music": "sw_memoryreboot.mp3",
+  "music_credit": "Song: VØJ, Narvent - Memory Reboot (Slowed)",
+  "description_final": "Why Jinshi cannot stop watching her. Experience this moment from the official The Apothecary Diaries trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=2KBxrmKh-M0). All rights to the film/series belong to their owners; short commentary edit.\n#shorts #edit #apothecarydiaries #maomao #jinshi\n\nMusic:\nSong: VØJ, Narvent - Memory Reboot (Slowed)",
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 28.866667,
+      "audio": true
+    },
+    "lufs": -14.0,
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook_english": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "metadata": 10.0
+      },
+      "reasons": [],
+      "low": []
+    }
+  }
 }
