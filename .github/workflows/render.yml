@@ -26,8 +26,12 @@ permissions:
   contents: write
   actions: write
 
+# Forced dispatches (explicit ids) get their own group so a long forced render never blocks the
+# hourly/push planner; push+schedule share one group (a newer pending planner run replaces an older
+# pending one, which is harmless). In-progress renders are never cancelled, and plan.py skips ids
+# another run is still rendering.
 concurrency:
-  group: render-${{ github.ref }}
+  group: render-${{ github.event_name == 'workflow_dispatch' && github.event.inputs.ids != '' && format('ids-{0}', github.run_id) || 'auto' }}
   cancel-in-progress: false
 
 jobs:
@@ -44,6 +48,7 @@ jobs:
           MAX_PER_RUN: ${{ github.event.inputs.max || '3' }}
           RETRY_FAILED: ${{ github.event.inputs.retry_failed || 'false' }}
           RENDER_AHEAD_HOURS: "6"
+          GH_TOKEN: ${{ github.token }}
         run: python3 scripts/plan.py
 
   render:
@@ -105,9 +110,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: result-${{ matrix.id }}
+          name: result-${{ strategy.job-index }}
           path: |
             results/${{ matrix.id }}.json
+            out/results/*.json
             out/work_${{ matrix.id }}/qa/qa_extra.json
             out/work_${{ matrix.id }}/qa/qa_all.jpg
             out/work_${{ matrix.id }}_a3/qa/qa_extra.json

@@ -60,6 +60,78 @@ else:
             continue
         if slot - now <= timedelta(hours=ahead) and now - slot <= timedelta(hours=24):
             pick.append(i)
+# --- never start an id that another in-progress render run is already working on
+def in_flight():
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    if not repo or not os.environ.get("GH_TOKEN"):
+        return set()
+    import subprocess
+    busy = set()
+    try:
+        runs = json.loads(subprocess.run(
+            ["gh", "api", f"repos/{repo}/actions/workflows/render.yml/runs?status=in_progress&per_page=10"],
+            capture_output=True, text=True, timeout=30).stdout or "{}").get("workflow_runs") or []
+        for r in runs:
+            if str(r.get("id")) == os.environ.get("GITHUB_RUN_ID"):
+                continue
+            jobs = json.loads(subprocess.run(["gh", "api", f"repos/{repo}/actions/runs/{r['id']}/jobs?per_page=50"],
+                                             capture_output=True, text=True, timeout=30).stdout or "{}").get("jobs") or []
+            for j in jobs:
+                n = j.get("name") or ""
+                if n.startswith("render (") and j.get("status") != "completed":
+                    busy.add(n[len("render ("):-1])
+    except Exception as e:
+        print(f"in-flight check skipped: {e}", file=sys.stderr)
+    return busy
+
+busy = in_flight()
+if busy:
+    print(f"in flight elsewhere (skipped): {sorted(busy)}", file=sys.stderr)
+pick = [i for i in pick if i not in busy]
+
+# --- backup rule: a slot whose queued items all ended 'failed' (nothing done) gets the next unused
+# item from config/backup_pool.json, rendered as <YYYYMMDD-HHMM>-<slug> for that slot. No slot is skipped.
+if not force_ids:
+    try:
+        pool = json.load(open("config/backup_pool.json")).get("items") or []
+    except Exception:
+        pool = []
+    used = set()
+    for f in glob.glob("results/*.json"):
+        try:
+            r = json.load(open(f))
+        except Exception:
+            continue
+        if r.get("backup_item"):
+            used.add(r["backup_item"])
+    slots = {}
+    for i, it in items.items():
+        if it.get("slot"):
+            slots.setdefault(it["slot"], []).append(i)
+    for slot_s, ids in sorted(slots.items()):
+        try:
+            slot = datetime.fromisoformat(slot_s)
+        except Exception:
+            continue
+        if not (slot - now <= timedelta(hours=ahead) and now - slot <= timedelta(hours=6)):
+            continue
+        st = [(result(i) or {}).get("status") for i in ids]
+        live = [i for i in ids if items[i].get("status", "queued") == "queued"]
+        if "done" in st or not live or any((result(i) or {}).get("status") != "failed" for i in live):
+            continue
+        code = slot.strftime("%Y%m%d-%H%M")
+        if any(os.path.exists(f"results/{code}-{b['id'][len('backup-'):]}.json") for b in pool):
+            continue  # a backup already ran for this slot
+        cand = [b for b in pool if b["id"] not in used]
+        if not cand:
+            print(f"::warning::slot {slot_s} failed and the backup pool is empty", file=sys.stderr)
+            continue
+        bid = f"{cand[0]['id']}@{code}"
+        if bid not in busy and f"{code}-{cand[0]['id'][len('backup-'):]}" not in busy:
+            print(f"backup for failed slot {slot_s}: {bid}", file=sys.stderr)
+            pick.insert(0, bid)
+            used.add(cand[0]["id"])
+
 pick = pick[:cap]
 print(f"now={now.isoformat()} ahead={ahead}h cap={cap} picked={pick}", file=sys.stderr)
 out = os.environ.get("GITHUB_OUTPUT")

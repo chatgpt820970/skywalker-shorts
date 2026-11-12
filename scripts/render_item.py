@@ -20,13 +20,26 @@ from pathlib import Path
 IST = timezone(timedelta(hours=5, minutes=30))
 REPO = Path(__file__).resolve().parent.parent
 iid = sys.argv[1]
+BACKUP = None
+if "@" in iid:
+    # backup-<slug>@YYYYMMDD-HHMM -> render pool item for that slot as YYYYMMDD-HHMM-<slug>
+    _bid, _code = iid.split("@", 1)
+    _pool = json.load(open(REPO / "config" / "backup_pool.json")).get("items") or []
+    BACKUP = next((dict(b) for b in _pool if b["id"] == _bid), None)
+    if BACKUP is None:
+        sys.exit(f"backup item {_bid} not found")
+    _d, _t = _code.split("-")
+    BACKUP["slot"] = f"{_d[:4]}-{_d[4:6]}-{_d[6:]}T{_t[:2]}:{_t[2:]}:00+05:30"
+    BACKUP["backup_item"] = _bid
+    iid = f"{_code}-{_bid[len('backup-'):]}"
+    BACKUP["id"] = iid
 OUT = REPO / "out"; OUT.mkdir(exist_ok=True)
 RES = REPO / "results"; RES.mkdir(exist_ok=True)
 run_url = f"{os.environ.get('GITHUB_SERVER_URL','https://github.com')}/{os.environ.get('GITHUB_REPOSITORY','')}/actions/runs/{os.environ.get('GITHUB_RUN_ID','')}"
 MAX_AUTO_RETRIES = 1  # outer workflow_run re-dispatch budget
 
-item = None
-for f in sorted(glob.glob(str(REPO / "queue" / "*.json"))):
+item = BACKUP
+for f in ([] if BACKUP else sorted(glob.glob(str(REPO / "queue" / "*.json")))):
     for it in json.load(open(f)):
         if it["id"] == iid:
             item = it
@@ -140,12 +153,14 @@ def write(status, detail, **extra):
          "slot": item.get("slot"), "title": item.get("title"), "hook": item.get("hook"),
          "description": item.get("description"), "tags": item.get("tags"),
          "queue_meta": QUEUE_META if GEMINI_META else None, "gemini_meta": bool(GEMINI_META),
-         "gemini_calls": gemini._budget().get("log", []), **extra}
+         "gemini_calls": gemini._budget().get("log", []), "backup_item": item.get("backup_item"), **extra}
     prev = read_prev()
     for k in ("buffer_post_id", "buffer_status", "buffer_due_at", "buffer_posted_at", "youtube_url"):
         if prev.get(k) and k not in r:
             r[k] = prev[k]  # never lose the Buffer record (idempotency)
     (RES / f"{iid}.json").write_text(json.dumps(r, indent=2, ensure_ascii=False))
+    (OUT / "results").mkdir(exist_ok=True)  # artifact copy (backup ids differ from the matrix id)
+    (OUT / "results" / f"{iid}.json").write_text(json.dumps(r, indent=2, ensure_ascii=False))
     print(json.dumps(r, indent=2, ensure_ascii=False))
     return r
 
