@@ -1,0 +1,36 @@
+{
+  "id": "20261112-1730-dunepartthree",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-12 16:36 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43203471993",
+  "slot": "2026-11-12T17:30:00+05:30",
+  "title": "The reason why Paul Atreides became the villain 💀 | Emperor Paul's final war | #edit",
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dunepartthree_trailer_h264.mp4",
+      "music": "ncs_adrenaline.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261112-1730-dunepartthree",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261112-1730-dunepartthree/render-20261112-1730-dunepartthree.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 12.272,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dunepartthree_trailer_h264.mp4",
+  "music": "ncs_adrenaline.mp3",
+  "music_credit": "Song: Slowboy, Zeli - Adrenaline\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/adrenaline\nWatch: http://ncs.lnk.to/adrenalineAT/youtube",
+  "description_final": "The reason why Paul Atreides became the villain. Emperor Paul's final war from the official Dune: Part Three trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=uJqaGLmZpGo). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dunepartthree\n\nMusic:\nSong: Slowboy, Zeli - Adrenaline\nMusic provided by NoCopyrightSounds\nFree Download/Stream: http://ncs.io/adrenaline\nWatch: http://ncs.lnk.to/adrenalineAT/youtube"
+}
