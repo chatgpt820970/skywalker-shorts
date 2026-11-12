@@ -80,6 +80,8 @@ def hook_errors(hook: str, avoid: list[str]) -> list[str]:
         errs.append(f"hook opener '{hook_text.opener(hook)}' used in the last 10 videos")
     if banned_hits(hook):
         errs.append("banned words")
+    if PROFANITY.search(hook or ""):
+        errs.append("profanity in hook")
     return errs
 
 
@@ -97,12 +99,16 @@ def _clip_dialogue(edl: list, transcript: dict) -> list[str]:
     return lines
 
 
+PROFANITY = re.compile(r"(?<![a-z])(shit\w*|fuck\w*|bitch\w*|damn\w*|ass|asshole|bastard|crap|dick|piss\w*)(?![a-z])", re.I)
+
+
 def fallback_hook(item: dict, dialogue: list[str], avoid: list[str]) -> str:
-    """Content-based, varied fallback (never a template): a short spoken line from the clip, else a seeded pool."""
+    """Content-based, varied fallback (never a template): a short spoken line from the clip, else a seeded pool.
+    A quoted line must be a clean, complete sentence (capitalised start, no profanity), not a clipped fragment."""
     for ln in sorted(dialogue, key=len):
         t = " ".join(re.sub(r"[^A-Za-z0-9' ?!]", " ", ln).split())
         n = len(t.split())
-        if 3 <= n <= 7 and t.isascii():
+        if 3 <= n <= 7 and t.isascii() and t[:1].isupper() and not PROFANITY.search(t):
             cand = f'"{t.rstrip(".")}"'
             if not hook_errors(cand, avoid):
                 return cand
@@ -221,7 +227,8 @@ Return JSON: {{"hook": str, "title": str, "line": str, "hashtags": [str, str, st
         title = f"{hook.strip(chr(34))} | {film}" if film else hook
         meta = {"hook": hook, "title": build_title(title, tags), "hashtags": tags,
                 "description": build_description(hook, item, tags), "source": "fallback"}
-    cache.write_text(json.dumps(meta, ensure_ascii=False))
+    if meta.get("source") == "gemini":  # a fallback is never cached: the next attempt asks Gemini again (budget allowing)
+        cache.write_text(json.dumps(meta, ensure_ascii=False))
     return meta
 
 

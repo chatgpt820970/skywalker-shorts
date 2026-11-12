@@ -77,8 +77,11 @@ def test_no_reason_why_template_anywhere():
 
 def test_fallback_hook_varied_and_valid():
     item = {"id": "20261113-0630-cliffbooth", "description": "x from the official Cliff Booth trailer. Edit."}
-    h1 = sky_ai.fallback_hook(item, ["he never walks away from a fight"], [])
+    h1 = sky_ai.fallback_hook(item, ["He never walks away from a fight"], [])
     assert h1.startswith('"') and not sky_ai.hook_errors(h1, [])
+    # clipped fragments and profanity are never quoted on the bar
+    h0 = sky_ai.fallback_hook(item, ["got Teddy's shit", "Get that shit out of here"], [])
+    assert not h0.startswith('"') and not sky_ai.hook_errors(h0, [])
     h2 = sky_ai.fallback_hook(item, [], [])
     assert not sky_ai.hook_errors(h2, [])
     import hook_text

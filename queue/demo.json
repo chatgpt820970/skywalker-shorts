@@ -53,10 +53,39 @@
    "trending"
   ],
   "target_dur": 32,
-  "status": "queued",
+  "status": "retired",
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "cliffbooth_trailer_h264.mp4",
+  "note": "Demo of the research-based hook/edit upgrade. No slot, so it is never posted to Buffer/YouTube. Retired: run 43248265692 cut to 24.6s clean shots."
+ },
+ {
+  "id": "demo-superman",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "Superman still saves everyone",
+  "words": "SUPERMAN",
+  "title": "Superman still saves everyone | Superman returns to Metropolis | #edit",
+  "description": "Superman still saves everyone. Superman returns to Metropolis from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+  "tags": [
+   "superman",
+   "dc",
+   "davidcorenswet",
+   "jamesgunn",
+   "superhero",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "superman_trailer_h264.mp4",
+  "status": "queued",
   "note": "Demo of the research-based hook/edit upgrade. No slot, so it is never posted to Buffer/YouTube."
  }
 ]
