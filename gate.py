@@ -69,6 +69,17 @@ def run_gate(final: Path, *, qa_obj: dict, checks: dict, item: dict, work: Path 
         fails.append("auto_qc failed: " + "; ".join(map(str, (aq.get("issues") or [])[:3])))
     if qa_obj.get("issues"):
         fails.append("pipeline issues: " + "; ".join(map(str, qa_obj["issues"][:3])))
+    # Clean-dialogue audio check (vocal stem vs ducked song inside dialogue windows).
+    try:
+        import vocal_mix
+        ac_p = Path(work) / "audio_check.json" if work else None
+        ac = json.loads(ac_p.read_text()) if ac_p and ac_p.exists() else None
+        sw_p = Path(work) / "speech_windows.json" if work else None
+        speech = bool(sw_p and sw_p.exists() and (json.loads(sw_p.read_text()).get("output") or []))
+        info["audio_check"] = ac
+        fails += vocal_mix.check_errors(ac, speech)
+    except Exception as e:
+        fails.append(f"audio check error: {e}")
     cues = subtitle_cues(work)
     info["subtitle_cues"] = cues
     # captions check true + zero cues means the pipeline found no subtitle-able words (cc8b263 rule)

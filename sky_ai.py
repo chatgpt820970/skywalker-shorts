@@ -200,16 +200,35 @@ contradictions ("He smiled. Then everyone ran."), sharp questions, a quoted/teas
 "<character> aura"/"<scene> core" style for character edits. Bar text is read in under 1 second: short, concrete words.
 FORBIDDEN: "The reason why...", generic templates, emoji, hashtags, Hindi/Hinglish words.
 Do NOT start with any of these openers (used recently): {avoid}.
-Also write: title (max 65 chars, punchy, curiosity-driven, includes the film and/or actor/character name for search,
-formats that work: "<Character> <bold action/claim>", "POV: <character> aura", "<Film> | <moment> core",
-"Nobody expected <character> to <x>"; no "The reason why", no emoji), a one-sentence English description line about this exact moment, and 3 relevant
-lowercase hashtags (film, actor/character, genre; no '#').
-Return JSON: {{"hook": str, "title": str, "line": str, "hashtags": [str, str, str], "style": str}}"""
+Then write 5 DIFFERENT title candidates for this Short and rank them by click potential like the top movie/anime
+edit channels (character-focused, emotional, curiosity): styles like "<Character>'s aura in this scene is unreal",
+"POV: you're <character> and ...", "This scene hits different when you know ...", "Nobody noticed <detail> in this scene",
+"<Character> didn't come to play", "The moment <character> ...". Each: pure English, max 62 chars, punchy, names the
+character/actor or film, never "The reason why", no emoji, no hashtags, no plain announcement like "<Actor> is the new <X>".
+Give each a click_score 0-100 (honest: would a scroller tap it?). Also a one-sentence English description line about
+this exact moment, and 3 relevant lowercase hashtags (film, character/actor, genre; no '#').
+Return JSON: {{"hook": str, "titles": [{{"title": str, "click_score": n}}, ...5], "line": str,
+"hashtags": [str, str, str], "style": str}}"""
         out = gemini.generate_json(prompt, [sheet], purpose="hook", temperature=0.9)
     meta = None
     if isinstance(out, dict):
         hook = " ".join(str(out.get("hook") or "").split()).strip(" .")
-        title = " ".join(str(out.get("title") or "").split())
+        cands = []
+        for c in (out.get("titles") or []):
+            if isinstance(c, dict) and c.get("title"):
+                try:
+                    sc = float(c.get("click_score") or 0)
+                except Exception:
+                    sc = 0.0
+                cands.append({"title": " ".join(str(c["title"]).split()).strip(' "'), "click_score": sc})
+        if out.get("title"):
+            cands.append({"title": " ".join(str(out["title"]).split()), "click_score": 0.0})
+        cands.sort(key=lambda c: -c["click_score"])
+        ok_c = [c for c in cands if len(c["title"]) <= 66 and not hook_text.template_errors(c["title"], label="title")
+                and not hook_text.hook_language_errors(c["title"], label="title")
+                and not banned_hits(c["title"]) and not PROFANITY.search(c["title"])]
+        title = ok_c[0]["title"] if ok_c else ""
+        print(f"  title candidates: {json.dumps(cands, ensure_ascii=False)}")
         tags = [re.sub(r"[^a-z0-9]", "", str(t).lower().lstrip("#")) for t in (out.get("hashtags") or [])]
         tags = [t for t in tags if t][:3]
         errs = hook_errors(hook, avoid) + hook_text.hook_language_errors(title, label="title") \
@@ -220,7 +239,7 @@ Return JSON: {{"hook": str, "title": str, "line": str, "hashtags": [str, str, st
         else:
             meta = {"hook": hook, "title": build_title(title, tags), "hashtags": tags,
                     "description": build_description(hook, item, tags, str(out.get("line") or "")),
-                    "style": out.get("style"), "source": "gemini"}
+                    "style": out.get("style"), "source": "gemini", "title_candidates": cands}
     if not meta:
         hook = fallback_hook(item, dialogue, avoid)
         tags = [t for t in (item.get("tags") or []) if t not in ("edit", "shorts", "trending")][:2] + ["movieedit"]
@@ -397,40 +416,82 @@ def subtitle_text(work: Path) -> str:
     return " / ".join(x for x in out if x)[:1500]
 
 
+QC_KEYS = ("hook", "title", "speech_clarity", "shake", "crop", "length", "layout", "clean_footage", "captions",
+           "post_worthy")
+
+
+def _qc_proxy(video: Path, work: Path) -> Path | None:
+    """Small 360x640 copy with audio (~1-2 MB) so Gemini can watch AND listen to the final cut inline."""
+    dst = work / "gem_qc_proxy.mp4"
+    r = subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(video), "-vf", "scale=360:-2,fps=12",
+                        "-c:v", "libx264", "-preset", "veryfast", "-b:v", "350k", "-c:a", "aac", "-b:a", "64k",
+                        "-ac", "1", str(dst)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if r.returncode != 0 or not dst.exists() or dst.stat().st_size > 15_000_000:
+        return None
+    return dst
+
+
 def qc_judge(video: Path, work: Path, hook: str, title: str, description: str) -> dict | None:
+    """Final judge: Gemini WATCHES and LISTENS to the finished cut (low-res proxy with audio) plus an 8-frame sheet,
+    and returns pass/fail with scores. One Gemini call."""
     sheet = sample_frames(video, work)
-    if not sheet:
+    proxy = _qc_proxy(video, work)
+    if not sheet and not proxy:
         return None
     subs = subtitle_text(work)
-    prompt = f"""You are the final quality judge for a YouTube Short (vertical 9:16) before it is published.
-The image shows 8 frames sampled evenly across the video, left to right.
-Expected layout: a tight WHITE bar with black italic English hook text sitting directly on top of the full,
-uncropped landscape movie frame, centered on a black canvas; only lower-third dialogue subtitles in the black
-area under the picture. Nothing else should be written on the footage.
+    try:
+        dur = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                                             "-of", "csv=p=0", str(video)], text=True).strip())
+    except Exception:
+        dur = 0.0
+    ac = {}
+    try:
+        ac = json.loads((work / "audio_check.json").read_text())
+    except Exception:
+        pass
+    prompt = f"""You are the final quality judge for a YouTube Short (vertical 9:16, {dur:.1f}s) before it is published.
+You get the finished video itself (watch it AND listen to it) plus an image of 8 frames sampled across it.
+Expected: a tight WHITE bar with black italic English hook text directly on top of the full, uncropped landscape
+movie frame, centered on black; only lower-third dialogue subtitles under the picture; nothing else on the footage.
+Audio: the actors' dialogue must be crystal clear; our song drives the edit between lines and is ducked far under
+speech; no second music bed (the trailer's own score) clashing under the voices.
 Hook in the white bar: "{hook}"
 Title: "{title}"
-Description: "{description[:400]}"
-Burned subtitles (may be Hindi/other language if the trailer is): "{subs}"
+Description: "{description[:300]}"
+Burned subtitles: "{subs}"
+Measured audio: speech-to-music {ac.get('smr_db')} dB (worst line {ac.get('smr_min_db')} dB), vocal stem isolated={ac.get('isolated')}
 
-Judge and score 0-10 each: hook_english (hook bar is readable English), layout (white bar flush on top of an uncropped
-frame, picture not cut off at the sides/top), clean_footage (no studio/distributor logo intro, no title/date/rating card,
-no added watermark), captions (subtitles look like real dialogue, not garbage, and not obviously mismatched to the
-title topic), metadata (title/description are English, match the film, no spam).
-Set reject=true ONLY for clear hard failures: a big studio logo or title/date card frame, non-English hook,
-obviously cropped picture (faces cut by the frame edge because the frame was zoomed), garbage/mismatched captions,
-or the title describing a different film.
-Return JSON: {{"scores": {{"hook_english": n, "layout": n, "clean_footage": n, "captions": n, "metadata": n}},
-"reject": bool, "reasons": [str]}}"""
-    out = gemini.generate_json(prompt, [sheet], purpose="qc", temperature=0.1)
+Score 0-10 each:
+hook (scroll-stopping, specific to this clip, pure English, readable in 1s),
+title (curiosity/emotion, character-focused, English, would you tap it),
+speech_clarity (every spoken line clear, no music fighting the dialogue, no muddy mix),
+shake (10 = steady; low if footage is jittery/handheld-shaky in a distracting way),
+crop (10 = full uncropped frame; low if faces/heads are cut by a zoom or the picture is cropped),
+length (pacing fits {dur:.0f}s; no dead air, no abrupt cut-off),
+layout (white bar flush on top, black canvas, nothing else written on the footage),
+clean_footage (no studio logo intro, title/date/rating card, watermark, or repeated shot),
+captions (subtitles real dialogue and in sync),
+post_worthy (overall: would a top edit channel post this as is?).
+Set reject=true for any clear hard failure (logo/title card, cropped picture, muddy/inaudible dialogue, garbage
+captions, non-English hook/title, a different film) or if it is simply not post-worthy.
+Return JSON: {{"scores": {{"hook": n, "title": n, "speech_clarity": n, "shake": n, "crop": n, "length": n,
+"layout": n, "clean_footage": n, "captions": n, "post_worthy": n}}, "reject": bool, "reasons": [str]}}"""
+    media = [p for p in (proxy, sheet) if p]
+    out = gemini.generate_json(prompt, media, purpose="qc", temperature=0.1, timeout=150.0)
     if not isinstance(out, dict):
         return None
     sc = out.get("scores") or {}
-    try:
-        scores = {k: float(sc.get(k)) for k in ("hook_english", "layout", "clean_footage", "captions", "metadata")
-                  if sc.get(k) is not None}
-    except Exception:
-        scores = {}
-    low = [k for k, v in scores.items() if v < 4]
-    reject = bool(out.get("reject")) or len(low) >= 2
-    return {"pass": not reject, "scores": scores, "reasons": [str(r)[:200] for r in (out.get("reasons") or [])][:5],
-            "low": low}
+    scores = {}
+    for k in QC_KEYS:
+        try:
+            if sc.get(k) is not None:
+                scores[k] = float(sc.get(k))
+        except Exception:
+            pass
+    hard = {"speech_clarity": 5, "crop": 5, "layout": 5, "clean_footage": 5, "shake": 4, "hook": 5}
+    low = [k for k, v in scores.items() if v < hard.get(k, 4)]
+    if scores.get("post_worthy") is not None and scores["post_worthy"] < 6:
+        low.append("post_worthy")
+    reject = bool(out.get("reject")) or bool(low)
+    return {"pass": not reject, "scores": scores, "reasons": [str(r)[:200] for r in (out.get("reasons") or [])][:6],
+            "low": low, "watched_video": bool(proxy)}

@@ -58,7 +58,9 @@ def budget_left() -> int:
 
 def _img_part(path: str | Path) -> dict:
     data = Path(path).read_bytes()
-    mime = "image/png" if str(path).lower().endswith(".png") else "image/jpeg"
+    low = str(path).lower()
+    mime = ("image/png" if low.endswith(".png") else "video/mp4" if low.endswith(".mp4")
+            else "audio/mpeg" if low.endswith(".mp3") else "image/jpeg")
     return {"inline_data": {"mime_type": mime, "data": base64.b64encode(data).decode()}}
 
 

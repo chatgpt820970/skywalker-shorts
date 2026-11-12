@@ -89,3 +89,12 @@ def test_fallback_hook_varied_and_valid():
     assert hook_text.opener(h3) != hook_text.opener(h2)
     t = sky_ai.build_title(h2 + " | Cliff Booth", ["cliffbooth", "bradpitt", "movieedit", "x"])
     assert t.count("#") == 3 and len(t) <= 100
+
+
+def test_audio_check_gate():
+    import vocal_mix
+    assert vocal_mix.check_errors(None, True)
+    assert vocal_mix.check_errors({"isolated": False, "speech_segments": 3, "smr_db": 20, "smr_min_db": 18}, True)
+    assert vocal_mix.check_errors({"isolated": True, "speech_segments": 3, "smr_db": 8, "smr_min_db": 5}, True)
+    assert not vocal_mix.check_errors({"isolated": True, "speech_segments": 3, "smr_db": 17, "smr_min_db": 15}, True)
+    assert not vocal_mix.check_errors(None, False)

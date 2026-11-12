@@ -2693,7 +2693,14 @@ def _mix_source_and_music(bed: Path, dur: float, src: Path | None = None,
         src_windows = dmod.speech_windows_from_transcript(tr) or dmod.vad_windows(Path(src))
         speech_out = dmod.map_windows_to_output(edl, src_windows)
         mixed = WORK / "mixed.wav"
-        dmod.mix_dialogue_and_music(dial, bed, mixed, dur, speech_out)
+        (WORK / "audio_check.json").unlink(missing_ok=True)
+        try:
+            # Isolated dialogue stem only (trailer music/SFX dropped) + our song ducked ~20 dB under speech.
+            import vocal_mix
+            vocal_mix.mix(dial, bed, mixed, dur, speech_out, WORK)
+        except Exception as e:
+            print(f"  clean dialogue mix failed ({e}); legacy mix (gate will flag it)")
+            dmod.mix_dialogue_and_music(dial, bed, mixed, dur, speech_out)
         (WORK / "speech_windows.json").write_text(json.dumps({"source": src_windows, "output": speech_out}))
         print(f"  mixed original dialogue + ducked music ({len(speech_out)} speech window(s))")
         return mixed if mixed.exists() and mixed.stat().st_size > 1000 else bed

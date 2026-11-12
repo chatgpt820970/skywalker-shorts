@@ -125,7 +125,7 @@ def write(status, detail, **extra):
          "slot": item.get("slot"), "title": item.get("title"), "hook": item.get("hook"),
          "description": item.get("description"), "tags": item.get("tags"),
          "queue_meta": QUEUE_META if GEMINI_META else None, "gemini_meta": bool(GEMINI_META),
-         "hook_source": (GEMINI_META or {}).get("source"), "hook_style": (GEMINI_META or {}).get("style"),
+         "hook_source": (GEMINI_META or {}).get("source"), "hook_style": (GEMINI_META or {}).get("style"), "title_candidates": (GEMINI_META or {}).get("title_candidates"),
          "gemini_calls": gemini._budget().get("log", []), "backup_item": item.get("backup_item"), **extra}
     prev = read_prev()
     for k in ("buffer_post_id", "buffer_status", "buffer_due_at", "buffer_posted_at", "youtube_url"):
@@ -578,7 +578,7 @@ def main():
         return 0
 
     # Attempt 2: sources-release fallback mp4
-    if not _budget_left_for(est):
+    if _qc_rejects(attempts_log) >= 2 or not _budget_left_for(est):
         return _give_up(attempts_log, auto_retries)
     t_a = time.monotonic()
     ok, info = attempt(2, force_fallback=True)
@@ -593,7 +593,7 @@ def main():
         return 0
 
     # Attempt 3: fallback + different music + alt scenes + relaxed non-hard thresholds
-    if not _budget_left_for(est):
+    if _qc_rejects(attempts_log) >= 2 or not _budget_left_for(est):
         return _give_up(attempts_log, auto_retries)
     excl = list(dict.fromkeys([m for m in prior_music + [attempts_log[0].get("music"), attempts_log[1].get("music")] if m]))
     ok, info = attempt(3, force_fallback=True, relax=True, alt_scenes=True,
@@ -610,8 +610,20 @@ def main():
     return _give_up(attempts_log, auto_retries)
 
 
+def _qc_rejects(attempts_log) -> int:
+    return sum(1 for a in attempts_log if "gemini QC reject" in str(a.get("error") or ""))
+
+
 def _give_up(attempts_log, auto_retries):
     last = attempts_log[-1].get("error") or "unknown failure"
+    # Gemini QC watched the final cut and rejected it twice: do not burn more renders; mark failed so
+    # plan.py's backup rule renders a backup item for this slot (never a skipped slot).
+    if _qc_rejects(attempts_log) >= 2:
+        write("failed", ("gemini QC rejected 2 re-renders; backup item takes the slot: " + last)[:800],
+              auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=last,
+              qc_rejected=True)
+        print(f"::error::{iid}: Gemini QC rejected 2 renders; backup takes the slot")
+        return 1
     # All 3 in-job attempts failed. If we still have an outer auto-retry, queue it
     # and exit 0 so this run does not wake BIBI yet.
     if auto_retries < MAX_AUTO_RETRIES:
