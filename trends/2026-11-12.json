@@ -1,0 +1,87 @@
+{
+ "hook_styles": [
+  "This scene changed cinema forever (e.g. This scene changed cinema forever)",
+  "Nobody expected him to do this (e.g. Nobody expected him to do this)",
+  "When the villain was actually right (e.g. When the villain was actually right)",
+  "He did this stunt himself (e.g. He did this stunt himself)",
+  "The cold reaction says it all (e.g. The cold reaction says it all)",
+  "She didn't realize who he was (e.g. She didn't realize who he was)"
+ ],
+ "title_patterns": [
+  "When He Realized It Was Too Late 💀 | Fight Club Ending | #edit",
+  "This Cold Entrance Hit Different 💀 | Arjun Sarkar Police Scene | #edit",
+  "Nobody Was Ready For This Twist 💀 | Dramatic Scene | #edit",
+  "He Played With The Wrong Person 💀 | Badass Movie Moment | #edit"
+ ],
+ "best_length_s": 24.0,
+ "posting_times_ist": [
+  "06:30",
+  "12:30",
+  "17:30",
+  "22:30"
+ ],
+ "caption_styles": [
+  "Keep text inside top white bar short (3-7 words) with high readability font.",
+  "Use yellow/white bold lower-third subtitles synced precisely to speech or beat drops.",
+  "Add a simple interactive prompt in the pinned comment (e.g. Rate this edit 1-10).",
+  "Maintain high contrast text without covering key visual elements of the clip."
+ ],
+ "song_picks": [
+  "Memory Reboot (Slowed)",
+  "Close Eyes",
+  "MONTAGEM FUJIN (Super Slowed)",
+  "MURDER IN MY MIND",
+  "Saiyaara (Slowed + Reverb)",
+  "Hukum",
+  "Winning Speech",
+  "METAMORPHOSIS",
+  "After Dark",
+  "PASSO BEM SOLTO (Slowed)"
+ ],
+ "songs_to_add": [
+  "Montagem Rugido - DJ GBR",
+  "Deadwood - Really Slow Motion",
+  "Tauba Tauba - Karan Aujla",
+  "Animal Title Track - Harshavardhan Rameshwar",
+  "Pushpa 2 Mass Theme - Devi Sri Prasad",
+  "Montagem Diamante - DJ SMG",
+  "Vortex Phonk - Scapin",
+  "Kala Chashma (Slowed + Reverb) - Amar Arshi"
+ ],
+ "hashtags": [
+  "movieedits",
+  "bollywoodedits",
+  "hollywoodedits",
+  "phonk",
+  "cinematic",
+  "shorts",
+  "viral",
+  "edit",
+  "trending",
+  "movieclips"
+ ],
+ "avoid": [
+  "Slow intro frames without visual motion or punchy hook text within 1.5s.",
+  "Mismatched audio beat drops relative to video cuts.",
+  "Cropping horizontal movie clips into stretched vertical aspect ratio instead of letterbox framing.",
+  "Excessive visual clutter or heavy filters that obscure character faces.",
+  "Clips exceeding 32 seconds which degrade audience completion rate."
+ ],
+ "top_channels": [
+  "Btsly Edits: High viral reach on Indian movie female character montages.",
+  "Nikit Ae: Great execution of South Indian action scenes paired with Phonk audio.",
+  "Taylor Gar: Exceptionally high retention on short dramatic clip edits.",
+  "AMAR EDITZ: Strong reference for clean CapCut layout and pacing techniques.",
+  "k o o k t a e c a f e: High view count FMV edit formats using trending pop audio."
+ ],
+ "our_insights": [
+  "No initial video performance data available yet; channel is in baseline setup phase.",
+  "Slot timing allows testing Hollywood early morning and Indian cinema mid-day/night.",
+  "Keeping duration fixed at 20-32s ensures eligibility for top loop retention optimization.",
+  "Strict top-hook bar layout will create visual brand recognition across all 4 daily slots."
+ ],
+ "generated_at": "2026-11-12 18:25 IST",
+ "research_chars": 0,
+ "yt_sample": 24,
+ "own_videos": 0
+}

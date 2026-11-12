@@ -1,0 +1,66 @@
+"""Light tests for the publish path (no ffmpeg, no network)."""
+from __future__ import annotations
+
+import json
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "scripts"))
+
+import gemini  # noqa: E402
+import music_lib  # noqa: E402
+import sky_ai  # noqa: E402
+
+
+def test_banned_words_ignore_safe_text():
+    assert sky_ai.banned_hits("The reason why Asta never gives up", "From the official trailer.") == []
+    assert "full movie" in sky_ai.banned_hits("Watch the FULL MOVIE now")
+
+
+def test_gemini_disabled_without_key(monkeypatch, tmp_path):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setenv("SKY_GEMINI_BUDGET_FILE", str(tmp_path / "b.json"))
+    assert gemini.generate_json("x", purpose="t") is None
+    assert sky_ai.write_meta({"id": "x", "hook": "A b c"}, {}) is None
+
+
+def test_gemini_budget_cap(monkeypatch, tmp_path):
+    monkeypatch.setenv("GEMINI_API_KEY", "dummy")
+    b = tmp_path / "b.json"
+    b.write_text(json.dumps({"calls": 5, "http": 0}))
+    monkeypatch.setenv("SKY_GEMINI_BUDGET_FILE", str(b))
+    assert gemini.budget_left() == 0
+    assert gemini.generate_json("x", purpose="t") is None  # no HTTP once the budget is spent
+
+
+def test_scene_ranks_keep_enough_footage():
+    scenes = [{"start": i * 3.0, "end": i * 3.0 + 3.0, "score": 1.0} for i in range(14)]
+    ranks = {f"{s['start']:.2f}-{s['end']:.2f}": {"score": 9, "card": True} for s in scenes}
+    sky_ai.apply_scene_ranks(scenes, ranks, min_keep_s=34.0)
+    kept = sum(s["end"] - s["start"] for s in scenes if not s.get("skip"))
+    assert kept >= 34.0
+
+
+def test_library_has_tracks_and_no_repeat(tmp_path, monkeypatch):
+    lib = json.loads((ROOT / "music" / "library.json").read_text())
+    assert len(lib["tracks"]) >= 15
+    (tmp_path / "music" / "lib").mkdir(parents=True)
+    (tmp_path / "music" / "library.json").write_text(json.dumps(lib))
+    for t in lib["tracks"]:
+        (tmp_path / "music" / "lib" / t["file"]).write_bytes(b"x")
+        assert t["credit"] and t["pillars"]
+    monkeypatch.setenv("SKY_MARKET", "IN")
+    used = []
+    for k in range(8):
+        t = music_lib.pick(tmp_path, "celeb", f"seed{k}", exclude=used)
+        assert t["file"] not in used
+        used.append(t["file"])
+
+
+def test_publish_config():
+    cfg = json.loads((ROOT / "config" / "publish.json").read_text())
+    assert cfg["buffer_channel_id"] == "6af580b362b70b94b00530b0"
+    assert cfg["buffer_org_id"] == "6ac41da09a0b5aca7c671500"

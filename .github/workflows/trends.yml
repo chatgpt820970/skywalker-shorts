@@ -1,0 +1,38 @@
+name: trends
+
+# Every 3 days: Gemini (2 calls) studies fast-growing movie/trailer edit Shorts + our stats
+# -> trends/latest.json, which render reads for hooks/titles/song choice.
+on:
+  schedule:
+    - cron: "0 1 */3 * *"   # 06:30 IST every 3rd day
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trends
+  cancel-in-progress: false
+
+jobs:
+  trends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q "yt-dlp[default]"
+      - name: Analyze trends
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python3 scripts/trends.py
+      - name: Commit trends
+        run: |
+          git config user.name "skywalker-trends"
+          git config user.email "actions@users.noreply.github.com"
+          git add trends/ || true
+          git diff --cached --quiet && exit 0
+          git commit -m "trends: $(date -u +%F)"
+          for i in 1 2 3 4; do git pull --rebase -q && git push && break; sleep 7; done

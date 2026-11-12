@@ -1,0 +1,57 @@
+name: publish
+
+# Posts every render that passed the publish gate to YouTube (Skywalker) via the Buffer API,
+# scheduled for its IST slot. Idempotent (buffer_post_id in results/<id>.json).
+on:
+  workflow_run:
+    workflows: ["render"]
+    types: [completed]
+  schedule:
+    - cron: "10,40 * * * *"
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: "Only these result ids (comma-separated); empty = all eligible"
+        required: false
+        default: ""
+      dry_run:
+        description: "Print what would be posted, post nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  buffer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Post / refresh Buffer posts
+        id: post
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          IDS: ${{ github.event.inputs.ids }}
+          DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '0' }}
+        run: |
+          git pull --ff-only -q || true
+          python3 scripts/buffer_post.py
+      - name: Commit buffer ids
+        if: always()
+        run: |
+          git config user.name "skywalker-publish"
+          git config user.email "actions@users.noreply.github.com"
+          git add results/*.json || true
+          git diff --cached --quiet && exit 0
+          git commit -m "publish: buffer ${{ steps.post.outputs.changed }} (run ${{ github.run_id }})"
+          for i in 1 2 3 4; do git pull --rebase -q && git push && break; sleep 7; done

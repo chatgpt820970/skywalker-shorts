@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    paths: ["**.py", "music/library.json", "config/**", ".github/workflows/**", "tests/**"]
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q pytest numpy pillow
+      - name: Compile all python
+        run: python3 -m py_compile *.py scripts/*.py
+      - name: Unit tests (light)
+        run: python3 -m pytest -q tests/test_hook_text.py tests/test_publish.py
+      - name: Queue hooks are English and ids unique
+        run: |
+          python3 - <<'PY'
+          import glob, json, sys
+          sys.path.insert(0, ".")
+          import hook_text
+          seen, bad = set(), []
+          for f in sorted(glob.glob("queue/2026-*.json")):
+              for it in json.load(open(f)):
+                  if it["id"] in seen: bad.append("dup " + it["id"])
+                  seen.add(it["id"])
+                  if it.get("status", "queued") == "queued" and it["slot"] >= "2026-11-12T17:30":
+                      e = hook_text.check_item_hook_fields(it)
+                      if e: bad.append(f"{it['id']}: {e}")
+          print("\n".join(bad) or "queue ok")
+          sys.exit(1 if bad else 0)
+          PY

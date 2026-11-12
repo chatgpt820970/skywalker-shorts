@@ -1,0 +1,8 @@
+{
+  "buffer_channel_id": "6af580b362b70b94b00530b0",
+  "buffer_org_id": "6ac41da09a0b5aca7c671500",
+  "youtube_category_id": "24",
+  "post_from_slot": "2026-11-12T22:30:00+05:30",
+  "late_post_hours": 6,
+  "note": "Only results with slot >= post_from_slot are posted (older slots were uploaded by hand). Late (missed) slots within late_post_hours are posted now (shareNow); never skipped silently."
+}
