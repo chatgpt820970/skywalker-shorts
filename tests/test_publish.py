@@ -24,7 +24,7 @@ def test_gemini_disabled_without_key(monkeypatch, tmp_path):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.setenv("SKY_GEMINI_BUDGET_FILE", str(tmp_path / "b.json"))
     assert gemini.generate_json("x", purpose="t") is None
-    assert sky_ai.write_meta({"id": "x", "hook": "A b c"}, {}) is None
+    assert sky_ai.clip_hook_meta(Path("/nonexistent"), [], {}, tmp_path, "x") is None
 
 
 def test_gemini_budget_cap(monkeypatch, tmp_path):
@@ -64,3 +64,25 @@ def test_publish_config():
     cfg = json.loads((ROOT / "config" / "publish.json").read_text())
     assert cfg["buffer_channel_id"] == "6af580b362b70b94b00530b0"
     assert cfg["buffer_org_id"] == "6ac41da09a0b5aca7c671500"
+
+
+def test_no_reason_why_template_anywhere():
+    import hook_text
+    assert hook_text.template_errors("The reason why Asta never gives up")
+    assert hook_text.template_errors("reason why he left")
+    assert not hook_text.template_errors("Asta refuses to stay down")
+    for h in sky_ai.FALLBACK_HOOKS:
+        assert not hook_text.template_errors(h)
+
+
+def test_fallback_hook_varied_and_valid():
+    item = {"id": "20261113-0630-cliffbooth", "description": "x from the official Cliff Booth trailer. Edit."}
+    h1 = sky_ai.fallback_hook(item, ["he never walks away from a fight"], [])
+    assert h1.startswith('"') and not sky_ai.hook_errors(h1, [])
+    h2 = sky_ai.fallback_hook(item, [], [])
+    assert not sky_ai.hook_errors(h2, [])
+    import hook_text
+    h3 = sky_ai.fallback_hook(item, [], [hook_text.opener(h2)])
+    assert hook_text.opener(h3) != hook_text.opener(h2)
+    t = sky_ai.build_title(h2 + " | Cliff Booth", ["cliffbooth", "bradpitt", "movieedit", "x"])
+    assert t.count("#") == 3 and len(t) <= 100

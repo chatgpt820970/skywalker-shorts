@@ -97,11 +97,8 @@ MIN_OUTPUT_DUR = 20.0   # hard floor: never publish shorter
 MIN_UNIQUE_DUR = 25.0   # aim; relaxed to MIN_OUTPUT_DUR only on --relax
 END_CARD = 2.4
 END_STILL = 52.0           # Godzilla lightning still (mezzanine time)
-HOOK_TEXT = "The reason why the whole world is talking about Godzilla"
-HOOK_LINES = [
-    "The reason why the whole world",
-    "is talking about Godzilla",
-]
+HOOK_TEXT = "Nobody was ready for this"
+HOOK_LINES = ["Nobody was ready for this"]
 FONT_HOOK = FONTS / "Poppins-BoldItalic.ttf"
 YUNET_MODEL = AE / "models" / "face_detection_yunet_2023mar.onnx"
 # Kept so older flags still parse; the caption-bar template ignores this.
@@ -1113,7 +1110,13 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             progress = min(1.0, max(0.0, t / max(body, 1.0)))
             tension = float(s.get("spectacle") or 0) * (0.75 + 0.7 * progress)
             speech = float(s.get("speech") or 0)
-            return tension + speech - pen
+            # Gemini editor score (0-10) on the actual frame. Research: open on the strongest moment in the
+            # first second (cold open), so the opener weighs it 2.5x more than later picks.
+            g = s.get("gemini")
+            gem = 0.0
+            if g is not None:
+                gem = (15.0 if t < 0.5 else 6.0) * (float(g) - 5.0)
+            return tension + speech + gem - pen
 
         cands.sort(key=key, reverse=True)
         return cands[0]
@@ -3494,6 +3497,21 @@ def main():
     (WORK / "edl.json").write_text(json.dumps(edl, indent=2))
     if TEMPLATE != "whitebar":
         (template_work() / "edl.json").write_text(json.dumps(edl, indent=2))
+
+    print("=== 4b. Content hook (Gemini looks at the chosen clip) ===")
+    try:
+        import sky_ai
+        meta = sky_ai.clip_hook_meta(mezz, edl, transcript, WORK, args.item_id or "")
+        if meta and meta.get("hook"):
+            HOOK_TEXT = "\x00"
+            HOOK_LINES = hook_lines(meta["hook"])
+            HOOK_TEXT = meta["hook"]
+            if TEMPLATE == "whitebar":
+                draw_caption_bar(WORK / "caption_bar.png", HOOK_LINES)
+            (WORK / "hook_meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+            print(f"  hook bar: {HOOK_TEXT!r} ({meta.get('source')})")
+    except Exception as e:
+        print("  content hook skipped:", e)
 
     print("=== 5. Render plates ===")
     # clear old clips

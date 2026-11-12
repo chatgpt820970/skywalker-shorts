@@ -79,6 +79,25 @@ def create(r, due, share_now):
     return d["post"]
 
 
+def edit(r, post_id, due_at):
+    m = """mutation E($input: EditPostInput!) { editPost(input: $input) {
+      ... on PostActionSuccess { post { id status dueAt } }
+      ... on MutationError { message } } }"""
+    inp = {"id": post_id, "text": (r.get("description_final") or r.get("description") or r["title"])[:4900],
+           "assets": [{"video": {"url": r["asset_url"]}}],
+           "metadata": {"youtube": {"title": r["title"][:100], "privacy": "public", "madeForKids": False,
+                                    "categoryId": str(CFG.get("youtube_category_id") or "24"),
+                                    "notifySubscribers": True, "embeddable": True}}}
+    if due_at:
+        inp["dueAt"] = due_at
+        inp["mode"] = "customScheduled"
+        inp["schedulingType"] = "automatic"
+    d = gql(m, {"input": inp})["editPost"]
+    if not d.get("post"):
+        raise RuntimeError("editPost: " + str(d.get("message")))
+    return d["post"]
+
+
 def save(p, r):
     Path(p).write_text(json.dumps(r, indent=2, ensure_ascii=False))
 
@@ -102,9 +121,22 @@ def main():
         if posts is None:
             posts = channel_posts()
         byid = {x["id"]: x for x in posts}
-        # refresh status of an already-created post
+        # refresh status of an already-created post; a re-render with new hook/title edits the scheduled post
         if r.get("buffer_post_id"):
             x = byid.get(r["buffer_post_id"])
+            bt = norm(((x or {}).get("metadata") or {}).get("title"))
+            if x and x.get("status") == "scheduled" and bt and bt != norm(r["title"]) and r.get("asset_url"):
+                print(f"{iid}: re-rendered with new title; editing scheduled Buffer post {x['id']} (same slot)")
+                if not DRY:
+                    try:
+                        ed = edit(r, x["id"], x.get("dueAt"))
+                        r.update(buffer_status=ed.get("status"), buffer_due_at=ed.get("dueAt"),
+                                 buffer_edited_at=now.strftime("%Y-%m-%d %H:%M IST"))
+                        save(p, r); changed.append(iid)
+                        x["metadata"] = {"title": r["title"]}
+                    except Exception as e:
+                        failed.append(f"{iid}: edit failed: {e}")
+                continue
             if x:
                 st = x.get("status")
                 upd = {"buffer_status": st, "youtube_url": x.get("externalLink") or r.get("youtube_url")}
@@ -121,6 +153,8 @@ def main():
         body = (r.get("description_final") or r.get("description") or "").split("\n\nMusic:")[0]
         bad = sky_ai.banned_hits(r.get("title"), body)
         errs = hook_text.check_item_hook_fields(r) + (["banned: " + ",".join(bad)] if bad else [])
+        if hook_text.template_errors(r.get("hook") or "") or hook_text.template_errors(r.get("title") or ""):
+            errs.append("old 'The reason why' template; needs re-render")
         if g and g.get("ok") is False:
             errs.append("render gate failed")
         if not (r.get("title") or "").strip():

@@ -55,6 +55,22 @@ def hook_language_errors(text: str, *, label: str = "hook") -> list[str]:
     return errors
 
 
+# Owner rule (12 Nov 2026 night): no fixed "The reason why ..." template in the hook bar or title.
+TEMPLATE_RE = re.compile(r"^\W*(the\s+)?reasons?\s+why\b", re.I)
+
+
+def template_errors(text: str, *, label: str = "hook") -> list[str]:
+    if TEMPLATE_RE.search(text or ""):
+        return [f"{label} uses the banned 'The reason why' template"]
+    return []
+
+
+def opener(text: str) -> str:
+    """First two words, lowercased, without punctuation (used to avoid repeating hook openers)."""
+    toks = [t.lower().strip("'") for t in _tokens(text or "")]
+    return " ".join(toks[:2])
+
+
 def check_item_hook_fields(item: dict) -> list[str]:
     """Check hook and title on a queue item. Description is not required to
     be fully English (source lines, hashtags), but the hook sentence that

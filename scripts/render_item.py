@@ -108,34 +108,6 @@ def recent_music(window=None):
     return [m for _, m in rows[-window:]]
 
 
-def apply_gemini_meta():
-    """Gemini writes hook/title/description/hashtags (validated); queue text stays as fallback."""
-    global GEMINI_META
-    if os.environ.get("SKY_GEMINI_META", "1") == "0" or not gemini.available():
-        return
-    meta = sky_ai.write_meta(item, gemini.load_trends(REPO))
-    if not meta:
-        print("gemini meta: keeping queue hook/title")
-        return
-    trial = dict(item, hook=meta["hook"], title=meta["title"])
-    if hook_text.check_item_hook_fields(trial):
-        print("gemini meta failed English check; keeping queue text")
-        return
-    src_line = ""
-    for ln in (item.get("description") or "").split("\n"):
-        if ln.startswith("Source:"):
-            src_line = ln
-    if not src_line and item.get("source_url"):
-        src_line = (f"Source: official trailer ({item['source_url']}). All rights to the film/series belong to "
-                    f"their owners; short commentary edit.")
-    tags = list(dict.fromkeys(meta["hashtags"] + [t for t in (item.get("tags") or [])[:2]]))
-    desc = meta["description"].rstrip() + " Edit by Skywalker.\n" + src_line + "\n" + " ".join("#" + t for t in tags[:6])
-    item["hook"], item["title"], item["description"] = meta["hook"], meta["title"], desc.strip()
-    item["tags"] = list(dict.fromkeys((item.get("tags") or []) + meta["hashtags"]))[:12]
-    GEMINI_META = meta
-    print(f"gemini meta: hook={meta['hook']!r} title={meta['title']!r}")
-
-
 def now():
     return datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
 
@@ -153,6 +125,7 @@ def write(status, detail, **extra):
          "slot": item.get("slot"), "title": item.get("title"), "hook": item.get("hook"),
          "description": item.get("description"), "tags": item.get("tags"),
          "queue_meta": QUEUE_META if GEMINI_META else None, "gemini_meta": bool(GEMINI_META),
+         "hook_source": (GEMINI_META or {}).get("source"), "hook_style": (GEMINI_META or {}).get("style"),
          "gemini_calls": gemini._budget().get("log", []), "backup_item": item.get("backup_item"), **extra}
     prev = read_prev()
     for k in ("buffer_post_id", "buffer_status", "buffer_due_at", "buffer_posted_at", "youtube_url"):
@@ -510,6 +483,15 @@ def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_m
                 print(f"  source too short / under duration gate; trying next official trailer", flush=True)
                 continue
             return False, last
+        hm = work / "hook_meta.json"
+        if hm.exists():
+            global GEMINI_META
+            meta = json.loads(hm.read_text())
+            item["hook"], item["title"], item["description"] = meta["hook"], meta["title"], meta["description"]
+            item["tags"] = list(dict.fromkeys(meta.get("hashtags", []) + (item.get("tags") or [])))[:12]
+            GEMINI_META = meta
+            print(f"hook/title from clip ({meta.get('source')}): {meta['hook']!r} | {meta['title']!r}")
+        item["_avoid_openers"] = AVOID_OPENERS
         gem_qc = None
         if gemini.available() and gemini.budget_left() > 0:
             try:
@@ -539,6 +521,7 @@ def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_m
         return True, extra
 
 RECENT_MUSIC = []
+AVOID_OPENERS = []
 JOB_T0 = time.monotonic()
 # render.yml job cap is 120 min; stop starting new attempts well before it so the
 # result json is always written (no more silent cancel at the job timeout).
@@ -571,7 +554,13 @@ def main():
     recent = recent_music()
     if recent:
         print("music: skipping songs used in the last renders:", recent)
-    apply_gemini_meta()
+    # Hook bar/title are written inside the pipeline from the chosen clip (sky_ai.clip_hook_meta).
+    global AVOID_OPENERS
+    AVOID_OPENERS = sky_ai.recent_openers(REPO, iid)
+    ctx = OUT / f"item_{iid}.json"
+    ctx.write_text(json.dumps({"item": item, "avoid_openers": AVOID_OPENERS,
+                               "trends": gemini.load_trends(REPO)}, ensure_ascii=False))
+    os.environ["SKY_ITEM_JSON"] = str(ctx)
     global RECENT_MUSIC
     RECENT_MUSIC = recent
 

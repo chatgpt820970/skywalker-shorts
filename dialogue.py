@@ -522,8 +522,11 @@ def map_words_to_output(edl: list[dict], words: list[dict]) -> list[dict]:
 MIN_WORD_PROB = float(os.environ.get("SKY_MIN_WORD_PROB", "0.2"))
 
 
+CUE_MAX_WORDS = int(os.environ.get("SKY_CUE_WORDS", "3"))  # research: 2-3 words per beat read fastest on Shorts
+
+
 def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float = 3.6,
-                 max_gap: float = 0.45) -> list[dict]:
+                 max_gap: float = 0.45, max_words: int | None = None) -> list[dict]:
     """Pack mapped words into readable lower-third cues. One cue per spoken breath."""
     # MUST sort by output time. Words arrive in source order, but the EDL
     # can place a later trailer line earlier in the short.
@@ -568,7 +571,8 @@ def caption_cues(mapped_words: list[dict], max_chars: int = 42, max_dur: float =
         trial = " ".join((x.get("word") or "").strip() for x in buf + [w])
         dur = float(w["t1"]) - float(buf[0]["t0"])
         same_clip = buf[-1].get("clip") == w.get("clip")
-        if (not same_clip) or gap > max_gap or len(trial) > max_chars or dur > max_dur:
+        mw = max_words or CUE_MAX_WORDS
+        if (not same_clip) or gap > max_gap or len(trial) > max_chars or dur > max_dur or len(buf) >= mw:
             flush()
             buf.append(w)
         else:

@@ -34,54 +34,195 @@ def _trend_brief(trends: dict) -> str:
     return json.dumps(keep, ensure_ascii=False)[:1800]
 
 
-# ------------------------------------------------------------------ metadata
+# ------------------------------------------------------------------ hook + title from the chosen clip
 
-def write_meta(item: dict, trends: dict) -> dict | None:
-    """English hook (3-7 words), title, description, hashtags for one queue item."""
-    film_line = (item.get("description") or "").split("\n")[0]
-    prompt = f"""You write metadata for a YouTube Shorts movie/trailer edit channel (Skywalker, global + India audience).
-Item: id={item.get('id')} pillar={item.get('pillar')} market={item.get('market')}
-Current hook: {item.get('hook')}
-Current title: {item.get('title')}
-Context: {film_line}
-Tags: {', '.join(item.get('tags') or [])}
-Trend notes from top growing edit channels: {_trend_brief(trends)}
+import hashlib
+import os
 
-Rules:
-- hook: PURE ENGLISH, 3-7 punchy words, curiosity or emotion, no emoji, no hashtags, no Hindi/Hinglish words.
-  Film titles and character names may stay as-is. It is shown in a white bar on top of the video.
-- title: "<hook> 💀 | <short scene line> | #edit" (under 95 characters, English).
-- description: 2 short English lines; FIRST sentence repeats the hook exactly. Mention it is from the official trailer. Do not mention the channel name.
-  No links, no music credit, no copyright claims.
-- hashtags: 4-6 lowercase hashtags without '#', always include "shorts" and "edit".
-Return JSON: {{"hook": str, "title": str, "description": str, "hashtags": [str]}}"""
-    out = gemini.generate_json(prompt, purpose="meta", temperature=0.8)
-    if not isinstance(out, dict):
-        return None
-    hook = " ".join(str(out.get("hook") or "").replace("\n", " ").split()).strip(" .!")
-    title = " ".join(str(out.get("title") or "").split())
-    desc = str(out.get("description") or "").strip()
-    tags = [re.sub(r"[^a-z0-9]", "", str(t).lower().lstrip("#")) for t in (out.get("hashtags") or [])]
-    tags = [t for t in tags if t][:6]
-    n = len(hook.split())
+FALLBACK_HOOKS = [
+    "{who} just crossed the line", "Nobody saw this coming", "Watch the last two seconds", "This look says everything",
+    "{who} has one rule", "Wait for {who}'s next move", "This changes everything for {who}", "{who} is not here to talk",
+    "One mistake changed everything", "{who} finally snaps", "Things get worse from here", "Was this the real plan?",
+    "This scene gave me chills", "{who} saw it coming", "Nobody walks away from this", "Pay attention to the ending",
+]
+
+
+def film_name(item: dict) -> str:
+    m = re.search(r"official (.+?) (trailer|teaser|promo)", item.get("description") or "", re.I)
+    if m:
+        return m.group(1).strip()
+    w = (item.get("words") or "").strip()
+    return w.title() if w else ""
+
+
+def recent_openers(repo: Path, iid: str, n: int = 10) -> list[str]:
+    rows = []
+    for p in (repo / "results").glob("*.json"):
+        try:
+            r = json.loads(p.read_text())
+        except Exception:
+            continue
+        if r.get("id") == iid or r.get("status") != "done":
+            continue
+        h = r.get("hook") or (r.get("title") or "").split(" 💀")[0]
+        rows.append((r.get("slot") or "", hook_text.opener(h)))
+    rows.sort()
+    return [o for _, o in rows[-n:] if o]
+
+
+def hook_errors(hook: str, avoid: list[str]) -> list[str]:
     errs = []
+    n = len((hook or "").split())
     if not (3 <= n <= 7):
-        errs.append(f"hook has {n} words")
-    errs += hook_text.hook_language_errors(hook, label="hook")
-    errs += hook_text.hook_language_errors(title, label="title")
-    if not title or len(title) > 100:
-        errs.append("bad title length")
-    if not desc or not desc.lower().startswith(hook.lower()[: max(8, len(hook) // 2)]):
-        desc = f"{hook}. {desc}".strip()
-    if banned_hits(hook, title, desc):
-        errs.append("banned words " + ",".join(banned_hits(hook, title, desc)))
-    if errs:
-        print("  gemini meta rejected:", "; ".join(errs))
+        errs.append(f"hook has {n} words (need 3-7)")
+    errs += hook_text.hook_language_errors(hook, label="hook") + hook_text.template_errors(hook)
+    if hook_text.opener(hook) in set(avoid or []):
+        errs.append(f"hook opener '{hook_text.opener(hook)}' used in the last 10 videos")
+    if banned_hits(hook):
+        errs.append("banned words")
+    return errs
+
+
+def _clip_dialogue(edl: list, transcript: dict) -> list[str]:
+    lines = []
+    words = transcript.get("words") or []
+    for e in edl:
+        if e.get("scene") == "end":
+            continue
+        s0 = float(e.get("src_start") or 0)
+        s1 = s0 + float(e.get("visible") or e.get("src_dur") or 0)
+        ws = [w.get("word", "").strip() for w in words if s0 <= float(w.get("start", -1)) < s1]
+        if ws:
+            lines.append(" ".join(ws))
+    return lines
+
+
+def fallback_hook(item: dict, dialogue: list[str], avoid: list[str]) -> str:
+    """Content-based, varied fallback (never a template): a short spoken line from the clip, else a seeded pool."""
+    for ln in sorted(dialogue, key=len):
+        t = " ".join(re.sub(r"[^A-Za-z0-9' ?!]", " ", ln).split())
+        n = len(t.split())
+        if 3 <= n <= 7 and t.isascii():
+            cand = f'"{t.rstrip(".")}"'
+            if not hook_errors(cand, avoid):
+                return cand
+    who = film_name(item) or "He"
+    who = who.split(":")[0].strip()
+    if len(who.split()) > 3:
+        who = "He"
+    seed = int(hashlib.sha1((item.get("id") or "x").encode()).hexdigest(), 16)
+    for k in range(len(FALLBACK_HOOKS)):
+        h = FALLBACK_HOOKS[(seed + k) % len(FALLBACK_HOOKS)].format(who=who)
+        if not hook_errors(h, avoid):
+            return h
+    return "Nobody was ready for this"
+
+
+def build_title(title: str, hashtags: list[str]) -> str:
+    title = " ".join((title or "").split())[:70].rstrip(" |-")
+    tags = [t for t in hashtags if t][:3]
+    return (title + " " + " ".join("#" + t for t in tags)).strip()
+
+
+def build_description(hook: str, item: dict, hashtags: list[str], extra: str = "") -> str:
+    film = film_name(item)
+    src = next((ln for ln in (item.get("description") or "").split("\n") if ln.startswith("Source:")), "")
+    if not src and item.get("source_url"):
+        src = (f"Source: official trailer ({item['source_url']}). All rights to the film/series belong to their owners; "
+               f"short commentary edit.")
+    first = hook.strip('"').rstrip(".!?") + "."
+    body = f"{first} {extra.strip()} " if extra else f"{first} "
+    body += f"From the official {film} trailer. Edit by Skywalker." if film else "Edit by Skywalker."
+    tags = list(dict.fromkeys(hashtags + ["shorts", "edit"]))[:6]
+    return body.strip() + "\n" + src + "\n" + " ".join("#" + t for t in tags)
+
+
+def _context_line(item: dict) -> str:
+    """Film/scene context without any old template hook sentence (so Gemini cannot paraphrase it)."""
+    first = (item.get("description") or "").split("\n")[0]
+    parts = [p for p in re.split(r"(?<=\.)\s+", first) if p and not hook_text.TEMPLATE_RE.search(p)
+             and p.strip(". ").lower() != (item.get("hook") or "").strip(". ").lower()]
+    return " ".join(parts)[:300]
+
+
+def clip_hook_meta(mezz: Path, edl: list, transcript: dict, work: Path, iid: str) -> dict | None:
+    """Gemini looks at frames of the CHOSEN shots + their dialogue + film context and writes the hook bar
+    text, title, description line and hashtags. Cached per item (one call per render job). Never a template."""
+    ip = os.environ.get("SKY_ITEM_JSON")
+    if not ip or not Path(ip).exists():
         return None
-    for must in ("shorts", "edit"):
-        if must not in tags:
-            tags.append(must)
-    return {"hook": hook, "title": title, "description": desc, "hashtags": tags}
+    ctx = json.loads(Path(ip).read_text())
+    item, avoid, trends = ctx.get("item") or {}, ctx.get("avoid_openers") or [], ctx.get("trends") or {}
+    cache = Path(os.environ.get("SKY_ROOT") or work) / f"gemini_hook_{iid or 'x'}.json"
+    if cache.exists():
+        try:
+            c = json.loads(cache.read_text())
+            if c.get("hook") and not hook_errors(c["hook"], avoid):
+                print("  gemini[hook]: cached")
+                return c
+        except Exception:
+            pass
+    dialogue = _clip_dialogue(edl, transcript)
+    shots = [e for e in edl if e.get("scene") != "end"]
+    frames = []
+    tdir = work / "gem_hook"
+    tdir.mkdir(parents=True, exist_ok=True)
+    pick = shots if len(shots) <= 10 else [shots[round(i * (len(shots) - 1) / 9)] for i in range(10)]
+    for i, e in enumerate(pick):
+        t = float(e.get("src_start") or 0) + float(e.get("visible") or 1) / 2
+        f = tdir / f"h{i:02d}.jpg"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t:.2f}", "-i", str(mezz), "-frames:v", "1",
+                        "-vf", "scale=288:-2", str(f)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        frames.append(f)
+    sheet = _tile(frames, work / "gem_hook_sheet.jpg")
+    film = film_name(item)
+    out = None
+    if sheet:
+        prompt = f"""You write the on-screen hook for a viral YouTube Short edit of the official "{film}" trailer.
+The contact sheet shows the shots that ARE in this edit, in order (yellow numbers). Spoken dialogue in the edit, in order:
+{json.dumps(dialogue, ensure_ascii=False)[:1500]}
+Context: {_context_line(item)} | tags: {', '.join((item.get('tags') or [])[:8])}
+Pillar: {item.get('pillar')} | audience: {item.get('market')}
+What is trending for hooks/titles right now: {_trend_brief(trends)}
+
+Write ONE hook for the white bar on top of the video: 3-7 words, PURE ENGLISH, scroll-stopping and SPECIFIC to what
+these shots and lines actually show (a character, a moment, a line, a stake). Look at the faces, action and
+the dialogue first; avoid vague praise like "never backs down" or "changes everything". Pick the best style for this clip:
+curiosity gap, shock, bold claim, emotional line, question, or quoting/teasing the key dialogue (translate to English).
+What works on the fastest-growing edit channels right now: cold-open statements (most common), curiosity gaps,
+contradictions ("He smiled. Then everyone ran."), sharp questions, a quoted/teased line of dialogue, "POV:" or
+"<character> aura"/"<scene> core" style for character edits. Bar text is read in under 1 second: short, concrete words.
+FORBIDDEN: "The reason why...", generic templates, emoji, hashtags, Hindi/Hinglish words.
+Do NOT start with any of these openers (used recently): {avoid}.
+Also write: title (max 65 chars, punchy, curiosity-driven, includes the film and/or actor/character name for search,
+formats that work: "<Character> <bold action/claim>", "POV: <character> aura", "<Film> | <moment> core",
+"Nobody expected <character> to <x>"; no "The reason why", no emoji), a one-sentence English description line about this exact moment, and 3 relevant
+lowercase hashtags (film, actor/character, genre; no '#').
+Return JSON: {{"hook": str, "title": str, "line": str, "hashtags": [str, str, str], "style": str}}"""
+        out = gemini.generate_json(prompt, [sheet], purpose="hook", temperature=0.9)
+    meta = None
+    if isinstance(out, dict):
+        hook = " ".join(str(out.get("hook") or "").split()).strip(" .")
+        title = " ".join(str(out.get("title") or "").split())
+        tags = [re.sub(r"[^a-z0-9]", "", str(t).lower().lstrip("#")) for t in (out.get("hashtags") or [])]
+        tags = [t for t in tags if t][:3]
+        errs = hook_errors(hook, avoid) + hook_text.hook_language_errors(title, label="title") \
+            + hook_text.template_errors(title, label="title") + (["empty title"] if not title else []) \
+            + (["banned words"] if banned_hits(title, out.get("line") or "") else [])
+        if errs:
+            print("  gemini hook rejected:", "; ".join(errs))
+        else:
+            meta = {"hook": hook, "title": build_title(title, tags), "hashtags": tags,
+                    "description": build_description(hook, item, tags, str(out.get("line") or "")),
+                    "style": out.get("style"), "source": "gemini"}
+    if not meta:
+        hook = fallback_hook(item, dialogue, avoid)
+        tags = [t for t in (item.get("tags") or []) if t not in ("edit", "shorts", "trending")][:2] + ["movieedit"]
+        title = f"{hook.strip(chr(34))} | {film}" if film else hook
+        meta = {"hook": hook, "title": build_title(title, tags), "hashtags": tags,
+                "description": build_description(hook, item, tags), "source": "fallback"}
+    cache.write_text(json.dumps(meta, ensure_ascii=False))
+    return meta
 
 
 # ------------------------------------------------------------------ scenes
