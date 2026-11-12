@@ -88,6 +88,7 @@ MIN_TRAILER_FOR_WINDOW = 10**9  # disabled
 OUT_RES = 2160            # 1080 or 2160 (4K upscale is the default)
 RELAX = False             # retry-tier 3: relax ONLY non-hard-rule thresholds
 ALT_SCENES = False        # retry-tier 3: alternate scene preference
+MEZZ_FOR_SHAKE = None     # stabilized mezzanine path, set before selection (shake filter)
 LOGO_REASONS = ("near_black", "empty_dark", "centered_logo", "logo_animation", "graphic_blob", "text_card", "flat_card", "title_card", "title_logo", "text_overlay", "text_page", "date_card", "logo")
 ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
@@ -540,6 +541,54 @@ def _scene_card_reason(frames: list[np.ndarray], start: float, end: float, dur: 
                     return r
     return ""
 
+
+
+
+def _jitter_metric(frames: list) -> float | None:
+    """Same high-frequency global-motion jitter metric the QA no_shake check uses."""
+    if len(frames) < 6:
+        return None
+    sh_ = [cv2.phaseCorrelate(frames[i - 1], frames[i])[0] for i in range(1, len(frames))]
+    dx = np.array([v[0] for v in sh_]); dy = np.array([v[1] for v in sh_])
+    return float(np.std(np.diff(dx)) + np.std(np.diff(dy)))
+
+
+def shot_jitter(mezz: Path, scene: dict) -> float:
+    """Worst QA-style jitter over a few 0.5s windows inside a scene (stabilized mezzanine).
+    Used so the edit never picks a shot that the hard no_shake QA would reject."""
+    if "jitter" in scene:
+        return float(scene["jitter"])
+    st, en = float(scene["start"]), float(scene["end"])
+    wins = [st + 0.15]
+    if en - st > 1.6:
+        wins.append(st + (en - st) / 2 - 0.25)
+    if en - st > 2.4:
+        wins.append(en - 0.75)
+    worst = 0.0
+    for w in wins:
+        if w + 0.5 > en + 0.01:
+            continue
+        r = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{w:.3f}", "-i", str(mezz), "-t", "0.5",
+                            "-vf", f"fps={FPS},scale=540:-2,format=gray", "-f", "rawvideo", "-"],
+                           capture_output=True)
+        try:
+            pr = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                 "stream=width,height", "-of", "csv=p=0", str(mezz)],
+                                capture_output=True, text=True)
+            vw, vh = [int(x) for x in pr.stdout.strip().split(",")[:2]]
+        except Exception:
+            continue
+        hh = int(round(vh * 540 / vw / 2) * 2)
+        fsz = 540 * hh
+        if fsz <= 0 or len(r.stdout) < fsz * 6:
+            continue
+        n = len(r.stdout) // fsz
+        buf = np.frombuffer(r.stdout[: n * fsz], dtype=np.uint8).reshape(n, hh, 540).astype(np.float32)
+        j = _jitter_metric(list(buf))
+        if j is not None:
+            worst = max(worst, j)
+    scene["jitter"] = round(worst, 2)
+    return worst
 
 
 def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = None) -> list[dict]:
@@ -1003,6 +1052,31 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
     usable = [s for s in scenes if not s.get("skip") and s["dur"] >= min_keep]
     if not usable:
         raise SystemExit("No usable scenes after filtering")
+    # Drop shots that are still shaky after vidstab (fast handheld action trailers),
+    # so the hard no_shake QA does not fail the whole render. Keep enough footage.
+    try:
+        shake_cap = (6.0 if RELAX else 4.0) * 0.8
+        calm = []
+        for s_ in usable:
+            j_ = shot_jitter(MEZZ_FOR_SHAKE, s_) if MEZZ_FOR_SHAKE else 0.0
+            if j_ < shake_cap:
+                calm.append(s_)
+        shaky_n = len(usable) - len(calm)
+        if shaky_n and sum(x["dur"] for x in calm) >= 30.0:
+            print(f"  shake filter: dropped {shaky_n} shaky shots (jitter >= {shake_cap:.1f}px), {len(calm)} left")
+            usable = calm
+        elif shaky_n:
+            calm_set = set(id(x) for x in calm)
+            extras = sorted([x for x in usable if id(x) not in calm_set], key=lambda x: x.get("jitter", 0))
+            keep = list(calm)
+            for x in extras:
+                if sum(y["dur"] for y in keep) >= 30.0:
+                    break
+                keep.append(x)
+            usable = keep
+            print(f"  shake filter: only {len(calm)} calm shots; kept least-shaky extras ({len(usable)} total)")
+    except Exception as e:
+        print(f"  shake filter skipped: {e}")
     if ALT_SCENES:
         # Different selection on retry-tier 3: prefer higher-motion mid-trailer scenes.
         mot = sorted(usable, key=lambda s: s.get("motion") or 0)
@@ -3202,7 +3276,7 @@ def main():
     ap.add_argument("--out-res", type=int, default=None, choices=[1080, 2160],
                     help="Output long-edge (1080 or 2160). Default 2160 (4K upscale in render_item).")
     args = ap.parse_args()
-    global END_STILL, ENERGY, RELAX, ALT_SCENES, TRAILER_OPEN_SKIP, TRAILER_END_SKIP, OUT_RES
+    global END_STILL, ENERGY, RELAX, ALT_SCENES, MEZZ_FOR_SHAKE, TRAILER_OPEN_SKIP, TRAILER_END_SKIP, OUT_RES
     ENERGY = bool(args.energy or (args.pillar or "").lower() in ("anime", "movie"))
     RELAX = bool(args.relax)
     ALT_SCENES = bool(args.alt_scenes)
@@ -3413,6 +3487,7 @@ def main():
             mezz = stabilize(mezz, WORK / "mezzanine_stab.mp4", WORK / "transforms.trf")
             print(f"  stabilized {mezz}")
 
+    MEZZ_FOR_SHAKE = mezz
     print("=== 2. Scene detect + score ===")
     scored_path = WORK / "scenes_scored.json"
     if args.reuse_scenes and scored_path.exists():
