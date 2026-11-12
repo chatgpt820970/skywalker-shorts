@@ -23,10 +23,11 @@
    "trending"
   ],
   "target_dur": 32,
-  "status": "queued",
+  "status": "replaced",
   "market": "US/UK",
   "fallback_release": "sources",
-  "fallback_asset": "godzillaminuszero_trailer_h264.mp4"
+  "fallback_asset": "godzillaminuszero_trailer_h264.mp4",
+  "note": "Godzilla Minus Zero already posted twice on 10 Nov (C4L6mVRSSCY, bCAwRahh2_Q); replaced by Predator: Badlands to avoid a repeat topic."
  },
  {
   "id": "20261116-1230-housefull5",
@@ -112,5 +113,38 @@
   "market": "IN",
   "fallback_release": "sources",
   "fallback_asset": "alluarjun_trailer_h264.mp4"
+ },
+ {
+  "id": "20261116-0630-predatorbadlands",
+  "slot": "2026-11-16T06:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=43R9l7EkJwE",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/predatorbadlands_trailer_h264.mp4",
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/predatorbadlands_final_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The reason why the hunter became prey",
+  "words": "BADLANDS",
+  "title": "The reason why the hunter became prey 💀 | A young Predator hunts alone | #edit",
+  "description": "The reason why the hunter became prey. A young Predator hunts alone from the official Predator: Badlands trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=43R9l7EkJwE). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #predatorbadlands #predator",
+  "tags": [
+   "predatorbadlands",
+   "predator",
+   "ellefanning",
+   "20thcentury",
+   "scifi",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "predatorbadlands_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=cDL3Zjdz514"
+  ]
  }
 ]
