@@ -108,7 +108,9 @@ def fallback_hook(item: dict, dialogue: list[str], avoid: list[str]) -> str:
     for ln in sorted(dialogue, key=len):
         t = " ".join(re.sub(r"[^A-Za-z0-9' ?!]", " ", ln).split())
         n = len(t.split())
-        if 3 <= n <= 7 and t.isascii() and t[:1].isupper() and not PROFANITY.search(t):
+        # Only a complete spoken sentence (ends with . ! ?) of 4-7 words; clipped fragments look broken on the bar.
+        complete = ln.strip().endswith((".", "!", "?")) and t.split()[-1].lower() not in ("i", "a", "the", "to", "and")
+        if 4 <= n <= 7 and complete and t.isascii() and t[:1].isupper() and not PROFANITY.search(t):
             cand = f'"{t.rstrip(".")}"'
             if not hook_errors(cand, avoid):
                 return cand

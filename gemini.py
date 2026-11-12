@@ -71,7 +71,7 @@ def generate_json(prompt: str, images: list | None = None, *, purpose: str = "",
         return None
     b = _budget()
     mx_calls = int(os.environ.get("GEMINI_MAX_CALLS", "5"))
-    mx_http = int(os.environ.get("GEMINI_MAX_HTTP", "10"))
+    mx_http = int(os.environ.get("GEMINI_MAX_HTTP", "16"))
     if b.get("calls", 0) >= mx_calls:
         print(f"  gemini[{purpose}]: budget exhausted ({mx_calls} calls); using heuristics")
         return None
@@ -85,7 +85,11 @@ def generate_json(prompt: str, images: list | None = None, *, purpose: str = "",
     _save_budget(b)
     delay = 4.0
     deadline = time.time() + float(os.environ.get("GEMINI_DEADLINE_S", "300"))
-    for model in _models():
+    models = _models()
+    good = _budget().get("good_model")
+    if good in models:  # the model that last answered goes first (quota differs per model)
+        models = [good] + [m for m in models if m != good]
+    for model in models:
         for _try in range(2):
             if time.time() > deadline:
                 print(f"  gemini[{purpose}]: deadline reached; using heuristics")
@@ -108,6 +112,7 @@ def generate_json(prompt: str, images: list | None = None, *, purpose: str = "",
                     txt = txt.strip("`").split("\n", 1)[-1].rsplit("```", 1)[0]
                 out = json.loads(txt)
                 b = _budget()
+                b["good_model"] = model
                 b.setdefault("log", []).append({"purpose": purpose, "model": model, "s": round(time.time() - t0, 1), "ok": True})
                 _save_budget(b)
                 print(f"  gemini[{purpose}]: ok via {model} in {time.time() - t0:.1f}s")
@@ -120,6 +125,13 @@ def generate_json(prompt: str, images: list | None = None, *, purpose: str = "",
                     return None
                 if code == 404:
                     break  # model gone; next model
+                if code == 429:
+                    b = _budget()
+                    b.setdefault("log", []).append({"purpose": purpose, "model": model, "err": msg})
+                    _save_budget(b)
+                    print(f"  gemini[{purpose}]: {model} rate-limited (429); next model")
+                    time.sleep(2)
+                    break  # quota is per model: move on instead of burning the HTTP budget
             except Exception as e:  # timeout, bad JSON, empty candidates
                 msg = type(e).__name__
             b = _budget()
