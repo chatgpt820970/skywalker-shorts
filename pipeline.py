@@ -2714,6 +2714,12 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
             capmod.write_ass(ass_lt, caps, plate_bottom=plate_bottom, font="Poppins")
         layout["caption_y"] = capmod.caption_y(plate_bottom)
         layout["captions"] = caps
+        if speech_out and not cues:
+            # Speech exists only as fragments the cuts slice mid-word: nothing can be
+            # subtitled word-accurately, so don't demand subtitles for it.
+            print(f"  {len(speech_out)} speech window(s) have no subtitle-able words; not requiring subtitles")
+            layout["speech_windows_uncaptioned"] = speech_out
+            speech_out = []
         layout["speech_windows"] = speech_out
         (WORK / "layout.json").write_text(json.dumps(layout, default=str))
         (WORK / "subtitles.json").write_text(json.dumps(caps, indent=2, ensure_ascii=False))
