@@ -76,6 +76,7 @@ SEP_H = 2                  # 2px hairline at the bottom of the bar (no gap)
 # (~195px for a 2-line hook, matching the approved layout).
 BAR_H = 196
 ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
+MUSIC_DROP_HINT = None     # library drop timestamp (seconds into the song)
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
 # No fixed opening/ending time lock: the best story scenes may come from
@@ -808,6 +809,12 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
 # ---------------------------------------------------------------------------
 # 3. Music analysis
 # ---------------------------------------------------------------------------
+def _pick_library(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "") -> dict | None:
+    """Trending edit songs (music/library.json + 'music' release); see music_lib.pick."""
+    import music_lib
+    return music_lib.pick(AE, pillar, seed, exclude, salt)
+
+
 def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "") -> dict:
     """Pick a credited, copyright-safe track for a pillar from music/credits.json.
 
@@ -816,6 +823,9 @@ def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, sa
     `exclude` + `salt` are used on retry-tier 3 to pick a different credited track.
     """
     import hashlib
+    lib_pick = _pick_library(pillar, seed, exclude, salt)
+    if lib_pick:
+        return lib_pick
     cj = json.loads((AE / "music" / "credits.json").read_text())
     mood = PILLAR_MOOD.get((pillar or "movie").lower(), "movie")
     blob = " ".join([
@@ -927,6 +937,11 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
         reveal_at = max(4.0, 0.38 * target)
         dur_m = float(times[-1])
         d = find_drop(y, sr, pulse, reveal_at, max(reveal_at, dur_m - (target - reveal_at)))
+        hint = globals().get("MUSIC_DROP_HINT")
+        if hint is not None and reveal_at <= float(hint) <= dur_m - (target - reveal_at) and len(pulse):
+            # library drop timestamp (analysed when the song was added): snap to the nearest beat
+            d = float(pulse[int(np.argmin(np.abs(pulse - float(hint))))])
+            print(f"  music drop from library hint {float(hint):.2f}s -> beat {d:.2f}s")
         if d is not None:
             start = max(0.0, d - reveal_at)
             on = pulse[pulse <= start + 0.05]
@@ -3200,6 +3215,8 @@ def main():
         WORK.mkdir(parents=True, exist_ok=True)
         try:
             import dialogue as dmod
+            if tr.get("library"):
+                raise RuntimeError("trending library track: keep the original edit audio")
             styled, note = dmod.style_music(
                 Path(tr["path"]), WORK / "music_styled.wav",
                 pillar=args.pillar or "", mood=tr.get("mood") or "",
@@ -3212,6 +3229,8 @@ def main():
                 print("Music style:", note)
         except Exception as e:
             print("music style skipped:", e)
+        global MUSIC_DROP_HINT
+        MUSIC_DROP_HINT = tr.get("drop_t") if tr.get("library") else None
         (WORK / "music_credit.json").write_text(json.dumps(tr, indent=2, ensure_ascii=False))
         print("Music:", tr["file"], "|", tr["credit"].splitlines()[0])
     if args.end_still is not None:
@@ -3420,6 +3439,20 @@ def main():
     except Exception as e:
         print("  transcribe skipped:", e)
         transcript = {"words": [], "segments": [], "ok": False, "error": str(e)}
+
+    print("=== 2c. Gemini scene pick ===")
+    try:
+        import sky_ai
+        cache = Path(os.environ.get("SKY_ROOT") or WORK) / f"gemini_scenes_{args.item_id or 'x'}.json"
+        ranks = sky_ai.rank_scenes(mezz, scenes, transcript, HOOK_TEXT, WORK, cache=cache)
+        if ranks:
+            n = sky_ai.apply_scene_ranks(scenes, ranks)
+            print(f"  gemini re-scored {n} scene(s)")
+            scored_path.write_text(json.dumps(scenes, indent=2, default=str))
+        else:
+            print("  gemini scene pick unavailable; heuristic scores kept")
+    except Exception as e:
+        print("  gemini scene pick skipped:", e)
 
     print("=== 3. Music analysis ===")
     music = analyze_music(music_path, TARGET_DUR)

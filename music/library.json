@@ -1,0 +1,441 @@
+{
+ "note": "Trending edit songs. mp3s live on the 'music' GitHub release and are fetched into music/lib/ at render time. Picker: pillar fit + trends/latest.json song_picks, never the same song within the last 8 renders.",
+ "release": "music",
+ "dir": "music/lib",
+ "no_repeat_window": 8,
+ "tracks": [
+  {
+   "file": "sw_elapeidafunk.mp3",
+   "title": "ELA PEIDA FUNK",
+   "artist": "Dj v2be, DJ SMG, XSKAY11, DJ llz",
+   "genre": "brazilian phonk",
+   "mood": "fun-hype",
+   "pillars": [
+    "funny",
+    "anime",
+    "celeb"
+   ],
+   "bpm": 129.2,
+   "drop_t": 18.88,
+   "duration_s": 42.4,
+   "energy": 0.556,
+   "tags": [
+    "anime",
+    "brazilian",
+    "celeb",
+    "edit",
+    "funny",
+    "phonk",
+    "trending"
+   ],
+   "credit": "Song: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK"
+  },
+  {
+   "file": "sw_closeeyes.mp3",
+   "title": "Close Eyes",
+   "artist": "DVRST",
+   "genre": "drift phonk",
+   "mood": "hype",
+   "pillars": [
+    "anime",
+    "movie",
+    "celeb"
+   ],
+   "bpm": 129.2,
+   "drop_t": 20.06,
+   "duration_s": 132.5,
+   "energy": 0.459,
+   "tags": [
+    "anime",
+    "celeb",
+    "drift",
+    "edit",
+    "movie",
+    "phonk",
+    "trending"
+   ],
+   "credit": "Song: DVRST - Close Eyes"
+  },
+  {
+   "file": "sw_montagemfujin.mp3",
+   "title": "MONTAGEM FUJIN (Super Slowed)",
+   "artist": "dj Samir, Mxng0, Nulteex",
+   "genre": "slowed phonk",
+   "mood": "hype",
+   "pillars": [
+    "anime",
+    "movie"
+   ],
+   "bpm": 172.3,
+   "drop_t": 103.47,
+   "duration_s": 139.9,
+   "energy": 0.456,
+   "tags": [
+    "anime",
+    "edit",
+    "movie",
+    "phonk",
+    "slowed",
+    "trending"
+   ],
+   "credit": "Song: dj Samir, Mxng0, Nulteex - MONTAGEM FUJIN (Super Slowed)"
+  },
+  {
+   "file": "sw_bateaublanc.mp3",
+   "title": "Bateau Blanc",
+   "artist": "Crazy Twins",
+   "genre": "phonk",
+   "mood": "fun-hype",
+   "pillars": [
+    "anime",
+    "funny"
+   ],
+   "bpm": 161.5,
+   "drop_t": 49.55,
+   "duration_s": 167.5,
+   "energy": 0.475,
+   "tags": [
+    "anime",
+    "edit",
+    "funny",
+    "phonk",
+    "trending"
+   ],
+   "credit": "Song: Crazy Twins - Bateau Blanc"
+  },
+  {
+   "file": "sw_passobemsolto.mp3",
+   "title": "PASSO BEM SOLTO (Slowed)",
+   "artist": "ATLXS",
+   "genre": "brazilian phonk",
+   "mood": "hype",
+   "pillars": [
+    "anime",
+    "celeb",
+    "funny"
+   ],
+   "bpm": 117.5,
+   "drop_t": 16.11,
+   "duration_s": 116.1,
+   "energy": 0.586,
+   "tags": [
+    "anime",
+    "brazilian",
+    "celeb",
+    "edit",
+    "funny",
+    "phonk",
+    "trending"
+   ],
+   "credit": "Song: ATLXS - PASSO BEM SOLTO (Slowed)"
+  },
+  {
+   "file": "sw_metamorphosis.mp3",
+   "title": "METAMORPHOSIS",
+   "artist": "INTERWORLD",
+   "genre": "drift phonk",
+   "mood": "hype",
+   "pillars": [
+    "anime",
+    "movie"
+   ],
+   "bpm": 172.3,
+   "drop_t": 10.87,
+   "duration_s": 143.5,
+   "energy": 0.331,
+   "tags": [
+    "anime",
+    "drift",
+    "edit",
+    "movie",
+    "phonk",
+    "trending"
+   ],
+   "credit": "Song: INTERWORLD - METAMORPHOSIS"
+  },
+  {
+   "file": "sw_murderinmymind.mp3",
+   "title": "MURDER IN MY MIND",
+   "artist": "Kordhell",
+   "genre": "drift phonk",
+   "mood": "hype",
+   "pillars": [
+    "movie",
+    "anime"
+   ],
+   "bpm": 117.5,
+   "drop_t": 16.81,
+   "duration_s": 145.0,
+   "energy": 0.646,
+   "tags": [
+    "anime",
+    "drift",
+    "edit",
+    "movie",
+    "phonk",
+    "trending"
+   ],
+   "credit": "Song: Kordhell - MURDER IN MY MIND"
+  },
+  {
+   "file": "sw_memoryreboot.mp3",
+   "title": "Memory Reboot (Slowed)",
+   "artist": "VØJ, Narvent",
+   "genre": "slowed reverb edit",
+   "mood": "dark-emotional",
+   "pillars": [
+    "movie",
+    "romance"
+   ],
+   "bpm": 143.6,
+   "drop_t": 173.15,
+   "duration_s": 236.4,
+   "energy": 0.502,
+   "tags": [
+    "edit",
+    "movie",
+    "reverb",
+    "romance",
+    "slowed",
+    "trending"
+   ],
+   "credit": "Song: VØJ, Narvent - Memory Reboot (Slowed)"
+  },
+  {
+   "file": "sw_canyoufeelmyheart.mp3",
+   "title": "Can You Feel My Heart",
+   "artist": "Bring Me The Horizon",
+   "genre": "edit rock",
+   "mood": "hype",
+   "pillars": [
+    "movie",
+    "anime"
+   ],
+   "bpm": 172.3,
+   "drop_t": 16.81,
+   "duration_s": 228.4,
+   "energy": 0.598,
+   "tags": [
+    "anime",
+    "edit",
+    "movie",
+    "rock",
+    "trending"
+   ],
+   "credit": "Song: Bring Me The Horizon - Can You Feel My Heart"
+  },
+  {
+   "file": "sw_afterdark.mp3",
+   "title": "After Dark",
+   "artist": "Mr.Kitty",
+   "genre": "dark synth edit",
+   "mood": "dark-emotional",
+   "pillars": [
+    "movie",
+    "romance"
+   ],
+   "bpm": 143.6,
+   "drop_t": 30.88,
+   "duration_s": 257.2,
+   "energy": 0.392,
+   "tags": [
+    "dark",
+    "edit",
+    "movie",
+    "romance",
+    "synth",
+    "trending"
+   ],
+   "credit": "Song: Mr.Kitty - After Dark"
+  },
+  {
+   "file": "sw_saiyaara.mp3",
+   "title": "Saiyaara (Slowed + Reverb)",
+   "artist": "Tanishk Bagchi, Faheem Abdullah, Arslan Nizami",
+   "genre": "bollywood slowed reverb",
+   "mood": "romantic",
+   "pillars": [
+    "romance"
+   ],
+   "bpm": 83.4,
+   "drop_t": 231.55,
+   "duration_s": 371.4,
+   "energy": 0.515,
+   "tags": [
+    "bollywood",
+    "edit",
+    "reverb",
+    "romance",
+    "slowed",
+    "trending"
+   ],
+   "credit": "Song: Tanishk Bagchi, Faheem Abdullah, Arslan Nizami - Saiyaara (Slowed + Reverb)"
+  },
+  {
+   "file": "sw_sahiba.mp3",
+   "title": "Sahiba",
+   "artist": "Aditya Rikhari",
+   "genre": "bollywood romance",
+   "mood": "romantic",
+   "pillars": [
+    "romance"
+   ],
+   "bpm": 99.4,
+   "drop_t": 151.74,
+   "duration_s": 183.0,
+   "energy": 0.282,
+   "tags": [
+    "bollywood",
+    "edit",
+    "romance",
+    "trending"
+   ],
+   "credit": "Song: Aditya Rikhari - Sahiba"
+  },
+  {
+   "file": "sw_palpal.mp3",
+   "title": "Pal Pal",
+   "artist": "Afusic, AliSoomroMusic",
+   "genre": "hindi pop mashup",
+   "mood": "dark",
+   "pillars": [
+    "romance",
+    "celeb"
+   ],
+   "bpm": 103.4,
+   "drop_t": 166.35,
+   "duration_s": 208.0,
+   "energy": 0.428,
+   "tags": [
+    "celeb",
+    "edit",
+    "hindi",
+    "mashup",
+    "pop",
+    "romance",
+    "trending"
+   ],
+   "credit": "Song: Afusic, AliSoomroMusic - Pal Pal"
+  },
+  {
+   "file": "sw_jhol.mp3",
+   "title": "Jhol (Acoustic)",
+   "artist": "Maanu, Annural Khalid",
+   "genre": "urdu romance",
+   "mood": "romantic",
+   "pillars": [
+    "romance"
+   ],
+   "bpm": 152.0,
+   "drop_t": 229.65,
+   "duration_s": 277.6,
+   "energy": 0.34,
+   "tags": [
+    "edit",
+    "romance",
+    "trending",
+    "urdu"
+   ],
+   "credit": "Song: Maanu, Annural Khalid - Jhol (Acoustic)"
+  },
+  {
+   "file": "sw_winningspeech.mp3",
+   "title": "Winning Speech",
+   "artist": "Karan Aujla",
+   "genre": "punjabi swag",
+   "mood": "hype",
+   "pillars": [
+    "celeb",
+    "movie"
+   ],
+   "bpm": 86.1,
+   "drop_t": 179.37,
+   "duration_s": 237.8,
+   "energy": 0.491,
+   "tags": [
+    "celeb",
+    "edit",
+    "movie",
+    "punjabi",
+    "swag",
+    "trending"
+   ],
+   "credit": "Song: Karan Aujla - Winning Speech"
+  },
+  {
+   "file": "sw_monica.mp3",
+   "title": "Monica",
+   "artist": "Anirudh Ravichander, Sublahshini",
+   "genre": "south mass dance",
+   "mood": "fun-hype",
+   "pillars": [
+    "celeb",
+    "funny"
+   ],
+   "bpm": 143.6,
+   "drop_t": 99.29,
+   "duration_s": 214.4,
+   "energy": 0.651,
+   "tags": [
+    "celeb",
+    "dance",
+    "edit",
+    "funny",
+    "mass",
+    "south",
+    "trending"
+   ],
+   "credit": "Song: Anirudh Ravichander, Sublahshini - Monica"
+  },
+  {
+   "file": "sw_hukum.mp3",
+   "title": "Hukum",
+   "artist": "Anirudh Ravichander",
+   "genre": "south mass hype",
+   "mood": "hype",
+   "pillars": [
+    "celeb",
+    "movie"
+   ],
+   "bpm": 103.4,
+   "drop_t": 23.66,
+   "duration_s": 213.0,
+   "energy": 0.383,
+   "tags": [
+    "celeb",
+    "edit",
+    "hype",
+    "mass",
+    "movie",
+    "south",
+    "trending"
+   ],
+   "credit": "Song: Anirudh Ravichander - Hukum"
+  },
+  {
+   "file": "sw_fearsong.mp3",
+   "title": "Fear Song",
+   "artist": "Anirudh Ravichander",
+   "genre": "south mass hype",
+   "mood": "hype",
+   "pillars": [
+    "movie",
+    "celeb"
+   ],
+   "bpm": 89.1,
+   "drop_t": 106.21,
+   "duration_s": 196.0,
+   "energy": 0.545,
+   "tags": [
+    "celeb",
+    "edit",
+    "hype",
+    "mass",
+    "movie",
+    "south",
+    "trending"
+   ],
+   "credit": "Song: Anirudh Ravichander - Fear Song"
+  }
+ ]
+}
