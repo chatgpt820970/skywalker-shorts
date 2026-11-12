@@ -1,18 +1,17 @@
 {
   "id": "demo-superman-v2",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: publish gate failed: dialogue not isolated (trailer music/SFX bed would clash with the song)",
-  "at": "2026-11-12 23:21 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43263234026",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-12 23:47 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43274666125",
   "slot": null,
-  "title": "Not maybe I | Superman #superman #dc #movieedit",
-  "hook": "\"Not maybe I\"",
-  "description": "Not maybe I. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #dc #movieedit #shorts #edit",
+  "title": "Nobody trusts the new Superman #superman #davidcorenswet #dc",
+  "hook": "They are already turning on Superman",
+  "description": "They are already turning on Superman. As tension builds between global leaders and the hero, Superman finds himself at the center of a growing political firestorm. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #davidcorenswet #dc #shorts #edit",
   "tags": [
     "superman",
-    "dc",
-    "movieedit",
     "davidcorenswet",
+    "dc",
     "jamesgunn",
     "superhero",
     "edit",
@@ -35,9 +34,30 @@
     ]
   },
   "gemini_meta": true,
-  "hook_source": "fallback",
-  "hook_style": null,
-  "title_candidates": null,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Nobody trusts the new Superman",
+      "click_score": 92.0
+    },
+    {
+      "title": "Superman is forced to make his move",
+      "click_score": 88.0
+    },
+    {
+      "title": "David Corenswet's aura is different",
+      "click_score": 85.0
+    },
+    {
+      "title": "The government vs Superman",
+      "click_score": 82.0
+    },
+    {
+      "title": "They tried to challenge the Man of Steel",
+      "click_score": 79.0
+    }
+  ],
   "gemini_calls": [
     {
       "purpose": "scenes",
@@ -46,22 +66,7 @@
     },
     {
       "purpose": "scenes",
-      "model": "gemini-3.5-flash",
-      "err": "TimeoutError"
-    },
-    {
-      "purpose": "scenes",
       "model": "gemini-3.8-flash",
-      "err": "HTTP 429"
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.8-flash",
-      "err": "HTTP 429"
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-flash-latest",
       "err": "HTTP 429"
     },
     {
@@ -72,50 +77,94 @@
     {
       "purpose": "scenes",
       "model": "gemini-3.1-flash-lite",
-      "s": 34.7,
+      "s": 3.3,
       "ok": true
     },
     {
       "purpose": "hook",
-      "model": "gemini-3.5-flash",
-      "err": "HTTP 503"
+      "model": "gemini-3.1-flash-lite",
+      "s": 1.6,
+      "ok": true
     },
     {
-      "purpose": "hook",
-      "model": "gemini-3.5-flash",
-      "err": "HTTP 429"
-    },
-    {
-      "purpose": "hook",
-      "model": "gemini-3.8-flash",
-      "err": "HTTP 503"
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "s": 2.3,
+      "ok": true
     }
   ],
   "backup_item": null,
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
       "attempt": 1,
-      "ok": false,
-      "error": "publish gate failed: dialogue not isolated (trailer music/SFX bed would clash with the song)",
+      "ok": true,
+      "error": null,
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
       "music": "sw_murderinmymind.mp3"
-    },
-    {
-      "attempt": 2,
-      "ok": false,
-      "error": "publish gate failed: dialogue not isolated (trailer music/SFX bed would clash with the song)",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
-      "music": "sw_murderinmymind.mp3"
-    },
-    {
-      "attempt": 3,
-      "ok": false,
-      "error": "publish gate failed: dialogue not isolated (trailer music/SFX bed would clash with the song)",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
-      "music": "sw_canyoufeelmyheart.mp3"
     }
   ],
-  "last_error": "publish gate failed: dialogue not isolated (trailer music/SFX bed would clash with the song)"
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-demo-superman-v2",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-demo-superman-v2/render-demo-superman-v2.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 11.302,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+  "music": "sw_murderinmymind.mp3",
+  "music_credit": "Song: Kordhell - MURDER IN MY MIND",
+  "description_final": "They are already turning on Superman. As tension builds between global leaders and the hero, Superman finds himself at the center of a growing political firestorm. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #davidcorenswet #dc #shorts #edit\n\nMusic:\nSong: Kordhell - MURDER IN MY MIND",
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 27.466667,
+      "audio": true
+    },
+    "lufs": -14.4,
+    "audio_check": {
+      "isolated": true,
+      "speech_segments": 11,
+      "smr_db": 20.0,
+      "smr_min_db": 13.8,
+      "vocal_vs_mix_db": -0.04,
+      "duck_db": -20.0,
+      "music_between_lines_dbfs": -14.3,
+      "min_smr_db": 12.0
+    },
+    "subtitle_cues": 1,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 9.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 8.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all technical and creative requirements.",
+        "The hook is clear and engaging.",
+        "The audio mix is well-balanced with clear dialogue.",
+        "The layout adheres to the specified format.",
+        "Captions are present, though limited in frequency, they are accurate."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
 }
