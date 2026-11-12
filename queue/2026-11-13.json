@@ -23,10 +23,11 @@
       "trending"
     ],
     "target_dur": 32,
-    "status": "queued",
+    "status": "moved",
     "market": "US/UK",
     "fallback_release": "sources",
-    "fallback_asset": "dunepartthree_trailer_h264.mp4"
+    "fallback_asset": "dunepartthree_trailer_h264.mp4",
+    "note": "moved to 20261112-1730-dunepartthree"
   },
   {
     "id": "20261113-1230-war2",
