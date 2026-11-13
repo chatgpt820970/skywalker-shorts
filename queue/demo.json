@@ -10,7 +10,7 @@
   "template": "whitebar",
   "hook": "The reason why Fool Night has everyone talking",
   "words": "FOOL NIGHT",
-  "title": "The reason why Fool Night has everyone talking \ud83d\udc80 | The flower-tree transformation | #edit",
+  "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
   "description": "The reason why Fool Night has everyone talking. Energy edit (beat cuts, ramp, drop flash + punch-in) from the official Netflix Anime Fool Night trailer.\nSource: official trailer (https://www.youtube.com/watch?v=2Qg_AfPF2sM).\n#edit #shorts #foolnight",
   "tags": [
    "foolnight",
@@ -175,5 +175,35 @@
   "status": "queued",
   "edit_mode": "music_only",
   "note": "Demo v4: music_only (hype song from second 0, no character voice, beat-cut action, white hook bar only). Forced music_only so the owner can review the new majority style. No slot, never posted."
+ },
+ {
+  "id": "test-superman-dryrun",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "Superman still saves everyone",
+  "words": "SUPERMAN",
+  "title": "Superman still saves everyone | dry-run test | #edit",
+  "description": "Superman still saves everyone. Dry-run test render from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+  "tags": [
+   "superman",
+   "dc",
+   "edit",
+   "shorts",
+   "trending",
+   "test"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "demo": true,
+  "no_publish": true,
+  "fallback_release": "sources",
+  "fallback_asset": "superman_trailer_h264.mp4",
+  "content_kind": "trailer",
+  "note": "Dry-run / no-publish test item. Never posted to Buffer/YouTube."
  }
 ]

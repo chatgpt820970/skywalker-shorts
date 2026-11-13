@@ -49,7 +49,14 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/runningman_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "runningman_trailer_h264.mp4",
+  "alt_source_urls": [],
+  "content_kind": "trailer"
  },
  {
   "id": "20261114-1130-mandalorian",
@@ -72,7 +79,17 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "mandalorian_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_alt_trailer_h264.mp4",
+   "https://www.youtube.com/watch?v=DNmOzJWnptU"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261114-1230-kantara",
@@ -124,7 +141,16 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fantasticfour_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "fantasticfour_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fantasticfour_alt_trailer_h264.mp4"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261114-1730-fireflywedding",
@@ -176,7 +202,13 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mortalkombat2_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "mortalkombat2_trailer_h264.mp4",
+  "content_kind": "trailer"
  },
  {
   "id": "20261114-2230-rajinikanth",

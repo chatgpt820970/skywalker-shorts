@@ -29,6 +29,61 @@
   "fallback_asset": "tronares_trailer_h264.mp4"
  },
  {
+  "id": "20261119-0900-twisters",
+  "slot": "2026-11-19T09:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=jufrkwWbAy0",
+  "template": "whitebar",
+  "hook": "The sky turned against them",
+  "words": "TWISTERS",
+  "title": "The sky turned against them | Twisters | #edit",
+  "description": "The sky turned against them. From the official Twisters trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #twisters",
+  "tags": [
+   "twisters",
+   "glenpowell",
+   "action",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/twisters_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "twisters_trailer_h264.mp4"
+ },
+ {
+  "id": "20261119-1130-superman",
+  "slot": "2026-11-19T11:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
+  "template": "whitebar",
+  "hook": "Superman still saves everyone",
+  "words": "SUPERMAN",
+  "title": "Superman still saves everyone | Superman returns to Metropolis | #edit",
+  "description": "Superman still saves everyone. Superman returns to Metropolis from the official Superman trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman",
+  "tags": [
+   "superman",
+   "dc",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "superman_trailer_h264.mp4"
+ },
+ {
   "id": "20261119-1230-jollyllb3",
   "slot": "2026-11-19T12:30:00+05:30",
   "pillar": "funny",
@@ -61,6 +116,34 @@
   ]
  },
  {
+  "id": "20261119-1600-civilwar",
+  "slot": "2026-11-19T16:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=aDyQxtg0V2w",
+  "template": "whitebar",
+  "hook": "America split in front of their lens",
+  "words": "CIVIL WAR",
+  "title": "America split in front of their lens | Civil War | #edit",
+  "description": "America split in front of their lens. From the official Civil War trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #civilwar",
+  "tags": [
+   "civilwar",
+   "a24",
+   "alexgarland",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/civilwar_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "civilwar_trailer_h264.mp4"
+ },
+ {
   "id": "20261119-1730-wickedforgood",
   "slot": "2026-11-19T17:30:00+05:30",
   "pillar": "romance",
@@ -88,6 +171,34 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "wickedforgood_trailer_h264.mp4"
+ },
+ {
+  "id": "20261119-2030-furiosa",
+  "slot": "2026-11-19T20:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=XJ55q4YikzA",
+  "template": "whitebar",
+  "hook": "She took the wasteland back",
+  "words": "FURIOSA",
+  "title": "She took the wasteland back | Furiosa | #edit",
+  "description": "She took the wasteland back. From the official Furiosa: A Mad Max Saga trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #furiosa",
+  "tags": [
+   "furiosa",
+   "madmax",
+   "anyataylorjoy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/furiosa_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "furiosa_trailer_h264.mp4"
  },
  {
   "id": "20261119-2230-chainsawman",

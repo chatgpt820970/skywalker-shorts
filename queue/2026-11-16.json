@@ -83,7 +83,13 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/wakeupdeadman_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "wakeupdeadman_trailer_h264.mp4",
+  "content_kind": "trailer"
  },
  {
   "id": "20261116-1130-goodbadugly",
@@ -106,7 +112,13 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "IN"
+  "market": "IN",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=bJbZAXbF3Xo",
+   "https://www.youtube.com/watch?v=jl-sgSDwJHs",
+   "https://www.youtube.com/watch?v=hasUDn4yvJQ"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261116-1230-housefull5",
@@ -157,7 +169,14 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=fPopd3ZOGUY",
+   "https://www.youtube.com/watch?v=G_tIlhPC1Ys",
+   "https://www.youtube.com/watch?v=KqXEcl4Whj4",
+   "https://www.dailymotion.com/video/x9c2lug"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261116-1730-wildhorsenine",
@@ -209,7 +228,16 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/sololeveling_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "sololeveling_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://archive.org/download/solo-leveling-season-2-arise-from-the-shadow-official-hindi-dub-trailer-crunchyroll-india-1080p/Solo%20Leveling%20Season%202%20-Arise%20from%20the%20Shadow-%20_%20OFFICIAL%20HINDI%20DUB%20TRAILER%20_%20Crunchyroll%20India_1080p.mp4"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261116-2230-alluarjun",

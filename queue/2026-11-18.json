@@ -29,6 +29,62 @@
   "fallback_asset": "avatarfireandash_trailer_h264.mp4"
  },
  {
+  "id": "20261118-0900-venom3",
+  "slot": "2026-11-18T09:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=__2bjWbetsA",
+  "template": "whitebar",
+  "hook": "Venom's last dance starts now",
+  "words": "LAST DANCE",
+  "title": "Venom's last dance starts now | Eddie and Venom face Knull | #edit",
+  "description": "Venom's last dance starts now. Eddie and Venom face Knull from the official Venom: The Last Dance trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #venom",
+  "tags": [
+   "venom",
+   "venomthelastdance",
+   "tomhardy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/venom3_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "venom3_trailer_h264.mp4"
+ },
+ {
+  "id": "20261118-1130-alienromulus",
+  "slot": "2026-11-18T11:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=x0XDEhP4MQs",
+  "template": "whitebar",
+  "hook": "Something woke up on the station",
+  "words": "ROMULUS",
+  "title": "Something woke up on the station | Alien: Romulus | #edit",
+  "description": "Something woke up on the station. From the official Alien: Romulus trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #alienromulus",
+  "tags": [
+   "alienromulus",
+   "alien",
+   "horror",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/alienromulus_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "alienromulus_trailer_h264.mp4"
+ },
+ {
   "id": "20261118-1230-dhurandhar",
   "slot": "2026-11-18T12:30:00+05:30",
   "pillar": "movie",
@@ -58,6 +114,34 @@
   "fallback_asset": "dhurandhar_trailer_h264.mp4"
  },
  {
+  "id": "20261118-1600-dune2",
+  "slot": "2026-11-18T16:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Way9Dexny3w",
+  "template": "whitebar",
+  "hook": "Paul Atreides became something else",
+  "words": "DUNE PART TWO",
+  "title": "Paul Atreides became something else | the desert answers | #edit",
+  "description": "Paul Atreides became something else. The desert answers from the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #dune",
+  "tags": [
+   "dune",
+   "duneparttwo",
+   "timotheechalamet",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "dune2_trailer_h264.mp4"
+ },
+ {
   "id": "20261118-1730-freakierfriday",
   "slot": "2026-11-18T17:30:00+05:30",
   "pillar": "funny",
@@ -85,6 +169,34 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "freakierfriday_trailer_h264.mp4"
+ },
+ {
+  "id": "20261118-2030-deadpool3",
+  "slot": "2026-11-18T20:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=73_1biulkYk",
+  "template": "whitebar",
+  "hook": "Deadpool dragged Wolverine into this",
+  "words": "DEADPOOL",
+  "title": "Deadpool dragged Wolverine into this | the MCU's messiest team-up | #edit",
+  "description": "Deadpool dragged Wolverine into this. The MCU's messiest team-up from the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #deadpool",
+  "tags": [
+   "deadpool",
+   "wolverine",
+   "marvel",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "deadpool3_trailer_h264.mp4"
  },
  {
   "id": "20261118-2230-jananayagan",

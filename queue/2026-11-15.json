@@ -49,7 +49,13 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/bonetemple_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "bonetemple_trailer_h264.mp4",
+  "content_kind": "trailer"
  },
  {
   "id": "20261115-1130-devilwearsprada2",
@@ -72,7 +78,14 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=PMd1at7OwiE",
+   "https://www.youtube.com/watch?v=9c-DrMe8o5Q",
+   "https://www.youtube.com/watch?v=gFJIo2aoP24",
+   "https://www.dailymotion.com/video/xa08t6i"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261115-1230-mahavatarnarsimha",
@@ -123,7 +136,14 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "alt_source_urls": [
+   "https://www.youtube.com/watch?v=PypDSyIRRSs",
+   "https://www.youtube.com/watch?v=hJnAHzo4-KI",
+   "https://www.dailymotion.com/video/x9u83ec",
+   "https://www.dailymotion.com/video/x9u5nq0"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261115-1730-jumanji",
@@ -175,7 +195,16 @@
   ],
   "target_dur": 26,
   "status": "queued",
-  "market": "US/UK"
+  "market": "US/UK",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/toystory5_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "toystory5_trailer_h264.mp4",
+  "alt_source_urls": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/toystory5_alt_trailer_h264.mp4"
+  ],
+  "content_kind": "trailer"
  },
  {
   "id": "20261115-2230-dragonballsuper",

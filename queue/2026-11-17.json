@@ -29,6 +29,62 @@
   "fallback_asset": "violentnight2_trailer_h264.mp4"
  },
  {
+  "id": "20261117-0900-fnaf2",
+  "slot": "2026-11-17T09:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=dSDpoobO6yM",
+  "template": "whitebar",
+  "hook": "The animatronics came back",
+  "words": "FIVE NIGHTS",
+  "title": "The animatronics came back | Freddy's opens its doors again | #edit",
+  "description": "The animatronics came back. Freddy's opens its doors again from the official Five Nights at Freddy's 2 trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #fnaf2",
+  "tags": [
+   "fnaf2",
+   "fivenightsatfreddys",
+   "horror",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fnaf2_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "fnaf2_trailer_h264.mp4"
+ },
+ {
+  "id": "20261117-1130-gladiator2",
+  "slot": "2026-11-17T11:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=JY7_-dzWK40",
+  "template": "whitebar",
+  "hook": "Rome wants blood again",
+  "words": "GLADIATOR II",
+  "title": "Rome wants blood again | Lucius enters the arena | #edit",
+  "description": "Rome wants blood again. Lucius enters the arena from the official Gladiator II trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #gladiator2",
+  "tags": [
+   "gladiator2",
+   "ridleyscott",
+   "paulmescal",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/gladiator2_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "gladiator2_trailer_h264.mp4"
+ },
+ {
   "id": "20261117-1230-saiyaara",
   "slot": "2026-11-17T12:30:00+05:30",
   "pillar": "romance",
@@ -55,6 +111,34 @@
   "market": "IN",
   "fallback_release": "sources",
   "fallback_asset": "saiyaara_trailer_h264.mp4"
+ },
+ {
+  "id": "20261117-1600-missionimpossible",
+  "slot": "2026-11-17T16:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=fsQgc9pCyDU",
+  "template": "whitebar",
+  "hook": "Ethan Hunt has one last mission",
+  "words": "FINAL RECKONING",
+  "title": "Ethan Hunt has one last mission | The Final Reckoning begins | #edit",
+  "description": "Ethan Hunt has one last mission. The Final Reckoning begins from the official Mission: Impossible – The Final Reckoning trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #missionimpossible",
+  "tags": [
+   "missionimpossible",
+   "tomcruise",
+   "action",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/missionimpossible_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "missionimpossible_trailer_h264.mp4"
  },
  {
   "id": "20261117-1730-ebenezer",
@@ -84,6 +168,34 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "ebenezer_trailer_h264.mp4"
+ },
+ {
+  "id": "20261117-2030-jurassicworldrebirth",
+  "slot": "2026-11-17T20:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=jan5CFWs9ic",
+  "template": "whitebar",
+  "hook": "The island is still hunting us",
+  "words": "JURASSIC WORLD",
+  "title": "The island is still hunting us | a new team enters the park | #edit",
+  "description": "The island is still hunting us. A new team enters the park from the official Jurassic World Rebirth trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jurassicworld",
+  "tags": [
+   "jurassicworld",
+   "jurassicworldrebirth",
+   "dinosaurs",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "content_kind": "trailer",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/jurassicworldrebirth_trailer_h264.mp4"
+  ],
+  "fallback_release": "sources",
+  "fallback_asset": "jurassicworldrebirth_trailer_h264.mp4"
  },
  {
   "id": "20261117-2230-onepiece",
