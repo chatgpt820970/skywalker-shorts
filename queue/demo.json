@@ -236,5 +236,36 @@
   "content_kind": "trailer",
   "edit_mode": "music_only",
   "note": "Follow-up improvements dry-run (blur fill / captions / cold open / loop / LUFS). Never posted."
+ },
+ {
+  "id": "test-improvements-v2-dryrun",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "He never stopped saving them",
+  "words": "SUPERMAN",
+  "title": "He never stopped saving them | improvements v2 dry-run | #edit",
+  "description": "He never stopped saving them. Dry-run v2 after seamless-loop audio fix. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+  "tags": [
+   "superman",
+   "dc",
+   "edit",
+   "shorts",
+   "trending",
+   "test"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "demo": true,
+  "no_publish": true,
+  "fallback_release": "sources",
+  "fallback_asset": "superman_trailer_h264.mp4",
+  "content_kind": "trailer",
+  "edit_mode": "music_only",
+  "note": "v2 dry-run after seamless-loop audio fix. Never posted."
  }
 ]
