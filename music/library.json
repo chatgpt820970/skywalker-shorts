@@ -1,441 +1,3372 @@
 {
- "note": "Trending edit songs. mp3s live on the 'music' GitHub release and are fetched into music/lib/ at render time. Picker: pillar fit + trends/latest.json song_picks, never the same song within the last 8 renders.",
- "release": "music",
- "dir": "music/lib",
- "no_repeat_window": 8,
- "tracks": [
-  {
-   "file": "sw_elapeidafunk.mp3",
-   "title": "ELA PEIDA FUNK",
-   "artist": "Dj v2be, DJ SMG, XSKAY11, DJ llz",
-   "genre": "brazilian phonk",
-   "mood": "fun-hype",
-   "pillars": [
-    "funny",
-    "anime",
-    "celeb"
-   ],
-   "bpm": 129.2,
-   "drop_t": 18.88,
-   "duration_s": 42.4,
-   "energy": 0.556,
-   "tags": [
-    "anime",
-    "brazilian",
-    "celeb",
-    "edit",
-    "funny",
-    "phonk",
-    "trending"
-   ],
-   "credit": "Song: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK"
-  },
-  {
-   "file": "sw_closeeyes.mp3",
-   "title": "Close Eyes",
-   "artist": "DVRST",
-   "genre": "drift phonk",
-   "mood": "hype",
-   "pillars": [
-    "anime",
-    "movie",
-    "celeb"
-   ],
-   "bpm": 129.2,
-   "drop_t": 20.06,
-   "duration_s": 132.5,
-   "energy": 0.459,
-   "tags": [
-    "anime",
-    "celeb",
-    "drift",
-    "edit",
-    "movie",
-    "phonk",
-    "trending"
-   ],
-   "credit": "Song: DVRST - Close Eyes"
-  },
-  {
-   "file": "sw_montagemfujin.mp3",
-   "title": "MONTAGEM FUJIN (Super Slowed)",
-   "artist": "dj Samir, Mxng0, Nulteex",
-   "genre": "slowed phonk",
-   "mood": "hype",
-   "pillars": [
-    "anime",
-    "movie"
-   ],
-   "bpm": 172.3,
-   "drop_t": 103.47,
-   "duration_s": 139.9,
-   "energy": 0.456,
-   "tags": [
-    "anime",
-    "edit",
-    "movie",
-    "phonk",
-    "slowed",
-    "trending"
-   ],
-   "credit": "Song: dj Samir, Mxng0, Nulteex - MONTAGEM FUJIN (Super Slowed)"
-  },
-  {
-   "file": "sw_bateaublanc.mp3",
-   "title": "Bateau Blanc",
-   "artist": "Crazy Twins",
-   "genre": "phonk",
-   "mood": "fun-hype",
-   "pillars": [
-    "anime",
-    "funny"
-   ],
-   "bpm": 161.5,
-   "drop_t": 49.55,
-   "duration_s": 167.5,
-   "energy": 0.475,
-   "tags": [
-    "anime",
-    "edit",
-    "funny",
-    "phonk",
-    "trending"
-   ],
-   "credit": "Song: Crazy Twins - Bateau Blanc"
-  },
-  {
-   "file": "sw_passobemsolto.mp3",
-   "title": "PASSO BEM SOLTO (Slowed)",
-   "artist": "ATLXS",
-   "genre": "brazilian phonk",
-   "mood": "hype",
-   "pillars": [
-    "anime",
-    "celeb",
-    "funny"
-   ],
-   "bpm": 117.5,
-   "drop_t": 16.11,
-   "duration_s": 116.1,
-   "energy": 0.586,
-   "tags": [
-    "anime",
-    "brazilian",
-    "celeb",
-    "edit",
-    "funny",
-    "phonk",
-    "trending"
-   ],
-   "credit": "Song: ATLXS - PASSO BEM SOLTO (Slowed)"
-  },
-  {
-   "file": "sw_metamorphosis.mp3",
-   "title": "METAMORPHOSIS",
-   "artist": "INTERWORLD",
-   "genre": "drift phonk",
-   "mood": "hype",
-   "pillars": [
-    "anime",
-    "movie"
-   ],
-   "bpm": 172.3,
-   "drop_t": 10.87,
-   "duration_s": 143.5,
-   "energy": 0.331,
-   "tags": [
-    "anime",
-    "drift",
-    "edit",
-    "movie",
-    "phonk",
-    "trending"
-   ],
-   "credit": "Song: INTERWORLD - METAMORPHOSIS"
-  },
-  {
-   "file": "sw_murderinmymind.mp3",
-   "title": "MURDER IN MY MIND",
-   "artist": "Kordhell",
-   "genre": "drift phonk",
-   "mood": "hype",
-   "pillars": [
-    "movie",
-    "anime"
-   ],
-   "bpm": 117.5,
-   "drop_t": 16.81,
-   "duration_s": 145.0,
-   "energy": 0.646,
-   "tags": [
-    "anime",
-    "drift",
-    "edit",
-    "movie",
-    "phonk",
-    "trending"
-   ],
-   "credit": "Song: Kordhell - MURDER IN MY MIND"
-  },
-  {
-   "file": "sw_memoryreboot.mp3",
-   "title": "Memory Reboot (Slowed)",
-   "artist": "VØJ, Narvent",
-   "genre": "slowed reverb edit",
-   "mood": "dark-emotional",
-   "pillars": [
-    "movie",
-    "romance"
-   ],
-   "bpm": 143.6,
-   "drop_t": 173.15,
-   "duration_s": 236.4,
-   "energy": 0.502,
-   "tags": [
-    "edit",
-    "movie",
-    "reverb",
-    "romance",
-    "slowed",
-    "trending"
-   ],
-   "credit": "Song: VØJ, Narvent - Memory Reboot (Slowed)"
-  },
-  {
-   "file": "sw_canyoufeelmyheart.mp3",
-   "title": "Can You Feel My Heart",
-   "artist": "Bring Me The Horizon",
-   "genre": "edit rock",
-   "mood": "hype",
-   "pillars": [
-    "movie",
-    "anime"
-   ],
-   "bpm": 172.3,
-   "drop_t": 16.81,
-   "duration_s": 228.4,
-   "energy": 0.598,
-   "tags": [
-    "anime",
-    "edit",
-    "movie",
-    "rock",
-    "trending"
-   ],
-   "credit": "Song: Bring Me The Horizon - Can You Feel My Heart"
-  },
-  {
-   "file": "sw_afterdark.mp3",
-   "title": "After Dark",
-   "artist": "Mr.Kitty",
-   "genre": "dark synth edit",
-   "mood": "dark-emotional",
-   "pillars": [
-    "movie",
-    "romance"
-   ],
-   "bpm": 143.6,
-   "drop_t": 30.88,
-   "duration_s": 257.2,
-   "energy": 0.392,
-   "tags": [
-    "dark",
-    "edit",
-    "movie",
-    "romance",
-    "synth",
-    "trending"
-   ],
-   "credit": "Song: Mr.Kitty - After Dark"
-  },
-  {
-   "file": "sw_saiyaara.mp3",
-   "title": "Saiyaara (Slowed + Reverb)",
-   "artist": "Tanishk Bagchi, Faheem Abdullah, Arslan Nizami",
-   "genre": "bollywood slowed reverb",
-   "mood": "romantic",
-   "pillars": [
-    "romance"
-   ],
-   "bpm": 83.4,
-   "drop_t": 231.55,
-   "duration_s": 371.4,
-   "energy": 0.515,
-   "tags": [
-    "bollywood",
-    "edit",
-    "reverb",
-    "romance",
-    "slowed",
-    "trending"
-   ],
-   "credit": "Song: Tanishk Bagchi, Faheem Abdullah, Arslan Nizami - Saiyaara (Slowed + Reverb)"
-  },
-  {
-   "file": "sw_sahiba.mp3",
-   "title": "Sahiba",
-   "artist": "Aditya Rikhari",
-   "genre": "bollywood romance",
-   "mood": "romantic",
-   "pillars": [
-    "romance"
-   ],
-   "bpm": 99.4,
-   "drop_t": 151.74,
-   "duration_s": 183.0,
-   "energy": 0.282,
-   "tags": [
-    "bollywood",
-    "edit",
-    "romance",
-    "trending"
-   ],
-   "credit": "Song: Aditya Rikhari - Sahiba"
-  },
-  {
-   "file": "sw_palpal.mp3",
-   "title": "Pal Pal",
-   "artist": "Afusic, AliSoomroMusic",
-   "genre": "hindi pop mashup",
-   "mood": "dark",
-   "pillars": [
-    "romance",
-    "celeb"
-   ],
-   "bpm": 103.4,
-   "drop_t": 166.35,
-   "duration_s": 208.0,
-   "energy": 0.428,
-   "tags": [
-    "celeb",
-    "edit",
-    "hindi",
-    "mashup",
-    "pop",
-    "romance",
-    "trending"
-   ],
-   "credit": "Song: Afusic, AliSoomroMusic - Pal Pal"
-  },
-  {
-   "file": "sw_jhol.mp3",
-   "title": "Jhol (Acoustic)",
-   "artist": "Maanu, Annural Khalid",
-   "genre": "urdu romance",
-   "mood": "romantic",
-   "pillars": [
-    "romance"
-   ],
-   "bpm": 152.0,
-   "drop_t": 229.65,
-   "duration_s": 277.6,
-   "energy": 0.34,
-   "tags": [
-    "edit",
-    "romance",
-    "trending",
-    "urdu"
-   ],
-   "credit": "Song: Maanu, Annural Khalid - Jhol (Acoustic)"
-  },
-  {
-   "file": "sw_winningspeech.mp3",
-   "title": "Winning Speech",
-   "artist": "Karan Aujla",
-   "genre": "punjabi swag",
-   "mood": "hype",
-   "pillars": [
-    "celeb",
-    "movie"
-   ],
-   "bpm": 86.1,
-   "drop_t": 179.37,
-   "duration_s": 237.8,
-   "energy": 0.491,
-   "tags": [
-    "celeb",
-    "edit",
-    "movie",
-    "punjabi",
-    "swag",
-    "trending"
-   ],
-   "credit": "Song: Karan Aujla - Winning Speech"
-  },
-  {
-   "file": "sw_monica.mp3",
-   "title": "Monica",
-   "artist": "Anirudh Ravichander, Sublahshini",
-   "genre": "south mass dance",
-   "mood": "fun-hype",
-   "pillars": [
-    "celeb",
-    "funny"
-   ],
-   "bpm": 143.6,
-   "drop_t": 99.29,
-   "duration_s": 214.4,
-   "energy": 0.651,
-   "tags": [
-    "celeb",
-    "dance",
-    "edit",
-    "funny",
-    "mass",
-    "south",
-    "trending"
-   ],
-   "credit": "Song: Anirudh Ravichander, Sublahshini - Monica"
-  },
-  {
-   "file": "sw_hukum.mp3",
-   "title": "Hukum",
-   "artist": "Anirudh Ravichander",
-   "genre": "south mass hype",
-   "mood": "hype",
-   "pillars": [
-    "celeb",
-    "movie"
-   ],
-   "bpm": 103.4,
-   "drop_t": 23.66,
-   "duration_s": 213.0,
-   "energy": 0.383,
-   "tags": [
-    "celeb",
-    "edit",
-    "hype",
-    "mass",
-    "movie",
-    "south",
-    "trending"
-   ],
-   "credit": "Song: Anirudh Ravichander - Hukum"
-  },
-  {
-   "file": "sw_fearsong.mp3",
-   "title": "Fear Song",
-   "artist": "Anirudh Ravichander",
-   "genre": "south mass hype",
-   "mood": "hype",
-   "pillars": [
-    "movie",
-    "celeb"
-   ],
-   "bpm": 89.1,
-   "drop_t": 106.21,
-   "duration_s": 196.0,
-   "energy": 0.545,
-   "tags": [
-    "celeb",
-    "edit",
-    "hype",
-    "mass",
-    "movie",
-    "south",
-    "trending"
-   ],
-   "credit": "Song: Anirudh Ravichander - Fear Song"
-  }
- ]
+  "note": "Trending edit songs. mp3s live on the 'music' GitHub release and are fetched into music/lib/ at render time. Picker: pillar fit + trends/latest.json song_picks, never the same song within the last 8 renders.",
+  "release": "music",
+  "dir": "music/lib",
+  "no_repeat_window": 8,
+  "tracks": [
+    {
+      "file": "sw_elapeidafunk.mp3",
+      "title": "ELA PEIDA FUNK",
+      "artist": "Dj v2be, DJ SMG, XSKAY11, DJ llz",
+      "genre": "brazilian phonk",
+      "mood": "fun-hype",
+      "pillars": [
+        "funny",
+        "anime",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 18.88,
+      "duration_s": 42.4,
+      "energy": 0.556,
+      "tags": [
+        "anime",
+        "brazilian",
+        "celeb",
+        "edit",
+        "funny",
+        "phonk",
+        "trending"
+      ],
+      "credit": "Song: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK"
+    },
+    {
+      "file": "sw_closeeyes.mp3",
+      "title": "Close Eyes",
+      "artist": "DVRST",
+      "genre": "drift phonk",
+      "mood": "hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 20.06,
+      "duration_s": 132.5,
+      "energy": 0.459,
+      "tags": [
+        "anime",
+        "celeb",
+        "drift",
+        "edit",
+        "movie",
+        "phonk",
+        "trending"
+      ],
+      "credit": "Song: DVRST - Close Eyes"
+    },
+    {
+      "file": "sw_montagemfujin.mp3",
+      "title": "MONTAGEM FUJIN (Super Slowed)",
+      "artist": "dj Samir, Mxng0, Nulteex",
+      "genre": "slowed phonk",
+      "mood": "hype",
+      "pillars": [
+        "anime",
+        "movie"
+      ],
+      "bpm": 172.3,
+      "drop_t": 103.47,
+      "duration_s": 139.9,
+      "energy": 0.456,
+      "tags": [
+        "anime",
+        "edit",
+        "movie",
+        "phonk",
+        "slowed",
+        "trending"
+      ],
+      "credit": "Song: dj Samir, Mxng0, Nulteex - MONTAGEM FUJIN (Super Slowed)"
+    },
+    {
+      "file": "sw_bateaublanc.mp3",
+      "title": "Bateau Blanc",
+      "artist": "Crazy Twins",
+      "genre": "phonk",
+      "mood": "fun-hype",
+      "pillars": [
+        "anime",
+        "funny"
+      ],
+      "bpm": 161.5,
+      "drop_t": 49.55,
+      "duration_s": 167.5,
+      "energy": 0.475,
+      "tags": [
+        "anime",
+        "edit",
+        "funny",
+        "phonk",
+        "trending"
+      ],
+      "credit": "Song: Crazy Twins - Bateau Blanc"
+    },
+    {
+      "file": "sw_passobemsolto.mp3",
+      "title": "PASSO BEM SOLTO (Slowed)",
+      "artist": "ATLXS",
+      "genre": "brazilian phonk",
+      "mood": "hype",
+      "pillars": [
+        "anime",
+        "celeb",
+        "funny"
+      ],
+      "bpm": 117.5,
+      "drop_t": 16.11,
+      "duration_s": 116.1,
+      "energy": 0.586,
+      "tags": [
+        "anime",
+        "brazilian",
+        "celeb",
+        "edit",
+        "funny",
+        "phonk",
+        "trending"
+      ],
+      "credit": "Song: ATLXS - PASSO BEM SOLTO (Slowed)"
+    },
+    {
+      "file": "sw_metamorphosis.mp3",
+      "title": "METAMORPHOSIS",
+      "artist": "INTERWORLD",
+      "genre": "drift phonk",
+      "mood": "hype",
+      "pillars": [
+        "anime",
+        "movie"
+      ],
+      "bpm": 172.3,
+      "drop_t": 10.87,
+      "duration_s": 143.5,
+      "energy": 0.331,
+      "tags": [
+        "anime",
+        "drift",
+        "edit",
+        "movie",
+        "phonk",
+        "trending"
+      ],
+      "credit": "Song: INTERWORLD - METAMORPHOSIS"
+    },
+    {
+      "file": "sw_murderinmymind.mp3",
+      "title": "MURDER IN MY MIND",
+      "artist": "Kordhell",
+      "genre": "drift phonk",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 16.81,
+      "duration_s": 145.0,
+      "energy": 0.646,
+      "tags": [
+        "anime",
+        "drift",
+        "edit",
+        "movie",
+        "phonk",
+        "trending"
+      ],
+      "credit": "Song: Kordhell - MURDER IN MY MIND"
+    },
+    {
+      "file": "sw_memoryreboot.mp3",
+      "title": "Memory Reboot (Slowed)",
+      "artist": "VØJ, Narvent",
+      "genre": "slowed reverb edit",
+      "mood": "dark-emotional",
+      "pillars": [
+        "movie",
+        "romance"
+      ],
+      "bpm": 143.6,
+      "drop_t": 173.15,
+      "duration_s": 236.4,
+      "energy": 0.502,
+      "tags": [
+        "edit",
+        "movie",
+        "reverb",
+        "romance",
+        "slowed",
+        "trending"
+      ],
+      "credit": "Song: VØJ, Narvent - Memory Reboot (Slowed)"
+    },
+    {
+      "file": "sw_canyoufeelmyheart.mp3",
+      "title": "Can You Feel My Heart",
+      "artist": "Bring Me The Horizon",
+      "genre": "edit rock",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 172.3,
+      "drop_t": 16.81,
+      "duration_s": 228.4,
+      "energy": 0.598,
+      "tags": [
+        "anime",
+        "edit",
+        "movie",
+        "rock",
+        "trending"
+      ],
+      "credit": "Song: Bring Me The Horizon - Can You Feel My Heart"
+    },
+    {
+      "file": "sw_afterdark.mp3",
+      "title": "After Dark",
+      "artist": "Mr.Kitty",
+      "genre": "dark synth edit",
+      "mood": "dark-emotional",
+      "pillars": [
+        "movie",
+        "romance"
+      ],
+      "bpm": 143.6,
+      "drop_t": 30.88,
+      "duration_s": 257.2,
+      "energy": 0.392,
+      "tags": [
+        "dark",
+        "edit",
+        "movie",
+        "romance",
+        "synth",
+        "trending"
+      ],
+      "credit": "Song: Mr.Kitty - After Dark"
+    },
+    {
+      "file": "sw_saiyaara.mp3",
+      "title": "Saiyaara (Slowed + Reverb)",
+      "artist": "Tanishk Bagchi, Faheem Abdullah, Arslan Nizami",
+      "genre": "bollywood slowed reverb",
+      "mood": "romantic",
+      "pillars": [
+        "romance"
+      ],
+      "bpm": 83.4,
+      "drop_t": 231.55,
+      "duration_s": 371.4,
+      "energy": 0.515,
+      "tags": [
+        "bollywood",
+        "edit",
+        "reverb",
+        "romance",
+        "slowed",
+        "trending"
+      ],
+      "credit": "Song: Tanishk Bagchi, Faheem Abdullah, Arslan Nizami - Saiyaara (Slowed + Reverb)"
+    },
+    {
+      "file": "sw_sahiba.mp3",
+      "title": "Sahiba",
+      "artist": "Aditya Rikhari",
+      "genre": "bollywood romance",
+      "mood": "romantic",
+      "pillars": [
+        "romance"
+      ],
+      "bpm": 99.4,
+      "drop_t": 151.74,
+      "duration_s": 183.0,
+      "energy": 0.282,
+      "tags": [
+        "bollywood",
+        "edit",
+        "romance",
+        "trending"
+      ],
+      "credit": "Song: Aditya Rikhari - Sahiba"
+    },
+    {
+      "file": "sw_palpal.mp3",
+      "title": "Pal Pal",
+      "artist": "Afusic, AliSoomroMusic",
+      "genre": "hindi pop mashup",
+      "mood": "dark",
+      "pillars": [
+        "romance",
+        "celeb"
+      ],
+      "bpm": 103.4,
+      "drop_t": 166.35,
+      "duration_s": 208.0,
+      "energy": 0.428,
+      "tags": [
+        "celeb",
+        "edit",
+        "hindi",
+        "mashup",
+        "pop",
+        "romance",
+        "trending"
+      ],
+      "credit": "Song: Afusic, AliSoomroMusic - Pal Pal"
+    },
+    {
+      "file": "sw_jhol.mp3",
+      "title": "Jhol (Acoustic)",
+      "artist": "Maanu, Annural Khalid",
+      "genre": "urdu romance",
+      "mood": "romantic",
+      "pillars": [
+        "romance"
+      ],
+      "bpm": 152.0,
+      "drop_t": 229.65,
+      "duration_s": 277.6,
+      "energy": 0.34,
+      "tags": [
+        "edit",
+        "romance",
+        "trending",
+        "urdu"
+      ],
+      "credit": "Song: Maanu, Annural Khalid - Jhol (Acoustic)"
+    },
+    {
+      "file": "sw_winningspeech.mp3",
+      "title": "Winning Speech",
+      "artist": "Karan Aujla",
+      "genre": "punjabi swag",
+      "mood": "hype",
+      "pillars": [
+        "celeb",
+        "movie"
+      ],
+      "bpm": 86.1,
+      "drop_t": 179.37,
+      "duration_s": 237.8,
+      "energy": 0.491,
+      "tags": [
+        "celeb",
+        "edit",
+        "movie",
+        "punjabi",
+        "swag",
+        "trending"
+      ],
+      "credit": "Song: Karan Aujla - Winning Speech"
+    },
+    {
+      "file": "sw_monica.mp3",
+      "title": "Monica",
+      "artist": "Anirudh Ravichander, Sublahshini",
+      "genre": "south mass dance",
+      "mood": "fun-hype",
+      "pillars": [
+        "celeb",
+        "funny"
+      ],
+      "bpm": 143.6,
+      "drop_t": 99.29,
+      "duration_s": 214.4,
+      "energy": 0.651,
+      "tags": [
+        "celeb",
+        "dance",
+        "edit",
+        "funny",
+        "mass",
+        "south",
+        "trending"
+      ],
+      "credit": "Song: Anirudh Ravichander, Sublahshini - Monica"
+    },
+    {
+      "file": "sw_hukum.mp3",
+      "title": "Hukum",
+      "artist": "Anirudh Ravichander",
+      "genre": "south mass hype",
+      "mood": "hype",
+      "pillars": [
+        "celeb",
+        "movie"
+      ],
+      "bpm": 103.4,
+      "drop_t": 23.66,
+      "duration_s": 213.0,
+      "energy": 0.383,
+      "tags": [
+        "celeb",
+        "edit",
+        "hype",
+        "mass",
+        "movie",
+        "south",
+        "trending"
+      ],
+      "credit": "Song: Anirudh Ravichander - Hukum"
+    },
+    {
+      "file": "sw_fearsong.mp3",
+      "title": "Fear Song",
+      "artist": "Anirudh Ravichander",
+      "genre": "south mass hype",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "celeb"
+      ],
+      "bpm": 89.1,
+      "drop_t": 106.21,
+      "duration_s": 196.0,
+      "energy": 0.545,
+      "tags": [
+        "celeb",
+        "edit",
+        "hype",
+        "mass",
+        "movie",
+        "south",
+        "trending"
+      ],
+      "credit": "Song: Anirudh Ravichander - Fear Song"
+    },
+    {
+      "file": "sw_nsasssingles20222023.mp3",
+      "title": "NSASS Singles (2022-2023)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 80.7,
+      "drop_t": 21.43,
+      "duration_s": 80.0,
+      "energy": 0.62,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS Singles (2022-2023) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "singles-2022-2023-nsass",
+      "source_file": "04 - Step Up (Linkin Park Cover)/01 - Step Up (Linkin Park Cover).mp3"
+    },
+    {
+      "file": "sw_nsasssingles202220232.mp3",
+      "title": "NSASS Singles (2022-2023)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 103.4,
+      "drop_t": 9.73,
+      "duration_s": 80.0,
+      "energy": 0.804,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS Singles (2022-2023) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "singles-2022-2023-nsass",
+      "source_file": "07 - Pizza Poteetza ft. Troo Stong/01 - Pizza Poteetza ft. Troo Stong.mp3"
+    },
+    {
+      "file": "sw_saschamller40tracksfor40.mp3",
+      "title": "Sascha Müller - 40 Tracks For 40 Days",
+      "artist": "Sascha Müller",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 64.6,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.698,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Sascha Müller - Sascha Müller - 40 Tracks For 40 Days (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "sascha-muller-40-tracks-for-40-days",
+      "source_file": "39. Sascha Muller - Untitled_40 Tracks For 40 Days.mp3"
+    },
+    {
+      "file": "sw_saschamller40tracksfor402.mp3",
+      "title": "Sascha Müller - 40 Tracks For 40 Days",
+      "artist": "Sascha Müller",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 63.0,
+      "drop_t": 23.43,
+      "duration_s": 80.0,
+      "energy": 0.621,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Sascha Müller - Sascha Müller - 40 Tracks For 40 Days (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "sascha-muller-40-tracks-for-40-days",
+      "source_file": "10. Sascha Muller - Bambi_40 Tracks For 40 Days.mp3"
+    },
+    {
+      "file": "sw_worthnothingfeatolivertr.mp3",
+      "title": "WORTH NOTHING (feat. Oliver Tree)",
+      "artist": "PHONK DRIFT",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 69.8,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.568,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: PHONK DRIFT - WORTH NOTHING (feat. Oliver Tree) (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "worth-nothing-feat.-oliver-tree",
+      "source_file": "WORTH NOTHING (feat. Oliver Tree).mp3"
+    },
+    {
+      "file": "sw_interworldrapturephonk.mp3",
+      "title": "INTERWORLD RAPTURE (PHONK)",
+      "artist": "InterWorld",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 103.4,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.578,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "interworld-rapture-phonk-i-5z-r-6to-pvq-8",
+      "source_file": "INTERWORLD - RAPTURE (PHONK)_i5zR6toPVQ8.mp3"
+    },
+    {
+      "file": "sw_nsassnsassinstrumentalsv.mp3",
+      "title": "NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 92.3,
+      "drop_t": 39.52,
+      "duration_s": 80.0,
+      "energy": 0.688,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "nsass-instrumentals-volume-one",
+      "source_file": "08. We’ve updated our privacy policy [Instrumental].mp3"
+    },
+    {
+      "file": "sw_nsassnsassinstrumentalsv2.mp3",
+      "title": "NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 29.51,
+      "duration_s": 80.0,
+      "energy": 0.791,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "nsass-instrumentals-volume-one",
+      "source_file": "01. Sparr Barr [Instrumental].mp3"
+    },
+    {
+      "file": "sw_neonhazealbumcollection.mp3",
+      "title": "Neon Haze Album Collection",
+      "artist": "Yiokki",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 40.03,
+      "duration_s": 61.9,
+      "energy": 0.718,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Yiokki - Neon Haze Album Collection (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "neon-haze-album-cover",
+      "source_file": "The Neon Haze Collection/Mp3/X MP3s/YOURBXTCHSAYSIGOHARD.mp3"
+    },
+    {
+      "file": "sw_neonhazealbumcollection2.mp3",
+      "title": "Neon Haze Album Collection",
+      "artist": "Yiokki",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 53.2,
+      "duration_s": 75.4,
+      "energy": 0.782,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Yiokki - Neon Haze Album Collection (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "neon-haze-album-cover",
+      "source_file": "The Neon Haze Collection/Mp3/Singles Mp3s/li!l master(Mxdz x YIOKKI).mp3"
+    },
+    {
+      "file": "sw_pkonkbetapkonkphenomenon.mp3",
+      "title": "PKONK BETA - PKONKPHENOMENON",
+      "artist": "187_NOTOR1OUS_ENEMY",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 9.33,
+      "duration_s": 25.8,
+      "energy": 0.64,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: 187_NOTOR1OUS_ENEMY - PKONK BETA - PKONKPHENOMENON (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "phonk-beta-phonkphenomnnon",
+      "source_file": "04. Insert #1.mp3"
+    },
+    {
+      "file": "sw_bondagood4ssjob.mp3",
+      "title": "BONDA GOOD 4SS JOB",
+      "artist": "MC VV",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 89.1,
+      "drop_t": 16.63,
+      "duration_s": 80.0,
+      "energy": 0.601,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: MC VV - BONDA GOOD 4SS JOB (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "2023-mc-vv-bonda-4",
+      "source_file": "10 Douglas & Ele (ft. Yomamaru).mp3"
+    },
+    {
+      "file": "sw_bondagood4ssjob2.mp3",
+      "title": "BONDA GOOD 4SS JOB",
+      "artist": "MC VV",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 80.7,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.649,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: MC VV - BONDA GOOD 4SS JOB (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "2023-mc-vv-bonda-4",
+      "source_file": "13 Golfão GTI (ft. Leo Chim).mp3"
+    },
+    {
+      "file": "sw_coiltheanalstaircaseaggr.mp3",
+      "title": "Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX)",
+      "artist": "lil' warden",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 112.3,
+      "drop_t": 2.21,
+      "duration_s": 80.0,
+      "energy": 0.701,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "BFTG_276",
+      "source_file": "lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) - 01 Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX).mp3"
+    },
+    {
+      "file": "sw_coiltheanalstaircaseaggr2.mp3",
+      "title": "Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX)",
+      "artist": "lil' warden",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 112.3,
+      "drop_t": 2.21,
+      "duration_s": 80.0,
+      "energy": 0.7,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "BFTG_276",
+      "source_file": "lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) - 01 Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX).flac"
+    },
+    {
+      "file": "sw_aura1hourauramusicplayli.mp3",
+      "title": "AURA ♾️ 1 HOUR AURA MUSIC PLAYLIST 2025 🔥 EMPIRE PHONK",
+      "artist": "d",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.627,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: d - AURA ♾️ 1 HOUR AURA MUSIC PLAYLIST 2025 🔥 EMPIRE PHONK (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "aura-1-hour-aura-music-playlist-2025-empire-phonk",
+      "source_file": "AURA  ♾️  1 HOUR AURA MUSIC PLAYLIST 2025 🔥 - EMPIRE PHONK.mp3"
+    },
+    {
+      "file": "sw_memphisphonksynthbassmix.mp3",
+      "title": "MEMPHIS PHONK SYNTHBASS MIX Vol. IV",
+      "artist": "awdawda",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 86.1,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.778,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: awdawda - MEMPHIS PHONK SYNTHBASS MIX Vol. IV (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "memphis-phonk-synthbass-mix-vol.-iv",
+      "source_file": "MEMPHIS  PHONK  SYNTHBASS  MIX vol. IV.mp3"
+    },
+    {
+      "file": "sw_nsassitsafakebike2022.mp3",
+      "title": "NSASS - It's A Fake Bike (2022)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.763,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - It's A Fake Bike (2022) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "its-a-fake-bike",
+      "source_file": "2. Down With The Town.mp3"
+    },
+    {
+      "file": "sw_nsassitsafakebike20222.mp3",
+      "title": "NSASS - It's A Fake Bike (2022)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 103.4,
+      "drop_t": 2.62,
+      "duration_s": 80.0,
+      "energy": 0.739,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - It's A Fake Bike (2022) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "its-a-fake-bike",
+      "source_file": "1. Sparr Barr.mp3"
+    },
+    {
+      "file": "sw_nsassthesystemisdown2018.mp3",
+      "title": "NSASS - The System Is Down (2018)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 103.4,
+      "drop_t": 3.3,
+      "duration_s": 36.9,
+      "energy": 0.476,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - The System Is Down (2018) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "the-system-is-down-2018",
+      "source_file": "4. Valumtimes.mp3"
+    },
+    {
+      "file": "sw_nsassthesystemisdown20182.mp3",
+      "title": "NSASS - The System Is Down (2018)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 80.7,
+      "drop_t": 31.76,
+      "duration_s": 80.0,
+      "energy": 0.636,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - The System Is Down (2018) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "the-system-is-down-2018",
+      "source_file": "3. Decomposing Pumpkins (Throw Them At The Plump Kid).mp3"
+    },
+    {
+      "file": "sw_nsassdaballthetime2018.mp3",
+      "title": "NSASS - Dab All The Time (2018)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 92.3,
+      "drop_t": 12.14,
+      "duration_s": 34.3,
+      "energy": 0.679,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - Dab All The Time (2018) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "dab-all-the-time",
+      "source_file": "2. Dab All The Time.mp3"
+    },
+    {
+      "file": "sw_nsassdaballthetime20182.mp3",
+      "title": "NSASS - Dab All The Time (2018)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 10.52,
+      "duration_s": 50.2,
+      "energy": 0.714,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - Dab All The Time (2018) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "dab-all-the-time",
+      "source_file": "5. Entire Albums.mp3"
+    },
+    {
+      "file": "sw_nsassbsiderarities2023.mp3",
+      "title": "NSASS - B-Side Rarities (2023)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 112.3,
+      "drop_t": 10.03,
+      "duration_s": 44.6,
+      "energy": 0.637,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - B-Side Rarities (2023) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "nsass-bsides",
+      "source_file": "2. Use Your Mind, Be Kind (Oct 13, 2014).mp3"
+    },
+    {
+      "file": "sw_nsassbsiderarities20232.mp3",
+      "title": "NSASS - B-Side Rarities (2023)",
+      "artist": "NSASS",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 86.1,
+      "drop_t": 34.78,
+      "duration_s": 80.0,
+      "energy": 0.675,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: NSASS - NSASS - B-Side Rarities (2023) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "nsass-bsides",
+      "source_file": "5. Recycled Cups (Jan 23, 2014).mp3"
+    },
+    {
+      "file": "sw_bloomingnostalgia.mp3",
+      "title": "blooming nostalgia",
+      "artist": "nervouspro",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 11.94,
+      "duration_s": 80.0,
+      "energy": 0.722,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: nervouspro - blooming nostalgia (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "BFTG_295",
+      "source_file": "01 blooming nostalgia.mp3"
+    },
+    {
+      "file": "sw_bloomingnostalgia2.mp3",
+      "title": "blooming nostalgia",
+      "artist": "nervouspro",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 11.94,
+      "duration_s": 80.0,
+      "energy": 0.721,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: nervouspro - blooming nostalgia (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "BFTG_295",
+      "source_file": "01 blooming nostalgia.flac"
+    },
+    {
+      "file": "sw_stoppostingaboutballer.mp3",
+      "title": "Stop posting about baller",
+      "artist": "Roblox Music",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 51.29,
+      "duration_s": 74.7,
+      "energy": 0.729,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Roblox Music - Stop posting about baller (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "roblox-baller-phonk-remix-stop-posting-about-baller",
+      "source_file": "ROBLOX - BALLER (Phonk Remix)  STOP POSTING ABOUT BALLER.mp3"
+    },
+    {
+      "file": "sw_goofyahhphonkfullversion.mp3",
+      "title": "Goofy Ahh Phonk [Full Version]",
+      "artist": "Memnicus",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.857,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Memnicus - Goofy Ahh Phonk [Full Version] (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "goofy-ahh-phonk-full-version",
+      "source_file": "Goofy Ahh Phonk [Full Version].mp3"
+    },
+    {
+      "file": "sw_spotimateiolabubufunksxl.mp3",
+      "title": "Spoti Mate.io LABUBU FUNK SXLLX",
+      "artist": "Labubinnga TN 2001",
+      "genre": "brazilian funk",
+      "mood": "fun-hype",
+      "pillars": [
+        "funny",
+        "anime",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 44.81,
+      "duration_s": 74.8,
+      "energy": 0.673,
+      "tags": [
+        "funk",
+        "edit"
+      ],
+      "credit": "Song: Labubinnga TN 2001 - Spoti Mate.io LABUBU FUNK SXLLX (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "spoti-mate.io-labubu-funk-sxllx",
+      "source_file": "SpotiMate.io - LABUBU FUNK - SXLLX.mp3"
+    },
+    {
+      "file": "sw_musicphonk.mp3",
+      "title": "MUSIC PHONK",
+      "artist": "Sayfalse, Nulteex, ESCENARIO, bxkq . QMIIR",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 95.7,
+      "drop_t": 10.05,
+      "duration_s": 80.0,
+      "energy": 0.529,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Sayfalse, Nulteex, ESCENARIO, bxkq . QMIIR - MUSIC PHONK (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "al-nacer",
+      "source_file": "AL NACER!.mp3"
+    },
+    {
+      "file": "sw_killakrusher.mp3",
+      "title": "KILLA KRUSHER!",
+      "artist": "hary_",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 16.58,
+      "duration_s": 80.0,
+      "energy": 0.515,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: hary_ - KILLA KRUSHER! (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "musicas_3746389a6a860b3602648b49a7a6",
+      "source_file": "musicas_3746389a6a860b3602648b49a7a6.mp3"
+    },
+    {
+      "file": "sw_killakrusher2.mp3",
+      "title": "KILLA KRUSHER!",
+      "artist": "hary_",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 16.58,
+      "duration_s": 80.0,
+      "energy": 0.516,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: hary_ - KILLA KRUSHER! (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "musicas_3746389a6a860b3602648b49a7a6",
+      "source_file": "musicas_3746389a6a860b3602648b49a7a6.wav"
+    },
+    {
+      "file": "sw_phonkcoreizdead.mp3",
+      "title": "PHONKCORE IZ DEAD",
+      "artist": "Memphis Terrorist",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 80.7,
+      "drop_t": 25.45,
+      "duration_s": 80.0,
+      "energy": 0.687,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Memphis Terrorist - PHONKCORE IZ DEAD (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "memphis-terrorist-phonkcore-iz-dead",
+      "source_file": "SKRD4EVER - MEMPHIS TERRORIST - PHONKCORE IZ DEAD - 03 MEMPHIS TERRORIST - PHONK TILL THA GRAVE.mp3"
+    },
+    {
+      "file": "sw_phonkcoreizdead2.mp3",
+      "title": "PHONKCORE IZ DEAD",
+      "artist": "Memphis Terrorist",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 95.7,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.83,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Memphis Terrorist - PHONKCORE IZ DEAD (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "memphis-terrorist-phonkcore-iz-dead",
+      "source_file": "SKRD4EVER - MEMPHIS TERRORIST - PHONKCORE IZ DEAD - 06 MEMPHIS TERRORIST - PHONKCORE4EVER.mp3"
+    },
+    {
+      "file": "sw_guacamolephonk6ix6.mp3",
+      "title": "Guacamole phonk 6$ix6",
+      "artist": "6$ix6",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 78.3,
+      "drop_t": 11.98,
+      "duration_s": 80.0,
+      "energy": 0.591,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: 6$ix6 - Guacamole phonk 6$ix6 (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "guacamole666",
+      "source_file": "guacamole 6$ix6.mp3"
+    },
+    {
+      "file": "sw_moonwalktokiodriftphonkh.mp3",
+      "title": "Moonwalk - Tokio Drift (Phonk Hip-Hop Beat)",
+      "artist": "Moonwalk",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 1.58,
+      "duration_s": 81.0,
+      "energy": 0.766,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Moonwalk - Moonwalk - Tokio Drift (Phonk Hip-Hop Beat) (http://creativecommons.org/licenses/by/3.0/)",
+      "license": "http://creativecommons.org/licenses/by/3.0/",
+      "source": "archive.org",
+      "source_id": "jamendo-525524",
+      "source_file": "01-2037726-Moonwalk-Tokio Drift _Phonk Hip-Hop Beat_.mp3"
+    },
+    {
+      "file": "sw_phonkmusicarchiveultimat.mp3",
+      "title": "Phonk Music Archive: Ultimate Collection",
+      "artist": "Unknown",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 8.41,
+      "duration_s": 65.6,
+      "energy": 0.475,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Unknown - Phonk Music Archive: Ultimate Collection (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "phonk-music-archive",
+      "source_file": "Pimba Pimba - Rezadead Taknam Phonk King.mp3"
+    },
+    {
+      "file": "sw_phonkmusicarchiveultimat2.mp3",
+      "title": "Phonk Music Archive: Ultimate Collection",
+      "artist": "Unknown",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 19.11,
+      "duration_s": 73.5,
+      "energy": 0.636,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Unknown - Phonk Music Archive: Ultimate Collection (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "phonk-music-archive",
+      "source_file": "Montagem Coma - Andromeda Elysian.mp3"
+    },
+    {
+      "file": "sw_phonkmemphisrap.mp3",
+      "title": "Phonk\\Memphis Rap",
+      "artist": "Wittty-T33th",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 103.4,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.679,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Wittty-T33th - Phonk\\Memphis Rap (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "Phonk-Memphis-Rap",
+      "source_file": "Freddie Dredd - GTG.mp3"
+    },
+    {
+      "file": "sw_phonkmemphisrap2.mp3",
+      "title": "Phonk\\Memphis Rap",
+      "artist": "Wittty-T33th",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 136.0,
+      "drop_t": 8.96,
+      "duration_s": 80.6,
+      "energy": 0.814,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Wittty-T33th - Phonk\\Memphis Rap (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "Phonk-Memphis-Rap",
+      "source_file": "4WHEEL - KERAUNOS KILLER (Speed Up).mp3"
+    },
+    {
+      "file": "sw_dentrodemi.mp3",
+      "title": "Dentro de mi",
+      "artist": "Piem Ión",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 107.7,
+      "drop_t": 21.57,
+      "duration_s": 80.0,
+      "energy": 0.412,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Piem Ión - Dentro de mi (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "dentro-de-mi",
+      "source_file": "Dentro de mí.mp3"
+    },
+    {
+      "file": "sw_lilwardenssecretsecretse.mp3",
+      "title": "lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one",
+      "artist": "lil' warden",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 99.4,
+      "drop_t": 3.27,
+      "duration_s": 36.0,
+      "energy": 0.528,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "BFTG_225",
+      "source_file": "lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one - 01 intro that makes you want to strangle your sigma sitck.mp3"
+    },
+    {
+      "file": "sw_lilwardenssecretsecretse2.mp3",
+      "title": "lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one",
+      "artist": "lil' warden",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 112.3,
+      "drop_t": 52.34,
+      "duration_s": 71.9,
+      "energy": 0.706,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "BFTG_225",
+      "source_file": "lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one - 05 0919 (2).mp3"
+    },
+    {
+      "file": "sw_moonwalklowslowphonkhiph.mp3",
+      "title": "Moonwalk - Low & Slow (Phonk Hip-Hop Beat)",
+      "artist": "Moonwalk",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 3.07,
+      "duration_s": 80.0,
+      "energy": 0.7,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Moonwalk - Moonwalk - Low & Slow (Phonk Hip-Hop Beat) (http://creativecommons.org/licenses/by/3.0/)",
+      "license": "http://creativecommons.org/licenses/by/3.0/",
+      "source": "archive.org",
+      "source_id": "jamendo-525521",
+      "source_file": "01-2037724-Moonwalk-Low _amp_ Slow _Phonk Hip-Hop Beat_.mp3"
+    },
+    {
+      "file": "sw_phonk.mp3",
+      "title": "Phonk",
+      "artist": "All",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 99.4,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.636,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: All - Phonk (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "safer-phonk-147844",
+      "source_file": "safer-phonk-147844.mp3"
+    },
+    {
+      "file": "sw_phonk2.mp3",
+      "title": "Phonk",
+      "artist": "All",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 99.4,
+      "drop_t": 3.67,
+      "duration_s": 80.0,
+      "energy": 0.711,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: All - Phonk (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "safer-phonk-147844",
+      "source_file": "drift-phonk-2-phonk-2025-mix-178692.mp3"
+    },
+    {
+      "file": "sw_montagemcoraldjholandamc.mp3",
+      "title": "MONTAGEM CORAL ( DJ HOLANDA, MC GW, MC TH & MC CYCLOPE)",
+      "artist": "DJ Holanda, MC GW, MC TH, & MC CyCLOPE",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 136.0,
+      "drop_t": 11.82,
+      "duration_s": 80.0,
+      "energy": 0.603,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: DJ Holanda, MC GW, MC TH, & MC CyCLOPE - MONTAGEM CORAL ( DJ HOLANDA, MC GW, MC TH & MC CYCLOPE) (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "montagem-coral-dj-holanda-mc-gw-mc-th-mc-cyclope",
+      "source_file": "MONTAGEM CORAL (DJ HOLANDA, MC GW, MC TH & MC CYCLOPE).mp3"
+    },
+    {
+      "file": "sw_saschamllermusicpodcastv.mp3",
+      "title": "Sascha Müller Music Podcast Vol. 20",
+      "artist": "Sascha Müller",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 11.98,
+      "duration_s": 80.0,
+      "energy": 0.816,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Sascha Müller - Sascha Müller Music Podcast Vol. 20 (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "saschamullermusicpodcast20_201912",
+      "source_file": "sascha müller music Podcast20.mp3"
+    },
+    {
+      "file": "sw_saschamllermusicpodcastv2.mp3",
+      "title": "Sascha Müller Music Podcast Vol. 20",
+      "artist": "Sascha Müller",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.815,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Sascha Müller - Sascha Müller Music Podcast Vol. 20 (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "saschamullermusicpodcast20_201912",
+      "source_file": "sascha müller music Podcast20.ogg"
+    },
+    {
+      "file": "sw_dudidamphonkremixdrifted.mp3",
+      "title": "Dudi Dam ( Phonk Remix) [ DRIFT EDIT]",
+      "artist": "Unknown",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 129.2,
+      "drop_t": 15.95,
+      "duration_s": 52.1,
+      "energy": 0.747,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: Unknown - Dudi Dam ( Phonk Remix) [ DRIFT EDIT] (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "dudi-dam-phonk-remix-drift-edit.mp3",
+      "source_file": "DudiDam (Phonk Remix) [DRIFT EDIT].mp3"
+    },
+    {
+      "file": "sw_sramotamemphisphonkarchi.mp3",
+      "title": "Sramota (Memphis Phonk) archive [2021-2022]",
+      "artist": "SRAMOTA",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 99.4,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.887,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: SRAMOTA - Sramota (Memphis Phonk) archive [2021-2022] (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "sramotarch",
+      "source_file": "fm.mp3"
+    },
+    {
+      "file": "sw_sramotamemphisphonkarchi2.mp3",
+      "title": "Sramota (Memphis Phonk) archive [2021-2022]",
+      "artist": "SRAMOTA",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 76.0,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.858,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: SRAMOTA - Sramota (Memphis Phonk) archive [2021-2022] (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "sramotarch",
+      "source_file": "fuckingrandomshit.mp3"
+    },
+    {
+      "file": "sw_fasterdeluxebyskyness202.mp3",
+      "title": "FASTER ( DELUXE) By Skyness [ 2021.04.01]",
+      "artist": "Skyness",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 31.67,
+      "duration_s": 80.0,
+      "energy": 0.861,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Skyness - FASTER ( DELUXE) By Skyness [ 2021.04.01] (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "faster-deluxe-by-skyness-2021.04.01_202410",
+      "source_file": "370Z - By Skyness.mp3"
+    },
+    {
+      "file": "sw_funkveneno.mp3",
+      "title": "FUNK VENENO",
+      "artist": "Flame Runner",
+      "genre": "brazilian funk",
+      "mood": "fun-hype",
+      "pillars": [
+        "funny",
+        "anime",
+        "celeb"
+      ],
+      "bpm": 80.7,
+      "drop_t": 4.04,
+      "duration_s": 81.4,
+      "energy": 0.529,
+      "tags": [
+        "funk",
+        "edit"
+      ],
+      "credit": "Song: Flame Runner - FUNK VENENO (https://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "funk-veneno",
+      "source_file": "FUNK VENENO.mp3"
+    },
+    {
+      "file": "sw_fasterdeluxebyskyness2022.mp3",
+      "title": "FASTER ( DELUXE) By Skyness [ 2021.04.01]",
+      "artist": "Skyness",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 31.67,
+      "duration_s": 80.0,
+      "energy": 0.861,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Skyness - FASTER ( DELUXE) By Skyness [ 2021.04.01] (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "faster-deluxe-by-skyness-2021.04.01",
+      "source_file": "370Z - By Skyness.mp3"
+    },
+    {
+      "file": "sw_phnk.mp3",
+      "title": "Phönk",
+      "artist": "M0ky",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 11.96,
+      "duration_s": 80.0,
+      "energy": 0.666,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: M0ky - Phönk (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "phonk_202404",
+      "source_file": "Phönk.mp3"
+    },
+    {
+      "file": "sw_phnk2.mp3",
+      "title": "Phönk",
+      "artist": "M0ky",
+      "genre": "phonk",
+      "mood": "dark-hype",
+      "pillars": [
+        "anime",
+        "movie",
+        "celeb"
+      ],
+      "bpm": 117.5,
+      "drop_t": 11.63,
+      "duration_s": 80.0,
+      "energy": 0.694,
+      "tags": [
+        "phonk",
+        "edit",
+        "trending"
+      ],
+      "credit": "Song: M0ky - Phönk (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "phonk_202404",
+      "source_file": "Phönk.ogg"
+    },
+    {
+      "file": "sw_kosmoridernight.mp3",
+      "title": "Kosmorider Night",
+      "artist": "Unknown",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 20.64,
+      "duration_s": 80.0,
+      "energy": 0.735,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Unknown - Kosmorider Night (https://creativecommons.org/licenses/by/4.0/)",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "kosmorider-night",
+      "source_file": "Kosmorider-Night.mp3"
+    },
+    {
+      "file": "sw_osamushojirootssearch.mp3",
+      "title": "Osamu Shoji - Roots Search",
+      "artist": "Osamu Shoji",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 86.1,
+      "drop_t": 13.28,
+      "duration_s": 74.6,
+      "energy": 0.672,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Osamu Shoji - Osamu Shoji - Roots Search (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "roots-search-soundtrack",
+      "source_file": "7. Stardust Slope.mp3"
+    },
+    {
+      "file": "sw_osamushojirootssearch2.mp3",
+      "title": "Osamu Shoji - Roots Search",
+      "artist": "Osamu Shoji",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 80.7,
+      "drop_t": 20.43,
+      "duration_s": 80.0,
+      "energy": 0.644,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Osamu Shoji - Osamu Shoji - Roots Search (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "roots-search-soundtrack",
+      "source_file": "4. Scratch My Breast.mp3"
+    },
+    {
+      "file": "sw_themidnightnocturnalviny.mp3",
+      "title": "The Midnight - Nocturnal Vinyl Rip",
+      "artist": "The Midnight",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 89.1,
+      "drop_t": 7.06,
+      "duration_s": 80.0,
+      "energy": 0.82,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: The Midnight - The Midnight - Nocturnal Vinyl Rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "nocturnal_202105",
+      "source_file": "Collateral.mp3"
+    },
+    {
+      "file": "sw_themidnightnocturnalviny2.mp3",
+      "title": "The Midnight - Nocturnal Vinyl Rip",
+      "artist": "The Midnight",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 11.98,
+      "duration_s": 80.0,
+      "energy": 0.657,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: The Midnight - The Midnight - Nocturnal Vinyl Rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "nocturnal_202105",
+      "source_file": "Lightyears.mp3"
+    },
+    {
+      "file": "sw_themidnightdaysofthunder.mp3",
+      "title": "The Midnight - Days Of Thunder Vinyl Rip",
+      "artist": "The Midnight",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 76.0,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.636,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: The Midnight - The Midnight - Days Of Thunder Vinyl Rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "we-move-forward",
+      "source_file": "Gloria.mp3"
+    },
+    {
+      "file": "sw_themidnightdaysofthunder2.mp3",
+      "title": "The Midnight - Days Of Thunder Vinyl Rip",
+      "artist": "The Midnight",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 83.4,
+      "drop_t": 12.7,
+      "duration_s": 80.0,
+      "energy": 0.714,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: The Midnight - The Midnight - Days Of Thunder Vinyl Rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "we-move-forward",
+      "source_file": "Days Of Thunder.mp3"
+    },
+    {
+      "file": "sw_perturbatoriamthenightvi.mp3",
+      "title": "Perturbator - I Am The Night vinyl rip",
+      "artist": "Perturbator",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 10.05,
+      "duration_s": 80.0,
+      "energy": 0.785,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Perturbator - Perturbator - I Am The Night vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "naked-tongues",
+      "source_file": "The New Black.mp3"
+    },
+    {
+      "file": "sw_perturbatoriamthenightvi2.mp3",
+      "title": "Perturbator - I Am The Night vinyl rip",
+      "artist": "Perturbator",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 112.3,
+      "drop_t": 11.49,
+      "duration_s": 80.0,
+      "energy": 0.71,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Perturbator - Perturbator - I Am The Night vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "naked-tongues",
+      "source_file": "Nexus Six_Interlude.mp3"
+    },
+    {
+      "file": "sw_themidnighthorrorshowvin.mp3",
+      "title": "The Midnight - Horror Show Vinyl Rip",
+      "artist": "The Midnight",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 112.3,
+      "drop_t": 51.59,
+      "duration_s": 80.0,
+      "energy": 0.763,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: The Midnight - The Midnight - Horror Show Vinyl Rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "neon-medusa",
+      "source_file": "The Stranger.mp3"
+    },
+    {
+      "file": "sw_themidnighthorrorshowvin2.mp3",
+      "title": "The Midnight - Horror Show Vinyl Rip",
+      "artist": "The Midnight",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 47.6,
+      "duration_s": 80.0,
+      "energy": 0.741,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: The Midnight - The Midnight - Horror Show Vinyl Rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "neon-medusa",
+      "source_file": "Because The Night.mp3"
+    },
+    {
+      "file": "sw_carpenter.mp3",
+      "title": "Carpenter",
+      "artist": "Retro Promenade",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 43.54,
+      "duration_s": 80.0,
+      "energy": 0.542,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Retro Promenade - Carpenter (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "Carpenter-RetroPromenade",
+      "source_file": "16FullEclipsecatherinesTheme-Strsgn-Carpenter.mp3"
+    },
+    {
+      "file": "sw_carpenter2.mp3",
+      "title": "Carpenter",
+      "artist": "Retro Promenade",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.629,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Retro Promenade - Carpenter (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "Carpenter-RetroPromenade",
+      "source_file": "07TombOfKhufu-AmplitudeProblem-Carpenter.mp3"
+    },
+    {
+      "file": "sw_dlr076zoltanfreitagkrasn.mp3",
+      "title": "[DLR076] Zoltan Freitag - Krasnojarsk",
+      "artist": "Unknown",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 35.2,
+      "duration_s": 80.0,
+      "energy": 0.731,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Unknown - [DLR076] Zoltan Freitag - Krasnojarsk (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "DLR076",
+      "source_file": "02 - 2 Minutes Agony.mp3"
+    },
+    {
+      "file": "sw_dlr076zoltanfreitagkrasn2.mp3",
+      "title": "[DLR076] Zoltan Freitag - Krasnojarsk",
+      "artist": "Unknown",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 1.88,
+      "duration_s": 80.0,
+      "energy": 0.644,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Unknown - [DLR076] Zoltan Freitag - Krasnojarsk (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "DLR076",
+      "source_file": "03 - Axiom (The Ending Hour).mp3"
+    },
+    {
+      "file": "sw_carpenterbrutleatherterr.mp3",
+      "title": "Carpenter Brut - Leather Terror vinyl rip",
+      "artist": "Carpenter Brut",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 92.3,
+      "drop_t": 2.46,
+      "duration_s": 80.0,
+      "energy": 0.703,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Carpenter Brut - Carpenter Brut - Leather Terror vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "leather-terror-raw-wav",
+      "source_file": "A1  Opening Title.mp3"
+    },
+    {
+      "file": "sw_carpenterbrutleatherterr2.mp3",
+      "title": "Carpenter Brut - Leather Terror vinyl rip",
+      "artist": "Carpenter Brut",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 92.3,
+      "drop_t": 27.56,
+      "duration_s": 80.0,
+      "energy": 0.726,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Carpenter Brut - Carpenter Brut - Leather Terror vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "leather-terror-raw-wav",
+      "source_file": "C1  Night Prowler.mp3"
+    },
+    {
+      "file": "sw_mitchmurdertherealdealvi.mp3",
+      "title": "Mitch Murder - The Real Deal vinyl rip",
+      "artist": "Mitch Murder",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 12.42,
+      "duration_s": 80.0,
+      "energy": 0.554,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Mitch Murder - Mitch Murder - The Real Deal vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "outpost-alpha",
+      "source_file": "Breakaway.mp3"
+    },
+    {
+      "file": "sw_mitchmurdertherealdealvi2.mp3",
+      "title": "Mitch Murder - The Real Deal vinyl rip",
+      "artist": "Mitch Murder",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 136.0,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.594,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Mitch Murder - Mitch Murder - The Real Deal vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "outpost-alpha",
+      "source_file": "Prime Operator.mp3"
+    },
+    {
+      "file": "sw_powergloveplaybackvinylr.mp3",
+      "title": "Power Glove - Playback vinyl rip",
+      "artist": "Power Glove",
+      "genre": "romance",
+      "mood": "emotional",
+      "pillars": [
+        "romance"
+      ],
+      "bpm": 136.0,
+      "drop_t": 1.49,
+      "duration_s": 63.3,
+      "energy": 0.707,
+      "tags": [
+        "romance",
+        "edit"
+      ],
+      "credit": "Song: Power Glove - Power Glove - Playback vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "playback_202112",
+      "source_file": "A1 Sundown.mp3"
+    },
+    {
+      "file": "sw_powergloveplaybackvinylr2.mp3",
+      "title": "Power Glove - Playback vinyl rip",
+      "artist": "Power Glove",
+      "genre": "romance",
+      "mood": "emotional",
+      "pillars": [
+        "romance"
+      ],
+      "bpm": 129.2,
+      "drop_t": 10.4,
+      "duration_s": 76.6,
+      "energy": 0.65,
+      "tags": [
+        "romance",
+        "edit"
+      ],
+      "credit": "Song: Power Glove - Power Glove - Playback vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "playback_202112",
+      "source_file": "C4 Last Breath.mp3"
+    },
+    {
+      "file": "sw_undead.mp3",
+      "title": "Undead",
+      "artist": "Cluster Buster",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 23.06,
+      "duration_s": 47.1,
+      "energy": 0.702,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Cluster Buster - Undead (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "ClusterBuster",
+      "source_file": "Cluster Buster/They Call Her One Eye/Vhs Logo (It's Not Dead Yet).mp3"
+    },
+    {
+      "file": "sw_undead2.mp3",
+      "title": "Undead",
+      "artist": "Cluster Buster",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 103.4,
+      "drop_t": 30.51,
+      "duration_s": 66.7,
+      "energy": 0.618,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Cluster Buster - Undead (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "ClusterBuster",
+      "source_file": "Cluster Buster/Total Terror/Total Terror.mp3"
+    },
+    {
+      "file": "sw_protect.mp3",
+      "title": "Protect",
+      "artist": "Protector 101",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 12.07,
+      "duration_s": 46.6,
+      "energy": 0.591,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Protector 101 - Protect (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "Protector101",
+      "source_file": "Protector 101/Black Friday 2_ Blood Money (The Uncut V/The Death Of Santa Claus.mp3"
+    },
+    {
+      "file": "sw_protect2.mp3",
+      "title": "Protect",
+      "artist": "Protector 101",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 80.7,
+      "drop_t": 32.72,
+      "duration_s": 80.0,
+      "energy": 0.737,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Protector 101 - Protect (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "Protector101",
+      "source_file": "Protector 101/Solitary Star/Hatch.mp3"
+    },
+    {
+      "file": "sw_powerglovetrialsoftheblo.mp3",
+      "title": "Power Glove - Trials Of The Blood Dragon Official Game Soundtrack vinyl rip",
+      "artist": "Power Glove",
+      "genre": "romance",
+      "mood": "emotional",
+      "pillars": [
+        "romance"
+      ],
+      "bpm": 112.3,
+      "drop_t": 32.53,
+      "duration_s": 68.2,
+      "energy": 0.536,
+      "tags": [
+        "romance",
+        "edit"
+      ],
+      "credit": "Song: Power Glove - Power Glove - Trials Of The Blood Dragon Official Game Soundtrack vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "trials-of-the-blood-dragon-soundtrack",
+      "source_file": "A7 Open For Buisness.mp3"
+    },
+    {
+      "file": "sw_culture.mp3",
+      "title": "Culture",
+      "artist": "Vestron Vulture",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 18.88,
+      "duration_s": 32.6,
+      "energy": 0.474,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Vestron Vulture - Culture (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "VestronVulture",
+      "source_file": "Vestron Vulture/Cinco De Mayo/Fx.mp3"
+    },
+    {
+      "file": "sw_variousartistsmagnatron2.mp3",
+      "title": "Various Artists - Magnatron 2.0 vinyl rip",
+      "artist": "Various Artists",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.777,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Various Artists - Various Artists - Magnatron 2.0 vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "omnicron-woob",
+      "source_file": "Burning Saber (Isidor).mp3"
+    },
+    {
+      "file": "sw_variousartistsmagnatron22.mp3",
+      "title": "Various Artists - Magnatron 2.0 vinyl rip",
+      "artist": "Various Artists",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 34.83,
+      "duration_s": 80.0,
+      "energy": 0.575,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Various Artists - Various Artists - Magnatron 2.0 vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "omnicron-woob",
+      "source_file": "Brute Force (Daniel Deluxe).mp3"
+    },
+    {
+      "file": "sw_octobersunupdatedweekly.mp3",
+      "title": "October Sun (Updated Weekly)",
+      "artist": "October Sun",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 86.1,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.72,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: October Sun - October Sun (Updated Weekly) (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "october-sun-breach-of-sighs-1",
+      "source_file": "October Sun - 006 - Frozen Garden 2.mp3"
+    },
+    {
+      "file": "sw_octobersunupdatedweekly2.mp3",
+      "title": "October Sun (Updated Weekly)",
+      "artist": "October Sun",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 9.01,
+      "duration_s": 80.0,
+      "energy": 0.545,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: October Sun - October Sun (Updated Weekly) (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "october-sun-breach-of-sighs-1",
+      "source_file": "October Sun - 004 - Interstat 1.mp3"
+    },
+    {
+      "file": "sw_discord.mp3",
+      "title": "Discord",
+      "artist": "Jupiter-8",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 15.28,
+      "duration_s": 25.9,
+      "energy": 0.725,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Jupiter-8 - Discord (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "Jupiter-8",
+      "source_file": "Jupiter-8/(2014) Alien Hunting/Space Theme.mp3"
+    },
+    {
+      "file": "sw_discord2.mp3",
+      "title": "Discord",
+      "artist": "Jupiter-8",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 8.36,
+      "duration_s": 47.7,
+      "energy": 0.758,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Jupiter-8 - Discord (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "Jupiter-8",
+      "source_file": "Jupiter-8/(2014) Alien Hunting/Alien Hunting Theme.mp3"
+    },
+    {
+      "file": "sw_variousartistsunitedsovi.mp3",
+      "title": "Various Artists - united:soviet.space.rangers [USC-WR-2004.0444]",
+      "artist": "Various Artists of USC",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 92.3,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.768,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Various Artists of USC - Various Artists - united:soviet.space.rangers [USC-WR-2004.0444] (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "united-soviet-space-rangers",
+      "source_file": "08.Terniev - Behind the Magellanic Clouds.mp3"
+    },
+    {
+      "file": "sw_variousartistsunitedsovi2.mp3",
+      "title": "Various Artists - united:soviet.space.rangers [USC-WR-2004.0444]",
+      "artist": "Various Artists of USC",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 107.7,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.819,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Various Artists of USC - Various Artists - united:soviet.space.rangers [USC-WR-2004.0444] (https://creativecommons.org/licenses/by-sa/4.0/)",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "archive.org",
+      "source_id": "united-soviet-space-rangers",
+      "source_file": "05.Harmonic Vibes - Event Horizon.mp3"
+    },
+    {
+      "file": "sw_beta.mp3",
+      "title": "Beta",
+      "artist": "Alpha Boy",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 7.66,
+      "duration_s": 33.0,
+      "energy": 0.602,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Alpha Boy - Beta (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "AlphaBoy",
+      "source_file": "Alpha Boy/Beverly Hills/The End.mp3"
+    },
+    {
+      "file": "sw_beta2.mp3",
+      "title": "Beta",
+      "artist": "Alpha Boy",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 1.58,
+      "duration_s": 30.0,
+      "energy": 0.646,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Alpha Boy - Beta (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "AlphaBoy",
+      "source_file": "Alpha Boy/VHS Rider EP/Commercial.mp3"
+    },
+    {
+      "file": "sw_zombiehyperdrivehyperion.mp3",
+      "title": "Zombie Hyperdrive - Hyperion vinyl rip",
+      "artist": "Zombie Hyperdrive",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 103.4,
+      "drop_t": 5.36,
+      "duration_s": 80.0,
+      "energy": 0.774,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Zombie Hyperdrive - Zombie Hyperdrive - Hyperion vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "the-kid-with-the-silver-mask",
+      "source_file": "Intro.mp3"
+    },
+    {
+      "file": "sw_zombiehyperdrivehyperion2.mp3",
+      "title": "Zombie Hyperdrive - Hyperion vinyl rip",
+      "artist": "Zombie Hyperdrive",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 89.1,
+      "drop_t": 21.9,
+      "duration_s": 80.0,
+      "energy": 0.7,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Zombie Hyperdrive - Zombie Hyperdrive - Hyperion vinyl rip (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "the-kid-with-the-silver-mask",
+      "source_file": "The Destroyer.mp3"
+    },
+    {
+      "file": "sw_low.mp3",
+      "title": "Low",
+      "artist": "David Bowie",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 80.7,
+      "drop_t": 13.37,
+      "duration_s": 80.0,
+      "energy": 0.606,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: David Bowie - Low (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "1977-david-bowie-low",
+      "source_file": "12 - Some Are (previously unreleased).mp3"
+    },
+    {
+      "file": "sw_low2.mp3",
+      "title": "Low",
+      "artist": "David Bowie",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 95.7,
+      "drop_t": 36.9,
+      "duration_s": 80.0,
+      "energy": 0.625,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: David Bowie - Low (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "1977-david-bowie-low",
+      "source_file": "02 - Breaking Glass.mp3"
+    },
+    {
+      "file": "sw_twilight.mp3",
+      "title": "Twilight",
+      "artist": "Twilight Racing",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 7.5,
+      "duration_s": 80.0,
+      "energy": 0.842,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Twilight Racing - Twilight (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "TwilightRacing",
+      "source_file": "Twilight Racing/The Sound Of A Speeding Heart/VHS Race.mp3"
+    },
+    {
+      "file": "sw_twilight2.mp3",
+      "title": "Twilight",
+      "artist": "Twilight Racing",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.71,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Twilight Racing - Twilight (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "TwilightRacing",
+      "source_file": "Twilight Racing/The Sound Of A Speeding Heart/Thrillgear.mp3"
+    },
+    {
+      "file": "sw_mycr001timmythemonsterst.mp3",
+      "title": "[MYCR001] Timmy & the Monsters - Take them home (2012)",
+      "artist": "MYRDAL, SICARIO, Rock Juvenil, Young Offenders",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 2.65,
+      "duration_s": 80.0,
+      "energy": 0.758,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: MYRDAL, SICARIO, Rock Juvenil, Young Offenders - [MYCR001] Timmy & the Monsters - Take them home (2012) (http://creativecommons.org/licenses/by/4.0/)",
+      "license": "http://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "mycr001",
+      "source_file": "04 Take them home (Two Thousand Leagues remix).mp3"
+    },
+    {
+      "file": "sw_mycr001timmythemonsterst2.mp3",
+      "title": "[MYCR001] Timmy & the Monsters - Take them home (2012)",
+      "artist": "MYRDAL, SICARIO, Rock Juvenil, Young Offenders",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.632,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: MYRDAL, SICARIO, Rock Juvenil, Young Offenders - [MYCR001] Timmy & the Monsters - Take them home (2012) (http://creativecommons.org/licenses/by/4.0/)",
+      "license": "http://creativecommons.org/licenses/by/4.0/",
+      "source": "archive.org",
+      "source_id": "mycr001",
+      "source_file": "02 Take them home (Di Murga remix).mp3"
+    },
+    {
+      "file": "sw_exalottimesliceuscwr1410.mp3",
+      "title": "Exalot - Time Slice [USC-WR-1410.0230]",
+      "artist": "Exalot",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 11.45,
+      "duration_s": 80.0,
+      "energy": 0.71,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Exalot - Exalot - Time Slice [USC-WR-1410.0230] (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "exalot-time-slice",
+      "source_file": "09.Boy's Name is Max.mp3"
+    },
+    {
+      "file": "sw_exalottimesliceuscwr14102.mp3",
+      "title": "Exalot - Time Slice [USC-WR-1410.0230]",
+      "artist": "Exalot",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 123.0,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.733,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Exalot - Exalot - Time Slice [USC-WR-1410.0230] (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "exalot-time-slice",
+      "source_file": "10.Time Slice.mp3"
+    },
+    {
+      "file": "sw_torleywongthefinalselect.mp3",
+      "title": "Torley Wong - The Final Selection ::: 230 diverse MP3s",
+      "artist": "Torley Wong",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 12.59,
+      "duration_s": 34.3,
+      "energy": 0.282,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Torley Wong - Torley Wong - The Final Selection ::: 230 diverse MP3s (http://creativecommons.org/licenses/by-sa/3.0/us/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/us/",
+      "source": "archive.org",
+      "source_id": "Torley_Wong_-_The_Final_Selection",
+      "source_file": "Torley_Wong-Monster_Cymbals.mp3"
+    },
+    {
+      "file": "sw_torleywongthefinalselect2.mp3",
+      "title": "Torley Wong - The Final Selection ::: 230 diverse MP3s",
+      "artist": "Torley Wong",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 15.67,
+      "duration_s": 36.9,
+      "energy": 0.595,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Torley Wong - Torley Wong - The Final Selection ::: 230 diverse MP3s (http://creativecommons.org/licenses/by-sa/3.0/us/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/us/",
+      "source": "archive.org",
+      "source_id": "Torley_Wong_-_The_Final_Selection",
+      "source_file": "Torley_Wong-_Lude_IV.mp3"
+    },
+    {
+      "file": "sw_deusexsoundtrack.mp3",
+      "title": "Deus Ex soundtrack",
+      "artist": "Alexander Brandon, Dan Gardopée, Michiel van den Bos",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 1.67,
+      "duration_s": 54.8,
+      "energy": 0.757,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Alexander Brandon, Dan Gardopée, Michiel van den Bos - Deus Ex soundtrack (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "deus_ex_soundtrack",
+      "source_file": "41-Paris Cathedral Conversation.mp3"
+    },
+    {
+      "file": "sw_deusexsoundtrack2.mp3",
+      "title": "Deus Ex soundtrack",
+      "artist": "Alexander Brandon, Dan Gardopée, Michiel van den Bos",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 107.7,
+      "drop_t": 18.65,
+      "duration_s": 80.0,
+      "energy": 0.721,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Alexander Brandon, Dan Gardopée, Michiel van den Bos - Deus Ex soundtrack (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "deus_ex_soundtrack",
+      "source_file": "20-Oceanlab.mp3"
+    },
+    {
+      "file": "sw_bladerunner.mp3",
+      "title": "Blade Runner",
+      "artist": "Deep Red Radio",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 107.7,
+      "drop_t": 28.82,
+      "duration_s": 80.0,
+      "energy": 0.638,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Deep Red Radio - Blade Runner (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "BladeRunner_201802",
+      "source_file": "Blade Runner - Teil 1.mp3"
+    },
+    {
+      "file": "sw_bladerunner2.mp3",
+      "title": "Blade Runner",
+      "artist": "Deep Red Radio",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.63,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Deep Red Radio - Blade Runner (http://creativecommons.org/licenses/by-sa/3.0/)",
+      "license": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "archive.org",
+      "source_id": "BladeRunner_201802",
+      "source_file": "Blade Runner - Teil 2.mp3"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod.mp3",
+      "title": "Cyberpunk Librarian Episode 57 A Prescription For Your Subscription Addiction",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 42.03,
+      "duration_s": 80.0,
+      "energy": 0.543,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 57 A Prescription For Your Subscription Addiction (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "CyberpunkLibrarianEpisode57APrescriptionForYourSubscriptionAddiction",
+      "source_file": "Cyberpunk Librarian - Episode 57 - A Prescription for Your Subscription Addiction.mp3"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod2.mp3",
+      "title": "Cyberpunk Librarian Episode 57 A Prescription For Your Subscription Addiction",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 99.4,
+      "drop_t": 42.03,
+      "duration_s": 80.0,
+      "energy": 0.545,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 57 A Prescription For Your Subscription Addiction (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "CyberpunkLibrarianEpisode57APrescriptionForYourSubscriptionAddiction",
+      "source_file": "Cyberpunk Librarian - Episode 57 - A Prescription for Your Subscription Addiction.ogg"
+    },
+    {
+      "file": "sw_deusexmankinddividedoste.mp3",
+      "title": "Deus Ex: Mankind Divided OST Extended",
+      "artist": "Sonic Mayhem, Michael McCann, Ed Harrison",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 107.7,
+      "drop_t": 47.74,
+      "duration_s": 80.0,
+      "energy": 0.592,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Sonic Mayhem, Michael McCann, Ed Harrison - Deus Ex: Mankind Divided OST Extended (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "deus_ex_mankind_divided_ost_extended",
+      "source_file": "21. Ed Harrison - Rippers.mp3"
+    },
+    {
+      "file": "sw_deusexmankinddividedoste2.mp3",
+      "title": "Deus Ex: Mankind Divided OST Extended",
+      "artist": "Sonic Mayhem, Michael McCann, Ed Harrison",
+      "genre": "electronic",
+      "mood": "hype",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 41.1,
+      "duration_s": 80.0,
+      "energy": 0.657,
+      "tags": [
+        "edit",
+        "electronic"
+      ],
+      "credit": "Song: Sonic Mayhem, Michael McCann, Ed Harrison - Deus Ex: Mankind Divided OST Extended (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "deus_ex_mankind_divided_ost_extended",
+      "source_file": "27. Sonic Mayhem - Adam Jensen 2.0 Trailer.mp3"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod3.mp3",
+      "title": "Cyberpunk Librarian Episode 59 Situation Offline",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 112.3,
+      "drop_t": 12.17,
+      "duration_s": 80.0,
+      "energy": 0.499,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 59 Situation Offline (http://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "cyberpunk-librarian-episode-59",
+      "source_file": "Cyberpunk Librarian - Episode 59.mp3"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod4.mp3",
+      "title": "Cyberpunk Librarian Episode 60",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 17.28,
+      "duration_s": 80.0,
+      "energy": 0.476,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 60 (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "cyberpunk-librarian-episode-60",
+      "source_file": "Cyberpunk Librarian - Episode 60.mp3"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod5.mp3",
+      "title": "Cyberpunk Librarian Episode 54 Nexus And Empathy",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 129.2,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.451,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 54 Nexus And Empathy (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "CyberpunkLibrarianEpisode54NexusAndEmpathy",
+      "source_file": "Cyberpunk Librarian - Episode 54- Nexus and Empathy.mp3"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod6.mp3",
+      "title": "Cyberpunk Librarian Episode 54 Nexus And Empathy",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 71.8,
+      "drop_t": 38.22,
+      "duration_s": 80.0,
+      "energy": 0.453,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 54 Nexus And Empathy (http://creativecommons.org/publicdomain/mark/1.0/)",
+      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "source": "archive.org",
+      "source_id": "CyberpunkLibrarianEpisode54NexusAndEmpathy",
+      "source_file": "Cyberpunk Librarian - Episode 54- Nexus and Empathy.ogg"
+    },
+    {
+      "file": "sw_cyberpunklibrarianepisod7.mp3",
+      "title": "Cyberpunk Librarian Episode 63 My Favourite Operating System",
+      "artist": "Daniel Messer",
+      "genre": "dark electronic",
+      "mood": "dark",
+      "pillars": [
+        "movie",
+        "anime"
+      ],
+      "bpm": 117.5,
+      "drop_t": 12.0,
+      "duration_s": 80.0,
+      "energy": 0.49,
+      "tags": [
+        "dark",
+        "edit"
+      ],
+      "credit": "Song: Daniel Messer - Cyberpunk Librarian Episode 63 My Favourite Operating System (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "archive.org",
+      "source_id": "cyberpunk-librarian-episode-63-my-favourite-operating-system",
+      "source_file": "Cyberpunk Librarian - Episode 63 - My Favourite Operating System.mp3"
+    }
+  ]
 }
