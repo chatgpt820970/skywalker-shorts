@@ -1,87 +1,93 @@
 {
  "hook_styles": [
-  "Name the character and the action in 3-7 English words (e.g. Tanjiro entered the Infinity Castle)",
-  "Big-IP cold open, specific not generic (e.g. Doctor Doom terrifies every Avenger)",
-  "One concrete scene fact (e.g. Haymitch was never the same)",
-  "A stake the picture already shows (e.g. She married her own assassin)",
-  "A short curiosity line from the shot (e.g. Nobody leaves the village after dark)"
+  "The reason why he changed 💀",
+  "Why everyone fears this character 💀",
+  "The moment he lost it 💀",
+  "This scene changed cinema forever 💀",
+  "Why this villain is iconic 💀",
+  "The truth behind this scene 💀",
+  "He was never the same 💀"
  ],
  "title_patterns": [
-  "<hook> 💀 | <scene> | #edit",
-  "Tanjiro entered the Infinity Castle 💀 | Into the Infinity Castle | #edit",
-  "Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
-  "She married her own assassin 💀 | The wedding | #edit"
+  "<hook> 💀 | <character name> enters the scene | #edit",
+  "<hook> 💀 | <movie title> best moment | #edit",
+  "<hook> 💀 | <character> vs everyone | #edit",
+  "<hook> 💀 | <movie title> climax | #edit"
  ],
  "best_length_s": 24.0,
  "posting_times_ist": [
   "06:30",
-  "12:30",
-  "17:30",
+  "09:00",
+  "11:30",
+  "13:30",
+  "16:00",
+  "18:30",
+  "20:30",
   "22:30"
  ],
  "caption_styles": [
-  "Keep text inside top white bar short (3-7 words) with high readability font.",
-  "Use yellow/white bold lower-third subtitles synced precisely to speech or beat drops.",
-  "Add a simple interactive prompt in the pinned comment (e.g. Rate this edit 1-10).",
-  "Maintain high contrast text without covering key visual elements of the clip."
+  "Keep it minimal: 1-2 words like 'Pure cinema' or 'Unreal'.",
+  "Use a single relevant emoji that matches the movie vibe.",
+  "Avoid long descriptions; let the on-screen hook do the work.",
+  "Include a call to action like 'Rate this 1-10' to boost engagement."
  ],
  "song_picks": [
-  "Adrenaline",
-  "Godless",
-  "Hukum",
-  "MURDER IN MY MIND",
-  "Close Eyes",
-  "METAMORPHOSIS",
-  "Monica",
-  "PASSO BEM SOLTO (Slowed)",
-  "Fear Song",
-  "MONTAGEM FUJIN (Super Slowed)"
+  "METAMORPHOSIS - INTERWORLD",
+  "MURDER IN MY MIND - Kordhell",
+  "WORTH NOTHING (feat. Oliver Tree) - PHONK DRIFT",
+  "Close Eyes - DVRST",
+  "After Dark - Mr.Kitty",
+  "Hukum - Anirudh Ravichander",
+  "Fear Song - Anirudh Ravichander",
+  "MONTAGEM FUJIN (Super Slowed) - dj Samir, Mxng0, Nulteex",
+  "Can You Feel My Heart - Bring Me The Horizon",
+  "Memory Reboot (Slowed) - VØJ, Narvent"
  ],
  "songs_to_add": [
-  "Montagem Rugido - DJ GBR",
-  "Deadwood - Really Slow Motion",
-  "Tauba Tauba - Karan Aujla",
-  "Animal Title Track - Harshavardhan Rameshwar",
-  "Pushpa 2 Mass Theme - Devi Sri Prasad",
-  "Montagem Diamante - DJ SMG",
-  "Vortex Phonk - Scapin",
-  "Kala Chashma (Slowed + Reverb) - Amar Arshi"
+  "Sahara - Hensonn",
+  "Luxury - Azealia Banks",
+  "Keraunos - PlayaPhonk",
+  "Override - KSLV Noh",
+  "Vendetta - MUPP, Sadfriendd",
+  "RAVE - Dxrk",
+  "Messages from the Stars - The Rah Band",
+  "Solitude (Felsmann + Tiley Reinterpretation) - M83"
  ],
  "hashtags": [
-  "movieedits",
-  "bollywoodedits",
-  "hollywoodedits",
-  "phonk",
-  "cinematic",
   "shorts",
+  "movieedits",
+  "cinema",
   "viral",
-  "edit",
   "trending",
-  "movieclips"
+  "hollywood",
+  "bollywood",
+  "southmovie",
+  "attitude",
+  "sigma",
+  "edit"
  ],
  "avoid": [
-  "Low-energy tracks with no beat drop on obscure or romcom titles.",
-  "Repeating a topic or title, including a same-day duplicate.",
-  "The banned 'The reason why' hook or title, and Hinglish titles.",
-  "Forcing unique footage past ~24s. Aim 20-28s with a drop. Hard minimum stays 18s. Do not exceed about 32s.",
-  "Slow intro frames without visual motion or a readable English hook in the first 1.5s.",
-  "Cropping the frame, stretched vertical video, or heavy filters over faces."
+  "Long intros before the hook appears.",
+  "Using low-energy music for high-intensity action scenes.",
+  "Over-editing with too many transitions that distract from the scene.",
+  "Publishing content without a clear 'drop' moment synced to the beat.",
+  "Using generic or boring fonts for the hook bar."
  ],
  "top_channels": [
-  "Btsly Edits: High viral reach on Indian movie female character montages.",
-  "Nikit Ae: Great execution of South Indian action scenes paired with Phonk audio.",
-  "Taylor Gar: Exceptionally high retention on short dramatic clip edits.",
-  "AMAR EDITZ: Strong reference for clean CapCut layout and pacing techniques.",
-  "k o o k t a e c a f e: High view count FMV edit formats using trending pop audio."
+  "Aditya Movies - Masterclass in high-retention South Indian action cuts.",
+  "South Edit zone - Great use of trending audio for mass appeal.",
+  "1NLY EDITS - Excellent at VFX-heavy character showcases.",
+  "HAExEDITZ - Strong aesthetic consistency for Bollywood edits.",
+  "FDR Edit - Effective use of short, punchy evolution-style edits."
  ],
  "our_insights": [
-  "13 Nov review of the 12 Nov 20:54 IST stats (12 videos, 20918 views, 3 subs). 06:30 Hollywood/big-IP action with a beat drop wins: Haymitch 10956 views (29s, 06:30, Godless, energy, drop ~12.6s) and Doctor Doom 2660 views (24s, 06:30, Adrenaline, energy, drop ~11s).",
-  "Low-energy tracks with no drop on obscure or romcom titles flopped: Maatrubhumi/Salman 3 views (31s, 22:30, Montagem Toma, energy false, no drop, Hinglish title) and Materialists/Lucy 5 views (33s, 17:30, teamo, energy false, no drop).",
-  "Do not repeat a topic or title. The same-day Godzilla Minus Zero duplicate got 43 views against 1229 for the original. Peddi still reached 1149 at 12:30 with Godless plus a drop even at 36s. Focker comedy reached 1123 at 17:30 without an energy edit.",
-  "English unique scene hooks only. Never the banned 'The reason why' template and never a Hinglish title. Raja Saab's Hinglish title still reached 958 with an energy edit, but the English big-IP hooks are the videos people actually watched.",
-  "Prefer about 24s (aim 20-28) with a music drop. Hard publish minimum stays 18s and the cap stays about 32s. The old 25s unique-shot floor wasted retries on cuts that already performed."
+  "High-energy edits with a clear drop (11-12s) perform 10x better than low-energy ones.",
+  "Character-focused titles ('The reason why...') drive significantly more clicks than generic descriptive titles.",
+  "Early morning slots (06:30) are currently our highest performing, likely due to fresh feed algorithm pushes.",
+  "Consistency in the 'white hook bar' layout is building brand recognition; don't change the visual format.",
+  "Avoid 'filler' edits; our lowest performing videos lack a clear emotional hook or high-impact scene."
  ],
- "generated_at": "2026-11-12 18:25 IST",
+ "generated_at": "2026-11-13 12:57 IST",
  "research_chars": 0,
  "yt_sample": 24,
  "own_videos": 12
