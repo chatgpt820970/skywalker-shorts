@@ -18,6 +18,10 @@ on:
         description: "Retry items whose result is failed or retry_queued"
         type: boolean
         default: false
+      no_publish:
+        description: "Dry-run: render + upload to test-renders release, never Buffer/YouTube"
+        type: boolean
+        default: false
   schedule:
     # Twice an hour: 8 IST slots/day (some only 2h apart). 8h ahead + 4 parallel so a 75-min
     # render still finishes well before the slot, even if one cron is skipped.
@@ -114,6 +118,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SKY_WHISPER_MODEL: small
+          SKY_NO_PUBLISH: ${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}

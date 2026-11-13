@@ -115,6 +115,11 @@ def main():
             continue
         if r.get("status") != "done" or not r.get("asset_url") or not r.get("slot"):
             continue
+        # Never post demo / dry-run / no_publish renders (test-renders release).
+        if r.get("no_publish") or r.get("demo") or (r.get("asset_url") or "").find("/test-renders/") >= 0:
+            continue
+        if (r.get("id") or "").startswith("demo-") or (r.get("id") or "").startswith("test-"):
+            continue
         slot = datetime.fromisoformat(r["slot"])
         if slot < start:
             continue
