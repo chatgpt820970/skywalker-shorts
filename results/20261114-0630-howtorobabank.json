@@ -1,0 +1,94 @@
+{
+  "id": "20261114-0630-howtorobabank",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 30.44, 'stabilized': True, 'shots': 5, 'limit_px': 6.0}; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors",
+  "at": "2026-11-14 04:12 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43510893671",
+  "slot": "2026-11-14T06:30:00+05:30",
+  "title": "This heist went completely wrong | The heist goes wrong | #edit",
+  "hook": "This heist went completely wrong",
+  "description": "This heist went completely wrong. The heist goes wrong from the official How to Rob a Bank trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=ORxw68y3lyw). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #howtorobabank",
+  "tags": [
+    "howtorobabank",
+    "heistmovie",
+    "amazonmgm",
+    "actionmovie",
+    "newmovie",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": null,
+  "gemini_meta": false,
+  "hook_source": null,
+  "hook_style": null,
+  "title_candidates": null,
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 28.1,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 11.2,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.0,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 17.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/howtorobabank_trailer_h264.mp4",
+      "music": "sw_worthnothingfeatolivertr.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 17.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/howtorobabank_trailer_h264.mp4",
+      "music": "sw_worthnothingfeatolivertr.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 30.44, 'stabilized': True, 'shots': 5, 'limit_px': 6.0}; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/howtorobabank_trailer_h264.mp4",
+      "music": "sw_pkonkbetapkonkphenomenon.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 30.44, 'stabilized': True, 'shots': 5, 'limit_px': 6.0}; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors"
+}

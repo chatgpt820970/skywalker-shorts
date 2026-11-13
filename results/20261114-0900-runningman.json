@@ -1,0 +1,177 @@
+{
+  "id": "20261114-0900-runningman",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1146x480 source -> 2160x3840), QA ok [no-publish]",
+  "at": "2026-11-14 03:13 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43510893671",
+  "slot": "2026-11-14T09:00:00+05:30",
+  "title": "Ben Richards didnt come to play #therunningman #glenpowell #actionmovie",
+  "hook": "Ben Richards against the entire nation",
+  "description": "Ben Richards against the entire nation. Ben Richards is forced into a deadly game where the whole nation tracks his every move. From the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=KD18ddeFuyM). All rights to the film/series belong to their owners; short commentary edit.\n#therunningman #glenpowell #actionmovie #shorts #edit",
+  "tags": [
+    "therunningman",
+    "glenpowell",
+    "actionmovie",
+    "edgarwright",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "The whole nation is hunting him",
+    "title": "The whole nation is hunting him | The whole nation hunts him | #edit",
+    "description": "The whole nation is hunting him. The whole nation hunts him from the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=KD18ddeFuyM). All rights to the film/series belong to their owners; short commentary edit.\n#therunningman #glenpowell #edgarwright #actionmovie #edit",
+    "tags": [
+      "therunningman",
+      "glenpowell",
+      "edgarwright",
+      "actionmovie",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Ben Richards didnt come to play",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment Ben Richards became the target",
+      "click_score": 88.0
+    },
+    {
+      "title": "POV you are being hunted by everyone",
+      "click_score": 85.0
+    },
+    {
+      "title": "Ben Richards aura in this scene is unreal",
+      "click_score": 82.0
+    },
+    {
+      "title": "This scene hits different in The Running Man",
+      "click_score": 78.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.9,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 7.4,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.2,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/runningman_trailer_h264.mp4",
+      "music": "sw_sramotamemphisphonkarchi.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/test-renders",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/test-renders/test-20261114-0900-runningman.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.497,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/runningman_trailer_h264.mp4",
+  "music": "sw_sramotamemphisphonkarchi.mp3",
+  "music_credit": "Song: SRAMOTA - Sramota (Memphis Phonk) archive [2021-2022] (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Ben Richards against the entire nation. Ben Richards is forced into a deadly game where the whole nation tracks his every move. From the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=KD18ddeFuyM). All rights to the film/series belong to their owners; short commentary edit.\n#therunningman #glenpowell #actionmovie #shorts #edit\n\nMusic:\nSong: SRAMOTA - Sramota (Memphis Phonk) archive [2021-2022] (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": true,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 21.9,
+      "audio": true
+    },
+    "lufs": -14.0,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.3,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 8.0,
+        "captions": 10.0,
+        "post_worthy": 9.0
+      },
+      "reasons": [
+        "The video meets all technical requirements.",
+        "The hook is clear and engaging.",
+        "The footage is clean, though there is a brief 'ESTE AÑO' text overlay from the original trailer source that could not be removed, but it does not significantly detract from the edit quality."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
