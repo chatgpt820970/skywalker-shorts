@@ -28,8 +28,8 @@ import scene_filter
 W1080, H1080 = 1080, 1920
 W4K, H4K = 2160, 3840
 MIN_DURATION = 18.0
-AIM_DURATION = 25.0
-AIM_DURATION_MAX = 32.0
+AIM_DURATION = 20.0
+AIM_DURATION_MAX = 28.0
 
 
 def duration_issue(dur: float) -> str | None:

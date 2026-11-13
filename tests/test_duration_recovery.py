@@ -80,11 +80,12 @@ def test_require_min_duration_never_relaxes_below_18():
         assert "18" in str(e)
     else:
         raise AssertionError("even --relax must refuse <18s")
-    # 18-25s is allowed (25s is the aim, not a hard gate)
+    # 18s is the hard floor. Aim is about 20-28s; 20-24s must not fail the planner.
     pipeline._require_min_duration(18.0)
+    pipeline._require_min_duration(20.0)
     pipeline._require_min_duration(22.0)
     pipeline.RELAX = False
-    pipeline._require_min_duration(25.0)
+    pipeline._require_min_duration(24.0)
 
 
 def _serif_frame(text="In exchange for 10 million yen"):
@@ -120,7 +121,7 @@ def test_plain_footage_is_not_flagged_as_text():
 
 
 def test_plan_edit_can_fill_with_short_recovered_slices():
-    """Sub-shot leftovers are often 0.7–1.4s; they must still count toward 25s."""
+    """Sub-shot leftovers are often 0.7–1.4s; they must still count toward the 20s aim."""
     pipeline.RELAX = False
     rng = np.random.default_rng(7)
     scenes = []
@@ -142,4 +143,4 @@ def test_plan_edit_can_fill_with_short_recovered_slices():
     music = {"pulses": list(np.linspace(0, 36, 50))}
     edl = pipeline.plan_edit(scenes, music, target=32)
     acc = float(edl[-1]["t1"]) if edl else 0.0
-    assert acc + 1e-6 >= 25.0, acc
+    assert acc + 1e-6 >= 20.0, acc
