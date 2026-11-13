@@ -308,6 +308,17 @@ def download_source(src, force_fallback=False, skip=None):
         if ok:
             return info, errors
         errors.append(info)
+        # Non-YouTube hosts (IMDb, DailyMotion, Archive, Vimeo, ...): yt-dlp after direct curl fails.
+        src.unlink(missing_ok=True)
+        ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
+                            "-4", "--user-agent", ua,
+                            "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
+                            "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
+                            u], capture_output=True, text=True)
+        if r.returncode == 0 and _ok_src(src):
+            return u, errors
+        errors.append("yt-dlp alt: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
     # Optional last-resort: official/legal Pexels clip if a key is already in the env.
     # Never required; never committed.
     pex = _try_pexels(src)
