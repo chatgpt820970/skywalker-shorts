@@ -1,0 +1,175 @@
+{
+  "id": "test-superman-dryrun",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok [no-publish]",
+  "at": "2026-11-13 14:56 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43397177695",
+  "slot": null,
+  "title": "The moment David Corenswet became Superman #superman #dc #lexluthor",
+  "hook": "The entire world turned against Superman",
+  "description": "The entire world turned against Superman. Superman faces intense public scrutiny and global backlash while Lex Luthor plots his downfall. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #dc #lexluthor #shorts #edit",
+  "tags": [
+    "superman",
+    "dc",
+    "lexluthor",
+    "edit",
+    "shorts",
+    "trending",
+    "test"
+  ],
+  "queue_meta": {
+    "hook": "Superman still saves everyone",
+    "title": "Superman still saves everyone | dry-run test | #edit",
+    "description": "Superman still saves everyone. Dry-run test render from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+    "tags": [
+      "superman",
+      "dc",
+      "edit",
+      "shorts",
+      "trending",
+      "test"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "The moment David Corenswet became Superman",
+      "click_score": 95.0
+    },
+    {
+      "title": "Lex Luthor's obsession with Superman hits different",
+      "click_score": 92.0
+    },
+    {
+      "title": "POV: The entire world turns against Superman",
+      "click_score": 90.0
+    },
+    {
+      "title": "Superman's presence in this trailer is unreal",
+      "click_score": 88.0
+    },
+    {
+      "title": "Nobody noticed Lex Luthor's rage in this scene",
+      "click_score": 85.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "s": 44.4,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 5.4,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 4.8,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_fasterdeluxebyskyness202.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/test-renders",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/test-renders/test-test-superman-dryrun.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+  "music": "sw_fasterdeluxebyskyness202.mp3",
+  "music_credit": "Song: Skyness - FASTER ( DELUXE) By Skyness [ 2021.04.01] (https://creativecommons.org/publicdomain/zero/1.0/)",
+  "description_final": "The entire world turned against Superman. Superman faces intense public scrutiny and global backlash while Lex Luthor plots his downfall. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #dc #lexluthor #shorts #edit\n\nMusic:\nSong: Skyness - FASTER ( DELUXE) By Skyness [ 2021.04.01] (https://creativecommons.org/publicdomain/zero/1.0/)",
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.3,
+      "audio": true
+    },
+    "lufs": -15.2,
+    "audio_check": {
+      "mode": "two_act",
+      "isolated": true,
+      "act1_end": 8.8,
+      "act1_frac": 0.362,
+      "song_in_act1_dbfs": -180.0,
+      "voice_in_act2_dbfs": -180.0,
+      "act1_voice_dbfs": -18.2,
+      "act2_song_dbfs": -16.2,
+      "song_switches": 1,
+      "speech_segments": 2
+    },
+    "subtitle_cues": 5,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
