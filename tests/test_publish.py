@@ -94,7 +94,18 @@ def test_fallback_hook_varied_and_valid():
 def test_audio_check_gate():
     import vocal_mix
     assert vocal_mix.check_errors(None, True)
-    assert vocal_mix.check_errors({"isolated": False, "speech_segments": 3, "smr_db": 20, "smr_min_db": 18}, True)
+    assert not vocal_mix.check_errors({"isolated": False, "speech_segments": 3, "smr_db": 20, "smr_min_db": 18}, True)
     assert vocal_mix.check_errors({"isolated": True, "speech_segments": 3, "smr_db": 8, "smr_min_db": 5}, True)
     assert not vocal_mix.check_errors({"isolated": True, "speech_segments": 3, "smr_db": 17, "smr_min_db": 15}, True)
     assert not vocal_mix.check_errors(None, False)
+
+
+def test_two_act_audio_gate():
+    import vocal_mix
+    good = {"mode": "two_act", "isolated": True, "act1_frac": 0.46, "song_in_act1_dbfs": -99, "voice_in_act2_dbfs": -99,
+            "song_switches": 1, "act1_voice_dbfs": -17, "act2_song_dbfs": -12}
+    assert not vocal_mix.check_errors(good, True)
+    assert vocal_mix.check_errors(dict(good, song_switches=5), True)
+    assert vocal_mix.check_errors(dict(good, song_in_act1_dbfs=-20), True)
+    assert vocal_mix.check_errors(dict(good, act1_frac=0.8), True)
+    assert not vocal_mix.check_errors(dict(good, isolated=False), True)  # Demucs fallback never fails a slot

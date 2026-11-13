@@ -114,7 +114,36 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "superman_trailer_h264.mp4",
+  "status": "retired",
+  "note": "Demo v2: Demucs-isolated dialogue + ducked song, 5 ranked title candidates, Gemini watches the final cut. No slot, never posted. Retired: owner wants two-act structure (dialogue first, song after)."
+ },
+ {
+  "id": "demo-superman-v3",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "Superman still saves everyone",
+  "words": "SUPERMAN",
+  "title": "Superman still saves everyone | Superman returns to Metropolis | #edit",
+  "description": "Superman still saves everyone. Superman returns to Metropolis from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+  "tags": [
+   "superman",
+   "dc",
+   "davidcorenswet",
+   "jamesgunn",
+   "superhero",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "superman_trailer_h264.mp4",
   "status": "queued",
-  "note": "Demo v2: Demucs-isolated dialogue + ducked song, 5 ranked title candidates, Gemini watches the final cut. No slot, never posted."
+  "note": "Demo v3: two-act (act 1 isolated dialogue only, act 2 hype song + beat-cut action), Gemini arranges. No slot, never posted."
  }
 ]

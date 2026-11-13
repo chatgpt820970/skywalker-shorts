@@ -77,6 +77,9 @@ SEP_H = 2                  # 2px hairline at the bottom of the bar (no gap)
 BAR_H = 196
 ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
 MUSIC_DROP_HINT = None     # library drop timestamp (seconds into the song)
+TWO_ACT = os.environ.get("SKY_TWO_ACT", "1") == "1"   # act 1 dialogue only, act 2 song only
+ACT1_FRAC, ACT1_MAX_FRAC, ACT1_MIN_S = 0.47, 0.55, 5.0
+TWO_ACT_A = None           # planned act-1 length (s), set before music analysis
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
 # No fixed opening/ending time lock: the best story scenes may come from
@@ -978,9 +981,10 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
     else:
         rel[0] = 0.0
     drop_rel = None
-    if ENERGY:
-        # Align the music drop with the reveal at ~38% of the edit.
-        reveal_at = max(4.0, 0.38 * target)
+    d = None
+    if ENERGY or TWO_ACT_A:
+        # Align the music drop with the reveal at ~38% of the edit (two-act: with the start of act 2).
+        reveal_at = float(TWO_ACT_A) if TWO_ACT_A else max(4.0, 0.38 * target)
         dur_m = float(times[-1])
         d = find_drop(y, sr, pulse, reveal_at, max(reveal_at, dur_m - (target - reveal_at)))
         hint = globals().get("MUSIC_DROP_HINT")
@@ -1007,6 +1011,7 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
         "window": win,
         "pulses": rel.tolist(),  # seconds relative to music window / video t=0
         "abs_beats": pulse.tolist(),
+        "drop_abs": float(d) if d is not None else float(start),
     }
 
 
@@ -1029,6 +1034,188 @@ def _require_min_duration(acc: float, *, where: str = "") -> None:
             f"(need ≥{need:.0f}s, aim 25-32s); "
             f"not repeating shots and not publishing a short cut"
         )
+
+
+# ---------------------------------------------------------------------------
+# Two-act structure (owner rule): ACT 1 = characters talking only (isolated voices, NO song);
+# ACT 2 = the hype song at full level from its drop over the best action shots cut on the beat,
+# no dialogue. The song starts once and never toggles in and out between lines.
+# ---------------------------------------------------------------------------
+def _ascii_ratio(t: str) -> float:
+    t = t or ""
+    return sum(1 for c in t if ord(c) < 128) / max(1, len(t))
+
+
+def act1_candidates(scenes: list[dict], transcript: dict | None) -> list[dict]:
+    """Spoken lines that can be shown as clean shots: inside a usable scene (small spill allowed)."""
+    segs = list((transcript or {}).get("segments") or [])
+    usable = [s for s in scenes if not s.get("skip") and float(s["end"]) - float(s["start"]) >= 0.6]
+    out = []
+    for g in segs:
+        a, b = float(g.get("start") or 0), float(g.get("end") or 0)
+        text = " ".join(str(g.get("text") or "").split())
+        if not (0.5 <= b - a <= 6.5) or len(text.split()) < 2:
+            continue
+        if not text.isascii() and _ascii_ratio(text) < 0.9:
+            continue
+        sc = next((s for s in usable if float(s["start"]) - 0.08 <= a < float(s["end"])), None)
+        if sc is None:
+            continue
+        hard = float(sc["end"])
+        nxt = sorted([x for x in scenes if float(x["start"]) >= float(sc["end"]) - 0.05], key=lambda x: float(x["start"]))
+        if nxt and not nxt[0].get("skip"):
+            hard = min(float(sc["end"]) + 1.2, float(nxt[0]["end"]))
+        if b > hard + 0.02:
+            continue
+        s0 = max(float(sc["start"]), a - 0.18)
+        e0 = min(hard, b + 0.28)
+        if e0 - s0 < 1.1:
+            e0 = min(hard, s0 + 1.1)
+            if e0 - s0 < 1.1:
+                s0 = max(float(sc["start"]), e0 - 1.1)
+        if e0 - s0 < 0.8:
+            continue
+        out.append({"id": len(out), "start": round(a, 2), "end": round(b, 2), "text": text,
+                    "scene": sc["id"], "a": round(s0, 3), "vis": round(e0 - s0, 3),
+                    "complete": text.rstrip().endswith((".", "!", "?")), "words": len(text.split())})
+    return out
+
+
+def choose_act1(scenes: list[dict], transcript: dict | None, total: float) -> list[dict]:
+    """Pick act-1 lines: Gemini's order if it chose (arrangement.json), else a deterministic story pick."""
+    import similarity as sim
+    cands = act1_candidates(scenes, transcript)
+    if not cands:
+        return []
+    want, cap = ACT1_FRAC * total, ACT1_MAX_FRAC * total
+    by_id = {c["id"]: c for c in cands}
+    arr = {}
+    try:
+        arr = json.loads((WORK / "arrangement.json").read_text())
+    except Exception:
+        pass
+    # Gemini ids refer to the candidate list it saw; match by source time so a re-slice keeps its choice.
+    gem = []
+    for t in arr.get("act1_times") or []:
+        m = next((c for c in cands if abs(c["start"] - float(t[0])) < 0.15 and abs(c["end"] - float(t[1])) < 0.3), None)
+        if m and m not in gem:
+            gem.append(m)
+    def q(c):
+        g = next((float(s.get("gemini") or 5) for s in scenes if s["id"] == c["scene"]), 5.0)
+        return (2.0 if c["complete"] else 0.0) + min(c["words"], 12) * 0.25 + g * 0.4
+    ranked = sorted(cands, key=q, reverse=True)
+    if gem and sum(c["vis"] for c in gem) >= 0.7 * want:
+        order, ordered_by_gemini = gem, True
+    elif gem:  # Gemini picked too little: keep its lines, top up deterministically, play in story order
+        order, ordered_by_gemini = gem + [c for c in ranked if c not in gem], False
+    else:
+        order, ordered_by_gemini = ranked, False
+    chosen, ranges, tot = [], [], 0.0
+    for c in order:
+        if tot >= want - 0.4:
+            break
+        if tot + c["vis"] > cap:
+            continue
+        if sim.range_blocked(c["a"], c["a"] + c["vis"], ranges):
+            continue
+        chosen.append(c)
+        ranges.append((c["a"], c["a"] + c["vis"]))
+        tot += c["vis"]
+    if not ordered_by_gemini:
+        chosen.sort(key=lambda c: c["a"])  # story order
+    return chosen
+
+
+def plan_two_act(scenes: list[dict], music: dict, target: float, transcript: dict | None,
+                 usable: list[dict]) -> list[dict] | None:
+    import similarity as sim
+    total = float(target) + END_CARD
+    act1 = choose_act1(scenes, transcript, total)
+    a1 = sum(c["vis"] for c in act1)
+    if a1 < ACT1_MIN_S:
+        print(f"  two-act: only {a1:.1f}s of clean dialogue lines; classic edit")
+        return None
+    beats = np.array(music.get("abs_beats") or [], dtype=float)
+    d = float(music.get("drop_abs") or music.get("start") or 0.0)
+    T = a1
+    grid = T + (beats[beats >= d - 1e-3] - d)
+    if len(grid) < 4:
+        ibi = 60.0 / max(60.0, float(music.get("tempo") or 100))
+        grid = T + np.arange(0, 60, ibi)
+    ibi = float(np.median(np.diff(grid))) if len(grid) > 3 else 0.6
+    step = 2 if 2 * ibi >= 0.85 else 4
+    if step * ibi > 3.2:
+        step = 1
+    used_ranges = [(c["a"], c["a"] + c["vis"]) for c in act1]
+    used_scenes = [s for s in scenes if any(s["id"] == c["scene"] for c in act1)]
+    used_ids = set(c["scene"] for c in act1)
+    gem2 = set((json.loads((WORK / "arrangement.json").read_text()).get("act2") or [])
+               if (WORK / "arrangement.json").exists() else [])
+    slots = [(c["vis"], next(s for s in scenes if s["id"] == c["scene"]), c["a"], 1) for c in act1]
+    body = float(target)
+    t, k, prev = T, 0, None
+    while t < body - 0.45:
+        nxt_i = min(len(grid) - 1, k + step)
+        vis = float(grid[nxt_i] - t) if nxt_i > k else step * ibi
+        vis = max(0.9, min(vis, 3.2, body - t))
+        if body - t - vis < 0.6:
+            vis = body - t
+        best, best_key = None, -1e9
+        for s in usable:
+            if s["id"] in used_ids or float(s["dur"]) < vis + 0.04:
+                continue
+            a = float(s["start"]) + max(0.0, (float(s["dur"]) - vis) / 2.0)
+            if sim.range_blocked(a, a + vis, used_ranges) or sim.similar_to_used(s, used_scenes):
+                continue
+            key = (float(s.get("spectacle") or 0) + 8.0 * (float(s.get("gemini") or 5) - 5)
+                   + 0.3 * float(s.get("motion") or 0) - 1.5 * float(s.get("speech") or 0)
+                   - 40.0 * float(s.get("skin") or 0))
+            if f"{float(s['start']):.2f}-{float(s['end']):.2f}" in gem2:
+                key += 60.0
+            if prev is not None and abs(float(s["start"]) - float(prev["end"])) < 0.08:
+                key -= 90.0
+            if key > best_key:
+                best, best_key, best_a = s, key, a
+        if best is None:
+            break
+        slots.append((vis, best, best_a, 2))
+        used_ids.add(best["id"]); used_ranges.append((best_a, best_a + vis)); used_scenes.append(best)
+        prev = best
+        t += vis
+        k = int(np.searchsorted(grid, t - 1e-3))
+    edl, acc = [], 0.0
+    for i, (vis, sc, a, act) in enumerate(slots):
+        edl.append({
+            "i": i, "scene": sc["id"], "src_start": round(float(a), 3), "src_end": round(float(sc["end"]), 3),
+            "src_dur": round(float(sc["dur"]), 3), "visible": round(float(vis), 3),
+            "t0": round(acc, 3), "t1": round(acc + float(vis), 3), "trans_out": "cut", "td": 0.0,
+            "spectacle": round(float(sc.get("spectacle") or 0), 2), "skin": round(float(sc.get("skin") or 0), 3),
+            "phash": int(sc.get("phash") or 0), "hist": list(sc.get("hist") or []),
+            "speech": round(float(sc.get("speech") or 0), 2), "act": act,
+        })
+        acc += float(vis)
+    music["drop_rel"] = round(T, 3)
+    print(f"  TWO-ACT: act 1 dialogue 0.00-{T:.2f}s ({len(act1)} line(s)), act 2 song from its drop "
+          f"{d:.2f}s at {T:.2f}s, {len(slots) - len(act1)} beat-cut shot(s) (every {step} beat(s))")
+    for c in act1:
+        print(f"    line {c['start']:.1f}-{c['end']:.1f}s: {c['text'][:70]!r}")
+    meta = {"unique_duration": round(acc, 3), "target": float(target), "min_unique": MIN_UNIQUE_DUR,
+            "min_output": MIN_OUTPUT_DUR, "short_unique": bool(acc + 1e-6 < MIN_UNIQUE_DUR), "n_shots": len(edl),
+            "two_act": {"act1_end": round(T, 3), "lines": [c["text"] for c in act1], "drop_abs": d}}
+    try:
+        (WORK / "plan_meta.json").write_text(json.dumps(meta, indent=2))
+    except Exception:
+        pass
+    _require_min_duration(acc)
+    return edl
+
+
+def is_two_act(edl: list[dict] | None) -> bool:
+    return any(it.get("act") == 1 for it in (edl or []))
+
+
+def act1_end(edl: list[dict] | None) -> float:
+    return max([float(it["t1"]) for it in (edl or []) if it.get("act") == 1] or [0.0])
 
 
 def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
@@ -1094,6 +1281,17 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
     else:
         for s in usable:
             s.setdefault("speech", 0.0)
+
+    if TWO_ACT and transcript and TEMPLATE == "whitebar":
+        try:
+            two = plan_two_act(scenes, music, target, transcript, usable)
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"  two-act plan failed ({e}); classic edit")
+            two = None
+        if two:
+            return two
 
     # Fill the whole target with unique live shots (25–32s). An end-card still
     # is only added later if we still have a unique unused frame.
@@ -2325,7 +2523,7 @@ SCREEN_ROUNDS = 4  # cheap clip-level re-slices before stitch/mux
 def _replan(scenes: list[dict], music: dict, transcript: dict | None) -> list[dict]:
     edl = plan_edit(scenes, music, TARGET_DUR, transcript=transcript)
     edl = finalize_edl_for_template(edl, music, TARGET_DUR)
-    if ENERGY:
+    if ENERGY and not is_two_act(edl):
         edl = apply_energy(edl, scenes, music)
         edl = repair_unique_edl(edl, scenes, transcript)
         acc = float(edl[-1]["t1"]) if edl else 0.0
@@ -2709,13 +2907,50 @@ def _mix_source_and_music(bed: Path, dur: float, src: Path | None = None,
         return bed
 
 
+def _mix_two_act(music: dict, dur: float, src: Path | None, edl: list[dict]) -> Path | None:
+    """Act 1: isolated character voices only (no song). Act 2: the song from its drop at full level, no voices.
+    Demucs failure falls back to the original trailer audio in act 1 (the old mixed path), never a failed slot."""
+    try:
+        import dialogue as dmod
+        import vocal_mix
+        T = act1_end(edl)
+        dial = WORK / "dialogue.wav"
+        (WORK / "audio_check.json").unlink(missing_ok=True)
+        if not src or not dmod.extract_dialogue_wav(Path(src), edl, dial):
+            print("  two-act mix: source has no audio; classic mix")
+            return None
+        d = float(music.get("drop_abs") or music.get("start") or 0.0)
+        song = WORK / "song_act2.wav"
+        L = max(0.5, dur - T)
+        run(["ffmpeg", "-y", "-ss", f"{d:.3f}", "-t", f"{L + 0.05:.3f}", "-i", str(music["path"]), "-af",
+             f"loudnorm=I=-11:TP=-1.5:LRA=8,afade=t=in:st=0:d=0.02,afade=t=out:st={max(0.1, L - 0.9):.3f}:d=0.9,"
+             f"aresample=48000", "-c:a", "pcm_s16le", str(song)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        tr = {}
+        tp = WORK / "transcript.json"
+        if tp.exists():
+            tr = json.loads(tp.read_text())
+        src_windows = dmod.speech_windows_from_transcript(tr) or dmod.vad_windows(Path(src))
+        speech_out = [(a, min(b, T)) for a, b in dmod.map_windows_to_output(edl, src_windows) if a < T - 0.1]
+        (WORK / "speech_windows.json").write_text(json.dumps({"source": src_windows, "output": speech_out}))
+        mixed = WORK / "mixed.wav"
+        vocal_mix.mix_two_act(dial, song, mixed, dur, T, speech_out, WORK)
+        return mixed if mixed.exists() and mixed.stat().st_size > 1000 else None
+    except Exception as e:
+        print(f"  two-act mix failed ({e}); classic mix")
+        return None
+
+
 def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: float,
               overlay_text: bool = OVERLAY_TEXT, src: Path | None = None,
               edl: list[dict] | None = None) -> Path:
     """Mux original dialogue + ducked music. Whitebar pads footage under the hook bar."""
     bed = WORK / "bed.wav"
     prepare_bed(music, dur, bed)
-    audio = _mix_source_and_music(bed, dur, src=src, edl=edl)
+    audio = None
+    if is_two_act(edl):
+        audio = _mix_two_act(music, dur, src, edl)
+    if audio is None:
+        audio = _mix_source_and_music(bed, dur, src=src, edl=edl)
     enc = [
         "-c:v", "libx264", "-preset", "fast", "-crf", "17",
         "-pix_fmt", "yuv420p", "-r", str(FPS),
@@ -2805,9 +3040,14 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         if edl and (tr.get("words") or tr.get("segments")):
             mapped = dmod.map_words_to_output(edl, tr.get("words") or [])
             mapped = dmod.drop_incomplete_lines(mapped, edl, tr.get("segments") or [])
-            cues = dmod.caption_cues(mapped)
             src_windows = dmod.speech_windows_from_transcript(tr)
             speech_out = dmod.map_windows_to_output(edl, src_windows)
+            if is_two_act(edl):
+                # Act 2 is song only: no dialogue audio, so no subtitles or speech windows there.
+                T = act1_end(edl)
+                mapped = [w for w in mapped if float(w.get("t1") or 0) <= T + 0.05]
+                speech_out = [(a, min(b, T)) for a, b in speech_out if a < T - 0.1]
+            cues = dmod.caption_cues(mapped)
         caps = capmod.generate_lines(HOOK_TEXT, globals().get("DEPTH_WORDS") or "", float(dur),
                                      dialogue=cues)
         ass_lt = WORK / "lowerthirds.ass"
@@ -3529,7 +3769,15 @@ def main():
     try:
         import sky_ai
         cache = Path(os.environ.get("SKY_ROOT") or WORK) / f"gemini_scenes_{args.item_id or 'x'}.json"
-        ranks = sky_ai.rank_scenes(mezz, scenes, transcript, HOOK_TEXT, WORK, cache=cache)
+        a1_lines = act1_candidates(scenes, transcript) if TWO_ACT else []
+        ranks = sky_ai.rank_scenes(mezz, scenes, transcript, HOOK_TEXT, WORK, cache=cache, lines=a1_lines,
+                                   act1_target=ACT1_FRAC * (TARGET_DUR + END_CARD))
+        if ranks and isinstance(ranks.get("_arrangement"), dict):
+            arr = ranks.pop("_arrangement")
+            by_id = {c["id"]: c for c in a1_lines}
+            arr["act1_times"] = [[by_id[i]["start"], by_id[i]["end"]] for i in arr.get("act1", []) if i in by_id]
+            (WORK / "arrangement.json").write_text(json.dumps(arr, indent=2))
+            print(f"  gemini arrangement: act1 lines {arr.get('act1')} | act2 shots {len(arr.get('act2') or [])}")
         if ranks:
             n = sky_ai.apply_scene_ranks(scenes, ranks)
             print(f"  gemini re-scored {n} scene(s)")
@@ -3540,6 +3788,15 @@ def main():
         print("  gemini scene pick skipped:", e)
 
     print("=== 3. Music analysis ===")
+    global TWO_ACT_A
+    TWO_ACT_A = None
+    if TWO_ACT and TEMPLATE == "whitebar":
+        try:
+            a1 = sum(c["vis"] for c in choose_act1(scenes, transcript, TARGET_DUR + END_CARD))
+            TWO_ACT_A = a1 if a1 >= ACT1_MIN_S else None
+            print(f"  two-act: planned act 1 = {a1:.1f}s of dialogue" + ("" if TWO_ACT_A else " (too little; classic edit)"))
+        except Exception as e:
+            print(f"  two-act pre-plan failed: {e}")
     music = analyze_music(music_path, TARGET_DUR)
     print(f"  {Path(music['path']).name} tempo={music['tempo']:.1f} bpm "
           f"window@{music['start']:.2f}s  pulses={len(music['pulses'])}")
@@ -3548,7 +3805,7 @@ def main():
     print("=== 4. Plan edit ===")
     edl = plan_edit(scenes, music, TARGET_DUR, transcript=transcript)
     edl = finalize_edl_for_template(edl, music, TARGET_DUR)
-    if ENERGY:
+    if ENERGY and not is_two_act(edl):
         edl = apply_energy(edl, scenes, music)
         edl = repair_unique_edl(edl, scenes, transcript)
         acc_after = float(edl[-1]["t1"]) if edl else 0.0

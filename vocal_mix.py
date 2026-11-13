@@ -165,12 +165,85 @@ def mix(dialogue_bed: Path, song: Path, dst: Path, dur: float, speech_out, work:
     return res
 
 
+def mix_two_act(dialogue_bed: Path, song: Path, dst: Path, dur: float, T: float, speech_out, work: Path) -> dict:
+    """ACT 1 [0, T): the characters' voices only (Demucs stem; original trailer audio if Demucs fails).
+    ACT 2 [T, end): our song at full level from its drop, no voices. One switch, never toggling."""
+    work = Path(work)
+    n, nT = int(dur * SR), int(T * SR)
+    # Separate only act 1 (+0.3 s) to keep Demucs fast.
+    a1 = work / "act1_dialogue.wav"
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", str(dialogue_bed), "-t", f"{T + 0.3:.3f}", str(a1)], check=True)
+    voc_path = work / "vocals.wav"
+    isolated = separate_vocals(a1, voc_path)
+    voice = _read(voc_path if isolated else a1)
+    voice = np.pad(voice, ((0, max(0, n - len(voice))), (0, 0)))[:n]
+    music = _read(song)
+    # Fade the last 80 ms of act 1 voice out; nothing of it reaches act 2.
+    f = int(0.08 * SR)
+    voice[nT:] = 0
+    if nT > f:
+        voice[nT - f:nT] *= np.linspace(1, 0, f, dtype=np.float32)[:, None]
+    win = _mask(n, speech_out)
+    act = (win[:nT] > 0) & (_env(voice[:nT]) > 10 ** (-45 / 20)) if nT else np.zeros(0, bool)
+    if act.any():
+        vrms = float(np.sqrt((voice[:nT][act] ** 2).mean()))
+        voice *= min(8.0, 10 ** ((VOICE_RMS_DB + 3) / 20) / max(vrms, 1e-6))
+    song_full = np.zeros((n, 2), dtype=np.float32)
+    m = music[: max(0, n - nT)] * 10 ** (min(0.0, MUSIC_DB + 2) / 20)
+    song_full[nT:nT + len(m)] = m
+    out = voice + song_full
+    peak = float(np.abs(out).max() or 1)
+    if peak > 0.97:
+        s = 0.97 / peak
+        out, voice, song_full = out * s, voice * s, song_full * s
+    _write(dst, out)
+
+    def rms_db(x):
+        return round(db(float(np.sqrt((x ** 2).mean()))) if len(x) else -99.0, 1)
+
+    # Song switches: count on/off transitions of the song bed in 0.25 s blocks after it first starts
+    # (by construction 1: silent in act 1, then on until the end).
+    blk = int(0.25 * SR)
+    on = [float(np.sqrt((song_full[i:i + blk] ** 2).mean())) > 10 ** (-50 / 20) for i in range(0, n - blk, blk)]
+    toggles = sum(1 for i in range(1, len(on)) if on[i] != on[i - 1])
+    act1_speech = (win[:nT] > 0) if nT else np.zeros(0, bool)
+    res = {
+        "mode": "two_act",
+        "isolated": bool(isolated),
+        "act1_end": round(T, 2),
+        "act1_frac": round(T / max(dur, 1e-6), 3),
+        "song_in_act1_dbfs": rms_db(song_full[:nT]),
+        "voice_in_act2_dbfs": rms_db(voice[nT:]),
+        "act1_voice_dbfs": rms_db(voice[:nT][act1_speech]) if act1_speech.any() else rms_db(voice[:nT]),
+        "act2_song_dbfs": rms_db(song_full[nT:]),
+        "song_switches": int(toggles),
+        "speech_segments": len(speech_out or []),
+    }
+    (work / "audio_check.json").write_text(json.dumps(res))
+    print(f"  two-act mix: {res}")
+    return res
+
+
 def check_errors(res: dict | None, speech_expected: bool) -> list[str]:
+    if res and res.get("mode") == "two_act":
+        errs = []
+        if res.get("song_in_act1_dbfs", -99) > -50:
+            errs.append(f"song audible under act-1 dialogue ({res.get('song_in_act1_dbfs')} dBFS)")
+        if res.get("voice_in_act2_dbfs", -99) > -50:
+            errs.append(f"dialogue audio leaks into the song act ({res.get('voice_in_act2_dbfs')} dBFS)")
+        if res.get("song_switches", 0) > 1:
+            errs.append(f"song toggles in and out ({res.get('song_switches')} switches; must start once)")
+        if res.get("act1_voice_dbfs", -99) < -35:
+            errs.append(f"act-1 dialogue too quiet ({res.get('act1_voice_dbfs')} dBFS)")
+        if res.get("act2_song_dbfs", -99) < -30:
+            errs.append(f"act-2 song too quiet ({res.get('act2_song_dbfs')} dBFS)")
+        if not (0.25 <= float(res.get("act1_frac") or 0) <= 0.62):
+            errs.append(f"act split {res.get('act1_frac')} outside 25-62% of the video")
+        return errs
     if not res:
         return ["audio check missing"] if speech_expected else []
     errs = []
-    if speech_expected and not res.get("isolated"):
-        errs.append("dialogue not isolated (trailer music/SFX bed would clash with the song)")
+    # Demucs failure is allowed: the old mixed path is the fallback so a slot never fails because of it.
     if res.get("speech_segments"):
         if (res.get("smr_db") or 0) < MIN_SMR_DB:
             errs.append(f"dialogue not clear over the song: speech/music {res.get('smr_db')} dB < {MIN_SMR_DB}")

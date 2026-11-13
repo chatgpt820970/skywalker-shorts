@@ -89,7 +89,7 @@ def _clip_dialogue(edl: list, transcript: dict) -> list[str]:
     lines = []
     words = transcript.get("words") or []
     for e in edl:
-        if e.get("scene") == "end":
+        if e.get("scene") == "end" or e.get("act") == 2:  # act 2 is song only: its lines are not heard
             continue
         s0 = float(e.get("src_start") or 0)
         s1 = s0 + float(e.get("visible") or e.get("src_dur") or 0)
@@ -287,12 +287,13 @@ def _tile(frames: list[Path], dst: Path, cols: int = 5, w: int = 288) -> Path | 
 
 
 def rank_scenes(mezz: Path, scenes: list[dict], transcript: dict, hook: str, work: Path,
-                cache: Path | None = None) -> dict | None:
+                cache: Path | None = None, lines: list[dict] | None = None,
+                act1_target: float = 13.0) -> dict | None:
     """Score usable scenes 0-10 for a hooky edit and flag text/logo cards. One Gemini call."""
     kept = [s for s in scenes if not s.get("skip")]
     if len(kept) < 3:
         return None
-    key = "|".join(f"{float(s['start']):.2f}-{float(s['end']):.2f}" for s in kept)
+    key = "|".join(f"{float(s['start']):.2f}-{float(s['end']):.2f}" for s in kept) + f"|L{len(lines or [])}"
     if cache and cache.exists():
         try:
             c = json.loads(cache.read_text())
@@ -328,7 +329,9 @@ Shot list with time ranges and spoken words:
 Score every shot 0-10 for how strongly it supports the hook and keeps viewers watching (faces, emotion, action, reveals,
 iconic moments, clear spoken lines). Also set card=true if the frame is mostly a studio/distributor LOGO, title card,
 date/"coming soon" card, rating card, credits, or on-screen text/typography rather than story footage.
-Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}]}}"""
+{_arrangement_brief(lines, act1_target)}
+Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}], "act1": [line ids in play order],
+"act2": [shot indexes for the hype part, best first]}}"""
     out = gemini.generate_json(prompt, [sheet], purpose="scenes", temperature=0.2)
     if not isinstance(out, dict) or not isinstance(out.get("shots"), list):
         return None
@@ -341,9 +344,38 @@ Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}]}}"""
             continue
         ranks[f"{float(s['start']):.2f}-{float(s['end']):.2f}"] = {
             "score": max(0.0, min(10.0, float(r.get("score") or 0))), "card": bool(r.get("card"))}
+    arr = {"act1": [], "act2": []}
+    ids = {int(l["id"]) for l in (lines or [])}
+    for x in out.get("act1") or []:
+        try:
+            if int(x) in ids and int(x) not in arr["act1"]:
+                arr["act1"].append(int(x))
+        except Exception:
+            pass
+    for x in out.get("act2") or []:
+        try:
+            s2 = kept[int(x)]
+            arr["act2"].append(f"{float(s2['start']):.2f}-{float(s2['end']):.2f}")
+        except Exception:
+            pass
+    ranks["_arrangement"] = arr
     if cache:
         cache.write_text(json.dumps({"key": key, "ranks": ranks}))
     return ranks
+
+
+def _arrangement_brief(lines: list[dict] | None, act1_target: float) -> str:
+    if not lines:
+        return ""
+    ls = "\n".join(f'L{l["id"]}: {float(l["start"]):.1f}-{float(l["end"]):.1f}s "{l["text"][:90]}"' for l in lines[:40])
+    return f"""
+You also ARRANGE the Short in two acts. ACT 1 (first ~{act1_target:.0f}s): only the characters talking, no music, so
+pick the spoken lines that tell a mini-story and make people curious (setup, tension, a strong last line that leads
+into the hype). ACT 2: the hype song at full volume over the best action/visual shots cut on the beat, no dialogue.
+Candidate spoken lines (id: source time, text):
+{ls}
+act1 = 2-6 line ids in the order they should play (total about {act1_target:.0f}s of speech, story order usually best).
+act2 = 8-14 shot indexes from the contact sheet with the strongest action/visuals/reveals (no talking heads), best first."""
 
 
 def apply_scene_ranks(scenes: list[dict], ranks: dict, min_keep_s: float = 34.0) -> int:
@@ -455,18 +487,18 @@ def qc_judge(video: Path, work: Path, hook: str, title: str, description: str) -
 You get the finished video itself (watch it AND listen to it) plus an image of 8 frames sampled across it.
 Expected: a tight WHITE bar with black italic English hook text directly on top of the full, uncropped landscape
 movie frame, centered on black; only lower-third dialogue subtitles under the picture; nothing else on the footage.
-Audio: the actors' dialogue must be crystal clear; our song drives the edit between lines and is ducked far under
-speech; no second music bed (the trailer's own score) clashing under the voices.
+Audio structure: ACT 1 (opening ~40-55%) = only the characters talking, crystal clear, NO song; ACT 2 = the hype song
+at full level over beat-cut action, no dialogue. The song must start once and never pop in and out between lines.
 Hook in the white bar: "{hook}"
 Title: "{title}"
 Description: "{description[:300]}"
 Burned subtitles: "{subs}"
-Measured audio: speech-to-music {ac.get('smr_db')} dB (worst line {ac.get('smr_min_db')} dB), vocal stem isolated={ac.get('isolated')}
+Measured audio: {json.dumps(ac)[:400]}
 
 Score 0-10 each:
 hook (scroll-stopping, specific to this clip, pure English, readable in 1s),
 title (curiosity/emotion, character-focused, English, would you tap it),
-speech_clarity (every spoken line clear, no music fighting the dialogue, no muddy mix),
+speech_clarity (every spoken line clear, no music under act-1 dialogue, song never toggling in/out, no muddy mix),
 shake (10 = steady; low if footage is jittery/handheld-shaky in a distracting way),
 crop (10 = full uncropped frame; low if faces/heads are cut by a zoom or the picture is cropped),
 length (pacing fits {dur:.0f}s; no dead air, no abrupt cut-off),
