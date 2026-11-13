@@ -13,14 +13,15 @@ on:
       max:
         description: "Max items this run"
         required: false
-        default: "3"
+        default: "4"
       retry_failed:
         description: "Retry items whose result is failed or retry_queued"
         type: boolean
         default: false
   schedule:
-    # Hourly, so each slot is picked ~3h before and the Release is ready ~2h before upload.
-    - cron: "20 * * * *"
+    # Twice an hour: 8 IST slots/day (some only 2h apart). 8h ahead + 4 parallel so a 75-min
+    # render still finishes well before the slot, even if one cron is skipped.
+    - cron: "20,50 * * * *"
 
 permissions:
   contents: write
@@ -45,9 +46,9 @@ jobs:
       - id: p
         env:
           IDS: ${{ github.event.inputs.ids }}
-          MAX_PER_RUN: ${{ github.event.inputs.max || '3' }}
+          MAX_PER_RUN: ${{ github.event.inputs.max || '4' }}
           RETRY_FAILED: ${{ github.event.inputs.retry_failed || 'false' }}
-          RENDER_AHEAD_HOURS: "6"
+          RENDER_AHEAD_HOURS: "8"
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/plan.py
 
@@ -58,7 +59,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 4
       matrix:
         id: ${{ fromJSON(needs.plan.outputs.ids) }}
     steps:

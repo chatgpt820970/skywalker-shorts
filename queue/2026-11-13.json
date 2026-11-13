@@ -88,6 +88,52 @@
   "fallback_asset": "war2_trailer_h264.mp4"
  },
  {
+  "id": "20261113-1330-dandadan",
+  "slot": "2026-11-13T13:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=Ua4NZ3yW2lk",
+  "template": "whitebar",
+  "hook": "Ghosts and aliens hit at once",
+  "words": "DANDADAN",
+  "title": "Ghosts and aliens hit at once | Ghosts and aliens hit at once | #edit",
+  "description": "Ghosts and aliens hit at once. Ghosts and aliens hit at once from the official Dan Da Dan Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ua4NZ3yW2lk). All rights to the film/series belong to their owners; short commentary edit.\n#dandadan #netflixanime #anime #supernatural #edit",
+  "tags": [
+   "dandadan",
+   "netflixanime",
+   "anime",
+   "supernatural",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261113-1600-projecthailmary",
+  "slot": "2026-11-13T16:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=y-wRUfdALQM",
+  "template": "whitebar",
+  "hook": "Earth has one last chance",
+  "words": "HAIL MARY",
+  "title": "Earth has one last chance | Earth has one last chance | #edit",
+  "description": "Earth has one last chance. Earth has one last chance from the official Project Hail Mary trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=y-wRUfdALQM). All rights to the film/series belong to their owners; short commentary edit.\n#projecthailmary #ryangosling #scifi #newmovie #edit",
+  "tags": [
+   "projecthailmary",
+   "ryangosling",
+   "scifi",
+   "newmovie",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
   "id": "20261113-1730-apothecarydiaries",
   "slot": "2026-11-13T17:30:00+05:30",
   "pillar": "romance",
@@ -121,6 +167,58 @@
    "https://www.youtube.com/watch?v=XYNGkSvFT8c",
    "https://www.youtube.com/watch?v=9aFlpf00KZs"
   ]
+ },
+ {
+  "id": "20261113-1830-theycallhimog",
+  "slot": "2026-11-13T18:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=29C2crcXn-E",
+  "template": "whitebar",
+  "hook": "OG is coming back to Bombay",
+  "words": "OG",
+  "title": "OG is coming back to Bombay | OG is coming back to Bombay | #edit",
+  "description": "OG is coming back to Bombay. OG is coming back to Bombay from the official They Call Him OG trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=29C2crcXn-E). All rights to the film/series belong to their owners; short commentary edit.\n#theycallhimog #pawankalyan #telugu #netflixindia #edit",
+  "tags": [
+   "theycallhimog",
+   "pawankalyan",
+   "telugu",
+   "netflixindia",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "IN"
+ },
+ {
+  "id": "20261113-2030-odyssey",
+  "slot": "2026-11-13T20:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=f_bKjZeJBBI",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "Ithaca's king is coming back",
+  "words": "ODYSSEY",
+  "title": "Ithaca's king is coming back | Ithaca's king comes home | #edit",
+  "description": "Ithaca's king is coming back. Ithaca's king comes home from the official The Odyssey trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=f_bKjZeJBBI). All rights to the film/series belong to their owners; short commentary edit.\n#theodyssey #christophernolan #mattdamon #epic #newmovie",
+  "tags": [
+   "theodyssey",
+   "christophernolan",
+   "mattdamon",
+   "epic",
+   "newmovie",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "odyssey_trailer_h264.mp4"
  },
  {
   "id": "20261113-2230-blackclover",

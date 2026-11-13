@@ -2,8 +2,9 @@
 """Pick which queue items to render this run (only due + still queued; capped).
 
 A push that adds many ideas therefore renders only what is due soon, never all at once.
-Cron pre-renders each slot ~2 hours before upload (ahead window is 6 hours so a skipped cron cannot miss a slot; a
-75-minute render is finished about 2 hours before the slot). Done items are never
+Cron pre-renders each slot on the official 8-slot IST grid (and any legacy 12:30/17:30 posts still
+in the queue). Ahead window is 8 hours so a skipped cron cannot miss a slot; a 75-minute render is
+finished well before upload. Existing Buffer-scheduled posts keep their original slot. Done items are never
 re-rendered. Items in retry_queued are left to the auto-retry workflow unless stale.
 """
 import glob, json, os, sys
@@ -11,8 +12,8 @@ from datetime import datetime, timedelta, timezone
 
 IST = timezone(timedelta(hours=5, minutes=30))
 now = datetime.now(IST)
-ahead = float(os.environ.get("RENDER_AHEAD_HOURS", "3"))
-cap = int(os.environ.get("MAX_PER_RUN", "3") or 3)
+ahead = float(os.environ.get("RENDER_AHEAD_HOURS", "8"))
+cap = int(os.environ.get("MAX_PER_RUN", "4") or 4)
 force_ids = [x.strip() for x in os.environ.get("IDS", "").split(",") if x.strip()]
 retry_failed = os.environ.get("RETRY_FAILED", "false") == "true"
 
@@ -126,7 +127,7 @@ def main():
         busy = set()
         try:
             runs = json.loads(subprocess.run(
-                ["gh", "api", f"repos/{repo}/actions/workflows/render.yml/runs?status=in_progress&per_page=10"],
+                ["gh", "api", f"repos/{repo}/actions/workflows/render.yml/runs?status=in_progress&per_page=20"],
                 capture_output=True, text=True, timeout=30).stdout or "{}").get("workflow_runs") or []
             for r in runs:
                 if str(r.get("id")) == os.environ.get("GITHUB_RUN_ID"):

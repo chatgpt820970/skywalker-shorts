@@ -29,6 +29,52 @@
   "fallback_asset": "werwulf_trailer_h264.mp4"
  },
  {
+  "id": "20261115-0900-bonetemple",
+  "slot": "2026-11-15T09:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=uWWzVfc8mhY",
+  "template": "whitebar",
+  "hook": "The whole world stops making sense",
+  "words": "BONE TEMPLE",
+  "title": "The whole world stops making sense | The whole world stops making sense | #edit",
+  "description": "The whole world stops making sense. The whole world stops making sense from the official 28 Years Later: The Bone Temple trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=uWWzVfc8mhY). All rights to the film/series belong to their owners; short commentary edit.\n#28yearslater #bonetemple #horrormovie #alexgarland #edit",
+  "tags": [
+   "28yearslater",
+   "bonetemple",
+   "horrormovie",
+   "alexgarland",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261115-1130-devilwearsprada2",
+  "slot": "2026-11-15T11:30:00+05:30",
+  "pillar": "romance",
+  "source_url": "https://www.youtube.com/watch?v=e9HXmMnUEdE",
+  "template": "whitebar",
+  "hook": "Andy Sachs walked back into Runway",
+  "words": "RUNWAY",
+  "title": "Andy Sachs walked back into Runway | Andy Sachs walked back into Runway | #edit",
+  "description": "Andy Sachs walked back into Runway. Andy Sachs walked back into Runway from the official The Devil Wears Prada 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=e9HXmMnUEdE). All rights to the film/series belong to their owners; short commentary edit.\n#thedevilwearsprada #merylstreep #annehathaway #comedy #edit",
+  "tags": [
+   "thedevilwearsprada",
+   "merylstreep",
+   "annehathaway",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
   "id": "20261115-1230-mahavatarnarsimha",
   "slot": "2026-11-15T12:30:00+05:30",
   "pillar": "movie",
@@ -55,6 +101,29 @@
   "market": "IN",
   "fallback_release": "sources",
   "fallback_asset": "mahavatarnarsimha_trailer_h264.mp4"
+ },
+ {
+  "id": "20261115-1600-hoppers",
+  "slot": "2026-11-15T16:00:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=rzysdbZgkMg",
+  "template": "whitebar",
+  "hook": "This tech turns her into an animal",
+  "words": "HOPPERS",
+  "title": "This tech turns her into an animal | This tech turns her into an animal | #edit",
+  "description": "This tech turns her into an animal. This tech turns her into an animal from the official Hoppers trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=rzysdbZgkMg). All rights to the film/series belong to their owners; short commentary edit.\n#hoppers #pixar #disney #animation #edit",
+  "tags": [
+   "hoppers",
+   "pixar",
+   "disney",
+   "animation",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
  },
  {
   "id": "20261115-1730-jumanji",
@@ -84,6 +153,29 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "jumanji_trailer_h264.mp4"
+ },
+ {
+  "id": "20261115-2030-toystory5",
+  "slot": "2026-11-15T20:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=-Ax3Zmd9S_o",
+  "template": "whitebar",
+  "hook": "Tech is replacing Bonnie's toys",
+  "words": "TOY STORY",
+  "title": "Tech is replacing Bonnie's toys | Tech is replacing Bonnie's toys | #edit",
+  "description": "Tech is replacing Bonnie's toys. Tech is replacing Bonnie's toys from the official Toy Story 5 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=-Ax3Zmd9S_o). All rights to the film/series belong to their owners; short commentary edit.\n#toystory5 #pixar #woody #disney #edit",
+  "tags": [
+   "toystory5",
+   "pixar",
+   "woody",
+   "disney",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
  },
  {
   "id": "20261115-2230-dragonballsuper",

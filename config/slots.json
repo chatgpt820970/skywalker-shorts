@@ -1,0 +1,17 @@
+{
+  "timezone": "Asia/Kolkata",
+  "utc_offset": "+05:30",
+  "times": [
+    "06:30",
+    "09:00",
+    "11:30",
+    "13:30",
+    "16:00",
+    "18:30",
+    "20:30",
+    "22:30"
+  ],
+  "per_day": 8,
+  "min_ahead_days": 2,
+  "note": "Eight public Shorts per day, all times IST. Existing Buffer-scheduled posts keep their original slot (including retired 12:30/17:30 times) and are never moved or cancelled. New queue items use only these eight times. plan.py still renders any item that has a slot, official or not."
+}

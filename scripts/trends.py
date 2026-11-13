@@ -142,7 +142,7 @@ edit songs/audios right now (phonk, Bollywood/Punjabi mashups, slowed+reverb, So
 posting times for India + global audiences. Be specific and current; list song titles with artists.""",
         purpose="trends-research", search=True) or ""
     prompt = f"""You are the growth strategist for "Skywalker", a YouTube Shorts channel posting 4 movie/trailer edits a day
-(slots 06:30 Hollywood, 12:30 Indian, 17:30 romance/funny, 22:30 Indian celeb or anime; IST). Layout is fixed (white
+(slots 06:30, 09:00, 11:30, 13:30, 16:00, 18:30, 20:30, 22:30 IST; vary Hollywood / Indian / anime / romance across the day). Layout is fixed (white
 English hook bar on top of the uncropped frame, lower-third subtitles, aim about 20-28s, hard publish 18-32s).
 Fresh research notes:
 {research[:7000]}

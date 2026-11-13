@@ -29,6 +29,52 @@
   "fallback_asset": "howtorobabank_trailer_h264.mp4"
  },
  {
+  "id": "20261114-0900-runningman",
+  "slot": "2026-11-14T09:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=KD18ddeFuyM",
+  "template": "whitebar",
+  "hook": "The whole nation is hunting him",
+  "words": "RUNNING MAN",
+  "title": "The whole nation is hunting him | The whole nation hunts him | #edit",
+  "description": "The whole nation is hunting him. The whole nation hunts him from the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=KD18ddeFuyM). All rights to the film/series belong to their owners; short commentary edit.\n#therunningman #glenpowell #edgarwright #actionmovie #edit",
+  "tags": [
+   "therunningman",
+   "glenpowell",
+   "edgarwright",
+   "actionmovie",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261114-1130-mandalorian",
+  "slot": "2026-11-14T11:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=IHWlvwu8t1w",
+  "template": "whitebar",
+  "hook": "He won't always protect Grogu",
+  "words": "GROGU",
+  "title": "He won't always protect Grogu | He won't always protect Grogu | #edit",
+  "description": "He won't always protect Grogu. He won't always protect Grogu from the official The Mandalorian and Grogu trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=IHWlvwu8t1w). All rights to the film/series belong to their owners; short commentary edit.\n#themandalorian #grogu #starwars #disney #edit",
+  "tags": [
+   "themandalorian",
+   "grogu",
+   "starwars",
+   "disney",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
   "id": "20261114-1230-kantara",
   "slot": "2026-11-14T12:30:00+05:30",
   "pillar": "movie",
@@ -58,6 +104,29 @@
   "fallback_asset": "kantara_trailer_h264.mp4"
  },
  {
+  "id": "20261114-1600-fantasticfour",
+  "slot": "2026-11-14T16:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=pAsmrKyMqaA",
+  "template": "whitebar",
+  "hook": "Their planet is marked for death",
+  "words": "FANTASTIC FOUR",
+  "title": "Their planet is marked for death | Their planet is marked for death | #edit",
+  "description": "Their planet is marked for death. Their planet is marked for death from the official The Fantastic Four: First Steps trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=pAsmrKyMqaA). All rights to the film/series belong to their owners; short commentary edit.\n#fantasticfour #marvel #mcu #superhero #edit",
+  "tags": [
+   "fantasticfour",
+   "marvel",
+   "mcu",
+   "superhero",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
   "id": "20261114-1730-fireflywedding",
   "slot": "2026-11-14T17:30:00+05:30",
   "pillar": "romance",
@@ -85,6 +154,29 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "fireflywedding_trailer_h264.mp4"
+ },
+ {
+  "id": "20261114-2030-mortalkombat2",
+  "slot": "2026-11-14T20:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=b24oG7qCwp4",
+  "template": "whitebar",
+  "hook": "Earth belongs to Shao Kahn",
+  "words": "MORTAL KOMBAT",
+  "title": "Earth belongs to Shao Kahn | Earth belongs to Shao Kahn | #edit",
+  "description": "Earth belongs to Shao Kahn. Earth belongs to Shao Kahn from the official Mortal Kombat II trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=b24oG7qCwp4). All rights to the film/series belong to their owners; short commentary edit.\n#mortalkombat #mortalkombat2 #actionmovie #warnerbros #edit",
+  "tags": [
+   "mortalkombat",
+   "mortalkombat2",
+   "actionmovie",
+   "warnerbros",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
  },
  {
   "id": "20261114-2230-rajinikanth",

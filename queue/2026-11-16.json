@@ -30,91 +30,6 @@
   "note": "Godzilla Minus Zero already posted twice on 10 Nov (C4L6mVRSSCY, bCAwRahh2_Q); replaced by Predator: Badlands to avoid a repeat topic."
  },
  {
-  "id": "20261116-1230-housefull5",
-  "slot": "2026-11-16T12:30:00+05:30",
-  "pillar": "movie",
-  "source_url": "https://www.youtube.com/watch?v=xGQuT1wm2qk",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/housefull5_trailer_h264.mp4"
-  ],
-  "template": "whitebar",
-  "hook": "The chaos in Housefull 5 never stops",
-  "words": "HOUSEFULL 5",
-  "title": "The chaos in Housefull 5 never stops | The official Nadiadwala trailer | #edit",
-  "description": "The chaos in Housefull 5 never stops. The official Nadiadwala comedy trailer from the official Housefull 5 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=xGQuT1wm2qk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #housefull5 #bollywood #comedy",
-  "tags": [
-   "housefull5",
-   "bollywood",
-   "comedy",
-   "nadiadwala",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 26,
-  "status": "queued",
-  "market": "IN",
-  "fallback_release": "sources",
-  "fallback_asset": "housefull5_trailer_h264.mp4"
- },
- {
-  "id": "20261116-1730-wildhorsenine",
-  "slot": "2026-11-16T17:30:00+05:30",
-  "pillar": "funny",
-  "source_url": "https://www.youtube.com/watch?v=Haw_sznA5aQ",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/wildhorsenine_trailer_h264.mp4"
-  ],
-  "template": "whitebar",
-  "hook": "This spy mission is pure chaos",
-  "words": "WILD HORSE",
-  "title": "This spy mission is pure chaos | Sam Rockwell goes rogue | #edit",
-  "description": "This spy mission is pure chaos. Sam Rockwell goes rogue from the official Wild Horse Nine trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Haw_sznA5aQ). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #wildhorsenine",
-  "tags": [
-   "wildhorsenine",
-   "samrockwell",
-   "martinmcdonagh",
-   "searchlight",
-   "comedy",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 26,
-  "status": "queued",
-  "market": "US/UK",
-  "fallback_release": "sources",
-  "fallback_asset": "wildhorsenine_trailer_h264.mp4"
- },
- {
-  "id": "20261116-2230-alluarjun",
-  "slot": "2026-11-16T22:30:00+05:30",
-  "pillar": "celeb",
-  "source_url": "https://www.youtube.com/watch?v=1kVK0MZlbI4",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/alluarjun_trailer_h264.mp4"
-  ],
-  "template": "whitebar",
-  "hook": "Pushpa's rule never stopped",
-  "words": "PUSHPA 2",
-  "title": "Pushpa's rule never stopped | Allu Arjun as Pushpa Raj | #edit",
-  "description": "Pushpa's rule never stopped. Allu Arjun as Pushpa Raj from the official Pushpa 2 The Rule trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=1kVK0MZlbI4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #pushpa2 #alluarjun #tollywood",
-  "tags": [
-   "pushpa2",
-   "alluarjun",
-   "tollywood",
-   "sukumar",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 26,
-  "status": "queued",
-  "market": "IN",
-  "fallback_release": "sources",
-  "fallback_asset": "alluarjun_trailer_h264.mp4"
- },
- {
   "id": "20261116-0630-predatorbadlands",
   "slot": "2026-11-16T06:30:00+05:30",
   "pillar": "movie",
@@ -146,5 +61,182 @@
   "alt_source_urls": [
    "https://www.youtube.com/watch?v=cDL3Zjdz514"
   ]
+ },
+ {
+  "id": "20261116-0900-wakeupdeadman",
+  "slot": "2026-11-16T09:00:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=0hc8yz5-d5Y",
+  "template": "whitebar",
+  "hook": "This crime appears perfectly impossible",
+  "words": "WAKE UP",
+  "title": "This crime appears perfectly impossible | This crime appears perfectly impossible | #edit",
+  "description": "This crime appears perfectly impossible. This crime appears perfectly impossible from the official Wake Up Dead Man: A Knives Out Mystery trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=0hc8yz5-d5Y). All rights to the film/series belong to their owners; short commentary edit.\n#wakeupdeadman #knivesout #danielcraig #netflix #edit",
+  "tags": [
+   "wakeupdeadman",
+   "knivesout",
+   "danielcraig",
+   "netflix",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261116-1130-goodbadugly",
+  "slot": "2026-11-16T11:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=XkLRfH1oF3I",
+  "template": "whitebar",
+  "hook": "He makes even fear fear him",
+  "words": "GOOD BAD UGLY",
+  "title": "He makes even fear fear him | He makes even fear fear him | #edit",
+  "description": "He makes even fear fear him. He makes even fear fear him from the official Good Bad Ugly trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=XkLRfH1oF3I). All rights to the film/series belong to their owners; short commentary edit.\n#goodbadugly #ajithkumar #thala #kollywood #edit",
+  "tags": [
+   "goodbadugly",
+   "ajithkumar",
+   "thala",
+   "kollywood",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "IN"
+ },
+ {
+  "id": "20261116-1230-housefull5",
+  "slot": "2026-11-16T12:30:00+05:30",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=xGQuT1wm2qk",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/housefull5_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "The chaos in Housefull 5 never stops",
+  "words": "HOUSEFULL 5",
+  "title": "The chaos in Housefull 5 never stops | The official Nadiadwala trailer | #edit",
+  "description": "The chaos in Housefull 5 never stops. The official Nadiadwala comedy trailer from the official Housefull 5 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=xGQuT1wm2qk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #housefull5 #bollywood #comedy",
+  "tags": [
+   "housefull5",
+   "bollywood",
+   "comedy",
+   "nadiadwala",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "housefull5_trailer_h264.mp4"
+ },
+ {
+  "id": "20261116-1600-sakamotodays",
+  "slot": "2026-11-16T16:00:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=9TbmxbckSjE",
+  "template": "whitebar",
+  "hook": "The greatest hitman retired for love",
+  "words": "SAKAMOTO",
+  "title": "The greatest hitman retired for love | The greatest hitman retired for love | #edit",
+  "description": "The greatest hitman retired for love. The greatest hitman retired for love from the official Sakamoto Days trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=9TbmxbckSjE). All rights to the film/series belong to their owners; short commentary edit.\n#sakamotodays #netflixanime #anime #actionanime #edit",
+  "tags": [
+   "sakamotodays",
+   "netflixanime",
+   "anime",
+   "actionanime",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261116-1730-wildhorsenine",
+  "slot": "2026-11-16T17:30:00+05:30",
+  "pillar": "funny",
+  "source_url": "https://www.youtube.com/watch?v=Haw_sznA5aQ",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/wildhorsenine_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "This spy mission is pure chaos",
+  "words": "WILD HORSE",
+  "title": "This spy mission is pure chaos | Sam Rockwell goes rogue | #edit",
+  "description": "This spy mission is pure chaos. Sam Rockwell goes rogue from the official Wild Horse Nine trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Haw_sznA5aQ). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #wildhorsenine",
+  "tags": [
+   "wildhorsenine",
+   "samrockwell",
+   "martinmcdonagh",
+   "searchlight",
+   "comedy",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "wildhorsenine_trailer_h264.mp4"
+ },
+ {
+  "id": "20261116-2030-sololeveling",
+  "slot": "2026-11-16T20:30:00+05:30",
+  "pillar": "anime",
+  "source_url": "https://www.youtube.com/watch?v=byJ7pxxhaDY",
+  "template": "whitebar",
+  "hook": "Sung Jinwoo's power finally awoke",
+  "words": "SOLO LEVELING",
+  "title": "Sung Jinwoo's power finally awoke | Sung Jinwoo's power finally awoke | #edit",
+  "description": "Sung Jinwoo's power finally awoke. Sung Jinwoo's power finally awoke from the official Solo Leveling Season 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=byJ7pxxhaDY). All rights to the film/series belong to their owners; short commentary edit.\n#sololeveling #sungjinwoo #crunchyroll #anime #edit",
+  "tags": [
+   "sololeveling",
+   "sungjinwoo",
+   "crunchyroll",
+   "anime",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "US/UK"
+ },
+ {
+  "id": "20261116-2230-alluarjun",
+  "slot": "2026-11-16T22:30:00+05:30",
+  "pillar": "celeb",
+  "source_url": "https://www.youtube.com/watch?v=1kVK0MZlbI4",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/alluarjun_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "Pushpa's rule never stopped",
+  "words": "PUSHPA 2",
+  "title": "Pushpa's rule never stopped | Allu Arjun as Pushpa Raj | #edit",
+  "description": "Pushpa's rule never stopped. Allu Arjun as Pushpa Raj from the official Pushpa 2 The Rule trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=1kVK0MZlbI4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #pushpa2 #alluarjun #tollywood",
+  "tags": [
+   "pushpa2",
+   "alluarjun",
+   "tollywood",
+   "sukumar",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 26,
+  "status": "queued",
+  "market": "IN",
+  "fallback_release": "sources",
+  "fallback_asset": "alluarjun_trailer_h264.mp4"
  }
 ]
