@@ -344,6 +344,22 @@ def process_candidate(item: dict, fileinfo: dict, lib: dict, cfg: dict, taken: s
         out.unlink(missing_ok=True)
         return None
     genre, mood, pillars, tags = tags_from_text(title, artist, ident)
+    blob = f"{title} {artist} {ident}".lower()
+    # Reject podcasts / OST dumps / boring instrumental collections
+    reject = tuple(str(x).lower() for x in (cfg.get("reject_title_substrings") or [
+        "podcast", "instrumentals volume", "album collection", "ost extended",
+        "soundtrack collection", "audiobook", "interview", "asmr",
+    ]))
+    if any(r in blob for r in reject):
+        out.unlink(missing_ok=True)
+        return None
+    # Prefer phonk / drift / brazilian / slowed for the edit library
+    prefer = [str(x).lower() for x in (cfg.get("prefer_genres") or [])]
+    if prefer and not any(p in genre.lower() or p in blob for p in prefer):
+        # Still allow high-energy electronic cousins; skip obvious soft beds
+        if genre.lower() in ("electronic",) and meta.get("energy", 0) < 0.35:
+            out.unlink(missing_ok=True)
+            return None
     track = {
         "file": fname,
         "title": title[:120],
@@ -361,6 +377,8 @@ def process_candidate(item: dict, fileinfo: dict, lib: dict, cfg: dict, taken: s
         "source": "archive.org",
         "source_id": ident,
         "source_file": fileinfo["name"],
+        # IA CC0/CC-BY/CC-BY-SA ingest is redistributable -> safe for claims
+        "safety": "safe",
     }
     taken.add(fname)
     return track

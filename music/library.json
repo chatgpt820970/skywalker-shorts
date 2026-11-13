@@ -1,5 +1,5 @@
 {
-  "note": "Trending edit songs. mp3s live on the 'music' GitHub release and are fetched into music/lib/ at render time. Picker: pillar fit + trends/latest.json song_picks, never the same song within the last 8 renders.",
+  "note": "Trending edit songs (phonk / drift phonk / Brazilian phonk / slowed+reverb / fast-edit). mp3s on the music release. Each track has safety=safe|claim_risk; Gemini prefers safe. Podcasts, OST dumps and junk removed. Credit is appended to the Short description.",
   "release": "music",
   "dir": "music/lib",
   "no_repeat_window": 8,
@@ -28,7 +28,8 @@
         "phonk",
         "trending"
       ],
-      "credit": "Song: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK"
+      "credit": "Song: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_closeeyes.mp3",
@@ -54,7 +55,8 @@
         "phonk",
         "trending"
       ],
-      "credit": "Song: DVRST - Close Eyes"
+      "credit": "Song: DVRST - Close Eyes",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_montagemfujin.mp3",
@@ -78,7 +80,8 @@
         "slowed",
         "trending"
       ],
-      "credit": "Song: dj Samir, Mxng0, Nulteex - MONTAGEM FUJIN (Super Slowed)"
+      "credit": "Song: dj Samir, Mxng0, Nulteex - MONTAGEM FUJIN (Super Slowed)",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_bateaublanc.mp3",
@@ -101,7 +104,8 @@
         "phonk",
         "trending"
       ],
-      "credit": "Song: Crazy Twins - Bateau Blanc"
+      "credit": "Song: Crazy Twins - Bateau Blanc",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_passobemsolto.mp3",
@@ -127,7 +131,8 @@
         "phonk",
         "trending"
       ],
-      "credit": "Song: ATLXS - PASSO BEM SOLTO (Slowed)"
+      "credit": "Song: ATLXS - PASSO BEM SOLTO (Slowed)",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_metamorphosis.mp3",
@@ -151,7 +156,8 @@
         "phonk",
         "trending"
       ],
-      "credit": "Song: INTERWORLD - METAMORPHOSIS"
+      "credit": "Song: INTERWORLD - METAMORPHOSIS",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_murderinmymind.mp3",
@@ -175,7 +181,8 @@
         "phonk",
         "trending"
       ],
-      "credit": "Song: Kordhell - MURDER IN MY MIND"
+      "credit": "Song: Kordhell - MURDER IN MY MIND",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_memoryreboot.mp3",
@@ -199,54 +206,8 @@
         "slowed",
         "trending"
       ],
-      "credit": "Song: VØJ, Narvent - Memory Reboot (Slowed)"
-    },
-    {
-      "file": "sw_canyoufeelmyheart.mp3",
-      "title": "Can You Feel My Heart",
-      "artist": "Bring Me The Horizon",
-      "genre": "edit rock",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 172.3,
-      "drop_t": 16.81,
-      "duration_s": 228.4,
-      "energy": 0.598,
-      "tags": [
-        "anime",
-        "edit",
-        "movie",
-        "rock",
-        "trending"
-      ],
-      "credit": "Song: Bring Me The Horizon - Can You Feel My Heart"
-    },
-    {
-      "file": "sw_afterdark.mp3",
-      "title": "After Dark",
-      "artist": "Mr.Kitty",
-      "genre": "dark synth edit",
-      "mood": "dark-emotional",
-      "pillars": [
-        "movie",
-        "romance"
-      ],
-      "bpm": 143.6,
-      "drop_t": 30.88,
-      "duration_s": 257.2,
-      "energy": 0.392,
-      "tags": [
-        "dark",
-        "edit",
-        "movie",
-        "romance",
-        "synth",
-        "trending"
-      ],
-      "credit": "Song: Mr.Kitty - After Dark"
+      "credit": "Song: VØJ, Narvent - Memory Reboot (Slowed)",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_saiyaara.mp3",
@@ -269,173 +230,8 @@
         "slowed",
         "trending"
       ],
-      "credit": "Song: Tanishk Bagchi, Faheem Abdullah, Arslan Nizami - Saiyaara (Slowed + Reverb)"
-    },
-    {
-      "file": "sw_sahiba.mp3",
-      "title": "Sahiba",
-      "artist": "Aditya Rikhari",
-      "genre": "bollywood romance",
-      "mood": "romantic",
-      "pillars": [
-        "romance"
-      ],
-      "bpm": 99.4,
-      "drop_t": 151.74,
-      "duration_s": 183.0,
-      "energy": 0.282,
-      "tags": [
-        "bollywood",
-        "edit",
-        "romance",
-        "trending"
-      ],
-      "credit": "Song: Aditya Rikhari - Sahiba"
-    },
-    {
-      "file": "sw_palpal.mp3",
-      "title": "Pal Pal",
-      "artist": "Afusic, AliSoomroMusic",
-      "genre": "hindi pop mashup",
-      "mood": "dark",
-      "pillars": [
-        "romance",
-        "celeb"
-      ],
-      "bpm": 103.4,
-      "drop_t": 166.35,
-      "duration_s": 208.0,
-      "energy": 0.428,
-      "tags": [
-        "celeb",
-        "edit",
-        "hindi",
-        "mashup",
-        "pop",
-        "romance",
-        "trending"
-      ],
-      "credit": "Song: Afusic, AliSoomroMusic - Pal Pal"
-    },
-    {
-      "file": "sw_jhol.mp3",
-      "title": "Jhol (Acoustic)",
-      "artist": "Maanu, Annural Khalid",
-      "genre": "urdu romance",
-      "mood": "romantic",
-      "pillars": [
-        "romance"
-      ],
-      "bpm": 152.0,
-      "drop_t": 229.65,
-      "duration_s": 277.6,
-      "energy": 0.34,
-      "tags": [
-        "edit",
-        "romance",
-        "trending",
-        "urdu"
-      ],
-      "credit": "Song: Maanu, Annural Khalid - Jhol (Acoustic)"
-    },
-    {
-      "file": "sw_winningspeech.mp3",
-      "title": "Winning Speech",
-      "artist": "Karan Aujla",
-      "genre": "punjabi swag",
-      "mood": "hype",
-      "pillars": [
-        "celeb",
-        "movie"
-      ],
-      "bpm": 86.1,
-      "drop_t": 179.37,
-      "duration_s": 237.8,
-      "energy": 0.491,
-      "tags": [
-        "celeb",
-        "edit",
-        "movie",
-        "punjabi",
-        "swag",
-        "trending"
-      ],
-      "credit": "Song: Karan Aujla - Winning Speech"
-    },
-    {
-      "file": "sw_monica.mp3",
-      "title": "Monica",
-      "artist": "Anirudh Ravichander, Sublahshini",
-      "genre": "south mass dance",
-      "mood": "fun-hype",
-      "pillars": [
-        "celeb",
-        "funny"
-      ],
-      "bpm": 143.6,
-      "drop_t": 99.29,
-      "duration_s": 214.4,
-      "energy": 0.651,
-      "tags": [
-        "celeb",
-        "dance",
-        "edit",
-        "funny",
-        "mass",
-        "south",
-        "trending"
-      ],
-      "credit": "Song: Anirudh Ravichander, Sublahshini - Monica"
-    },
-    {
-      "file": "sw_hukum.mp3",
-      "title": "Hukum",
-      "artist": "Anirudh Ravichander",
-      "genre": "south mass hype",
-      "mood": "hype",
-      "pillars": [
-        "celeb",
-        "movie"
-      ],
-      "bpm": 103.4,
-      "drop_t": 23.66,
-      "duration_s": 213.0,
-      "energy": 0.383,
-      "tags": [
-        "celeb",
-        "edit",
-        "hype",
-        "mass",
-        "movie",
-        "south",
-        "trending"
-      ],
-      "credit": "Song: Anirudh Ravichander - Hukum"
-    },
-    {
-      "file": "sw_fearsong.mp3",
-      "title": "Fear Song",
-      "artist": "Anirudh Ravichander",
-      "genre": "south mass hype",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "celeb"
-      ],
-      "bpm": 89.1,
-      "drop_t": 106.21,
-      "duration_s": 196.0,
-      "energy": 0.545,
-      "tags": [
-        "celeb",
-        "edit",
-        "hype",
-        "mass",
-        "movie",
-        "south",
-        "trending"
-      ],
-      "credit": "Song: Anirudh Ravichander - Fear Song"
+      "credit": "Song: Tanishk Bagchi, Faheem Abdullah, Arslan Nizami - Saiyaara (Slowed + Reverb)",
+      "safety": "claim_risk"
     },
     {
       "file": "sw_nsasssingles20222023.mp3",
@@ -459,7 +255,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "singles-2022-2023-nsass",
-      "source_file": "04 - Step Up (Linkin Park Cover)/01 - Step Up (Linkin Park Cover).mp3"
+      "source_file": "04 - Step Up (Linkin Park Cover)/01 - Step Up (Linkin Park Cover).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsasssingles202220232.mp3",
@@ -483,55 +280,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "singles-2022-2023-nsass",
-      "source_file": "07 - Pizza Poteetza ft. Troo Stong/01 - Pizza Poteetza ft. Troo Stong.mp3"
-    },
-    {
-      "file": "sw_saschamller40tracksfor40.mp3",
-      "title": "Sascha Müller - 40 Tracks For 40 Days",
-      "artist": "Sascha Müller",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 64.6,
-      "drop_t": 12.0,
-      "duration_s": 80.0,
-      "energy": 0.698,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Sascha Müller - Sascha Müller - 40 Tracks For 40 Days (http://creativecommons.org/publicdomain/mark/1.0/)",
-      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
-      "source": "archive.org",
-      "source_id": "sascha-muller-40-tracks-for-40-days",
-      "source_file": "39. Sascha Muller - Untitled_40 Tracks For 40 Days.mp3"
-    },
-    {
-      "file": "sw_saschamller40tracksfor402.mp3",
-      "title": "Sascha Müller - 40 Tracks For 40 Days",
-      "artist": "Sascha Müller",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 63.0,
-      "drop_t": 23.43,
-      "duration_s": 80.0,
-      "energy": 0.621,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Sascha Müller - Sascha Müller - 40 Tracks For 40 Days (http://creativecommons.org/publicdomain/mark/1.0/)",
-      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
-      "source": "archive.org",
-      "source_id": "sascha-muller-40-tracks-for-40-days",
-      "source_file": "10. Sascha Muller - Bambi_40 Tracks For 40 Days.mp3"
+      "source_file": "07 - Pizza Poteetza ft. Troo Stong/01 - Pizza Poteetza ft. Troo Stong.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_worthnothingfeatolivertr.mp3",
@@ -557,7 +307,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "worth-nothing-feat.-oliver-tree",
-      "source_file": "WORTH NOTHING (feat. Oliver Tree).mp3"
+      "source_file": "WORTH NOTHING (feat. Oliver Tree).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_interworldrapturephonk.mp3",
@@ -583,103 +334,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "interworld-rapture-phonk-i-5z-r-6to-pvq-8",
-      "source_file": "INTERWORLD - RAPTURE (PHONK)_i5zR6toPVQ8.mp3"
-    },
-    {
-      "file": "sw_nsassnsassinstrumentalsv.mp3",
-      "title": "NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023)",
-      "artist": "NSASS",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 92.3,
-      "drop_t": 39.52,
-      "duration_s": 80.0,
-      "energy": 0.688,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: NSASS - NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023) (https://creativecommons.org/licenses/by/4.0/)",
-      "license": "https://creativecommons.org/licenses/by/4.0/",
-      "source": "archive.org",
-      "source_id": "nsass-instrumentals-volume-one",
-      "source_file": "08. We’ve updated our privacy policy [Instrumental].mp3"
-    },
-    {
-      "file": "sw_nsassnsassinstrumentalsv2.mp3",
-      "title": "NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023)",
-      "artist": "NSASS",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 71.8,
-      "drop_t": 29.51,
-      "duration_s": 80.0,
-      "energy": 0.791,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: NSASS - NSASS - NSASS INSTRUMENTALS VOLUME ONE (2023) (https://creativecommons.org/licenses/by/4.0/)",
-      "license": "https://creativecommons.org/licenses/by/4.0/",
-      "source": "archive.org",
-      "source_id": "nsass-instrumentals-volume-one",
-      "source_file": "01. Sparr Barr [Instrumental].mp3"
-    },
-    {
-      "file": "sw_neonhazealbumcollection.mp3",
-      "title": "Neon Haze Album Collection",
-      "artist": "Yiokki",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 117.5,
-      "drop_t": 40.03,
-      "duration_s": 61.9,
-      "energy": 0.718,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Yiokki - Neon Haze Album Collection (https://creativecommons.org/licenses/by-sa/4.0/)",
-      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "source": "archive.org",
-      "source_id": "neon-haze-album-cover",
-      "source_file": "The Neon Haze Collection/Mp3/X MP3s/YOURBXTCHSAYSIGOHARD.mp3"
-    },
-    {
-      "file": "sw_neonhazealbumcollection2.mp3",
-      "title": "Neon Haze Album Collection",
-      "artist": "Yiokki",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 71.8,
-      "drop_t": 53.2,
-      "duration_s": 75.4,
-      "energy": 0.782,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Yiokki - Neon Haze Album Collection (https://creativecommons.org/licenses/by-sa/4.0/)",
-      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "source": "archive.org",
-      "source_id": "neon-haze-album-cover",
-      "source_file": "The Neon Haze Collection/Mp3/Singles Mp3s/li!l master(Mxdz x YIOKKI).mp3"
+      "source_file": "INTERWORLD - RAPTURE (PHONK)_i5zR6toPVQ8.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_pkonkbetapkonkphenomenon.mp3",
@@ -705,7 +361,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "phonk-beta-phonkphenomnnon",
-      "source_file": "04. Insert #1.mp3"
+      "source_file": "04. Insert #1.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_bondagood4ssjob.mp3",
@@ -729,7 +386,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "2023-mc-vv-bonda-4",
-      "source_file": "10 Douglas & Ele (ft. Yomamaru).mp3"
+      "source_file": "10 Douglas & Ele (ft. Yomamaru).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_bondagood4ssjob2.mp3",
@@ -753,7 +411,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "2023-mc-vv-bonda-4",
-      "source_file": "13 Golfão GTI (ft. Leo Chim).mp3"
+      "source_file": "13 Golfão GTI (ft. Leo Chim).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_coiltheanalstaircaseaggr.mp3",
@@ -777,7 +436,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "BFTG_276",
-      "source_file": "lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) - 01 Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX).mp3"
+      "source_file": "lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) - 01 Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_coiltheanalstaircaseaggr2.mp3",
@@ -801,7 +461,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "BFTG_276",
-      "source_file": "lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) - 01 Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX).flac"
+      "source_file": "lil' warden - Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX) - 01 Coil - The Anal Staircase (AGGRESSIVE INDUSTRIAL REMIX).flac",
+      "safety": "safe"
     },
     {
       "file": "sw_aura1hourauramusicplayli.mp3",
@@ -827,7 +488,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "aura-1-hour-aura-music-playlist-2025-empire-phonk",
-      "source_file": "AURA  ♾️  1 HOUR AURA MUSIC PLAYLIST 2025 🔥 - EMPIRE PHONK.mp3"
+      "source_file": "AURA  ♾️  1 HOUR AURA MUSIC PLAYLIST 2025 🔥 - EMPIRE PHONK.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_memphisphonksynthbassmix.mp3",
@@ -853,7 +515,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "memphis-phonk-synthbass-mix-vol.-iv",
-      "source_file": "MEMPHIS  PHONK  SYNTHBASS  MIX vol. IV.mp3"
+      "source_file": "MEMPHIS  PHONK  SYNTHBASS  MIX vol. IV.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassitsafakebike2022.mp3",
@@ -877,7 +540,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "its-a-fake-bike",
-      "source_file": "2. Down With The Town.mp3"
+      "source_file": "2. Down With The Town.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassitsafakebike20222.mp3",
@@ -901,7 +565,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "its-a-fake-bike",
-      "source_file": "1. Sparr Barr.mp3"
+      "source_file": "1. Sparr Barr.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassthesystemisdown2018.mp3",
@@ -925,7 +590,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "the-system-is-down-2018",
-      "source_file": "4. Valumtimes.mp3"
+      "source_file": "4. Valumtimes.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassthesystemisdown20182.mp3",
@@ -949,7 +615,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "the-system-is-down-2018",
-      "source_file": "3. Decomposing Pumpkins (Throw Them At The Plump Kid).mp3"
+      "source_file": "3. Decomposing Pumpkins (Throw Them At The Plump Kid).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassdaballthetime2018.mp3",
@@ -973,7 +640,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "dab-all-the-time",
-      "source_file": "2. Dab All The Time.mp3"
+      "source_file": "2. Dab All The Time.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassdaballthetime20182.mp3",
@@ -997,7 +665,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "dab-all-the-time",
-      "source_file": "5. Entire Albums.mp3"
+      "source_file": "5. Entire Albums.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassbsiderarities2023.mp3",
@@ -1021,7 +690,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "nsass-bsides",
-      "source_file": "2. Use Your Mind, Be Kind (Oct 13, 2014).mp3"
+      "source_file": "2. Use Your Mind, Be Kind (Oct 13, 2014).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_nsassbsiderarities20232.mp3",
@@ -1045,7 +715,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "nsass-bsides",
-      "source_file": "5. Recycled Cups (Jan 23, 2014).mp3"
+      "source_file": "5. Recycled Cups (Jan 23, 2014).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_bloomingnostalgia.mp3",
@@ -1069,7 +740,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "BFTG_295",
-      "source_file": "01 blooming nostalgia.mp3"
+      "source_file": "01 blooming nostalgia.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_bloomingnostalgia2.mp3",
@@ -1093,7 +765,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "BFTG_295",
-      "source_file": "01 blooming nostalgia.flac"
+      "source_file": "01 blooming nostalgia.flac",
+      "safety": "safe"
     },
     {
       "file": "sw_stoppostingaboutballer.mp3",
@@ -1119,7 +792,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "roblox-baller-phonk-remix-stop-posting-about-baller",
-      "source_file": "ROBLOX - BALLER (Phonk Remix)  STOP POSTING ABOUT BALLER.mp3"
+      "source_file": "ROBLOX - BALLER (Phonk Remix)  STOP POSTING ABOUT BALLER.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_goofyahhphonkfullversion.mp3",
@@ -1145,7 +819,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "goofy-ahh-phonk-full-version",
-      "source_file": "Goofy Ahh Phonk [Full Version].mp3"
+      "source_file": "Goofy Ahh Phonk [Full Version].mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_spotimateiolabubufunksxl.mp3",
@@ -1170,7 +845,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "spoti-mate.io-labubu-funk-sxllx",
-      "source_file": "SpotiMate.io - LABUBU FUNK - SXLLX.mp3"
+      "source_file": "SpotiMate.io - LABUBU FUNK - SXLLX.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_musicphonk.mp3",
@@ -1196,7 +872,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "al-nacer",
-      "source_file": "AL NACER!.mp3"
+      "source_file": "AL NACER!.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_killakrusher.mp3",
@@ -1220,7 +897,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "musicas_3746389a6a860b3602648b49a7a6",
-      "source_file": "musicas_3746389a6a860b3602648b49a7a6.mp3"
+      "source_file": "musicas_3746389a6a860b3602648b49a7a6.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_killakrusher2.mp3",
@@ -1244,7 +922,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "musicas_3746389a6a860b3602648b49a7a6",
-      "source_file": "musicas_3746389a6a860b3602648b49a7a6.wav"
+      "source_file": "musicas_3746389a6a860b3602648b49a7a6.wav",
+      "safety": "safe"
     },
     {
       "file": "sw_phonkcoreizdead.mp3",
@@ -1270,7 +949,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "memphis-terrorist-phonkcore-iz-dead",
-      "source_file": "SKRD4EVER - MEMPHIS TERRORIST - PHONKCORE IZ DEAD - 03 MEMPHIS TERRORIST - PHONK TILL THA GRAVE.mp3"
+      "source_file": "SKRD4EVER - MEMPHIS TERRORIST - PHONKCORE IZ DEAD - 03 MEMPHIS TERRORIST - PHONK TILL THA GRAVE.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonkcoreizdead2.mp3",
@@ -1296,7 +976,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "memphis-terrorist-phonkcore-iz-dead",
-      "source_file": "SKRD4EVER - MEMPHIS TERRORIST - PHONKCORE IZ DEAD - 06 MEMPHIS TERRORIST - PHONKCORE4EVER.mp3"
+      "source_file": "SKRD4EVER - MEMPHIS TERRORIST - PHONKCORE IZ DEAD - 06 MEMPHIS TERRORIST - PHONKCORE4EVER.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_guacamolephonk6ix6.mp3",
@@ -1322,7 +1003,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "guacamole666",
-      "source_file": "guacamole 6$ix6.mp3"
+      "source_file": "guacamole 6$ix6.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_moonwalktokiodriftphonkh.mp3",
@@ -1348,7 +1030,8 @@
       "license": "http://creativecommons.org/licenses/by/3.0/",
       "source": "archive.org",
       "source_id": "jamendo-525524",
-      "source_file": "01-2037726-Moonwalk-Tokio Drift _Phonk Hip-Hop Beat_.mp3"
+      "source_file": "01-2037726-Moonwalk-Tokio Drift _Phonk Hip-Hop Beat_.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonkmusicarchiveultimat.mp3",
@@ -1374,7 +1057,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "phonk-music-archive",
-      "source_file": "Pimba Pimba - Rezadead Taknam Phonk King.mp3"
+      "source_file": "Pimba Pimba - Rezadead Taknam Phonk King.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonkmusicarchiveultimat2.mp3",
@@ -1400,7 +1084,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "phonk-music-archive",
-      "source_file": "Montagem Coma - Andromeda Elysian.mp3"
+      "source_file": "Montagem Coma - Andromeda Elysian.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonkmemphisrap.mp3",
@@ -1426,7 +1111,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "Phonk-Memphis-Rap",
-      "source_file": "Freddie Dredd - GTG.mp3"
+      "source_file": "Freddie Dredd - GTG.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonkmemphisrap2.mp3",
@@ -1452,7 +1138,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "Phonk-Memphis-Rap",
-      "source_file": "4WHEEL - KERAUNOS KILLER (Speed Up).mp3"
+      "source_file": "4WHEEL - KERAUNOS KILLER (Speed Up).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_dentrodemi.mp3",
@@ -1476,7 +1163,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "dentro-de-mi",
-      "source_file": "Dentro de mí.mp3"
+      "source_file": "Dentro de mí.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_lilwardenssecretsecretse.mp3",
@@ -1502,7 +1190,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "BFTG_225",
-      "source_file": "lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one - 01 intro that makes you want to strangle your sigma sitck.mp3"
+      "source_file": "lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one - 01 intro that makes you want to strangle your sigma sitck.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_lilwardenssecretsecretse2.mp3",
@@ -1528,7 +1217,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "BFTG_225",
-      "source_file": "lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one - 05 0919 (2).mp3"
+      "source_file": "lil' warden - lil' warden's SECRET SECRET SECRET phonk sigma mixxes vol one - 05 0919 (2).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_moonwalklowslowphonkhiph.mp3",
@@ -1554,7 +1244,8 @@
       "license": "http://creativecommons.org/licenses/by/3.0/",
       "source": "archive.org",
       "source_id": "jamendo-525521",
-      "source_file": "01-2037724-Moonwalk-Low _amp_ Slow _Phonk Hip-Hop Beat_.mp3"
+      "source_file": "01-2037724-Moonwalk-Low _amp_ Slow _Phonk Hip-Hop Beat_.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonk.mp3",
@@ -1580,7 +1271,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "safer-phonk-147844",
-      "source_file": "safer-phonk-147844.mp3"
+      "source_file": "safer-phonk-147844.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phonk2.mp3",
@@ -1606,7 +1298,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "safer-phonk-147844",
-      "source_file": "drift-phonk-2-phonk-2025-mix-178692.mp3"
+      "source_file": "drift-phonk-2-phonk-2025-mix-178692.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_montagemcoraldjholandamc.mp3",
@@ -1630,55 +1323,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "montagem-coral-dj-holanda-mc-gw-mc-th-mc-cyclope",
-      "source_file": "MONTAGEM CORAL (DJ HOLANDA, MC GW, MC TH & MC CYCLOPE).mp3"
-    },
-    {
-      "file": "sw_saschamllermusicpodcastv.mp3",
-      "title": "Sascha Müller Music Podcast Vol. 20",
-      "artist": "Sascha Müller",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 129.2,
-      "drop_t": 11.98,
-      "duration_s": 80.0,
-      "energy": 0.816,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Sascha Müller - Sascha Müller Music Podcast Vol. 20 (http://creativecommons.org/publicdomain/mark/1.0/)",
-      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
-      "source": "archive.org",
-      "source_id": "saschamullermusicpodcast20_201912",
-      "source_file": "sascha müller music Podcast20.mp3"
-    },
-    {
-      "file": "sw_saschamllermusicpodcastv2.mp3",
-      "title": "Sascha Müller Music Podcast Vol. 20",
-      "artist": "Sascha Müller",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 129.2,
-      "drop_t": 12.0,
-      "duration_s": 80.0,
-      "energy": 0.815,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Sascha Müller - Sascha Müller Music Podcast Vol. 20 (http://creativecommons.org/publicdomain/mark/1.0/)",
-      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
-      "source": "archive.org",
-      "source_id": "saschamullermusicpodcast20_201912",
-      "source_file": "sascha müller music Podcast20.ogg"
+      "source_file": "MONTAGEM CORAL (DJ HOLANDA, MC GW, MC TH & MC CYCLOPE).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_dudidamphonkremixdrifted.mp3",
@@ -1704,7 +1350,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "dudi-dam-phonk-remix-drift-edit.mp3",
-      "source_file": "DudiDam (Phonk Remix) [DRIFT EDIT].mp3"
+      "source_file": "DudiDam (Phonk Remix) [DRIFT EDIT].mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_sramotamemphisphonkarchi.mp3",
@@ -1730,7 +1377,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "sramotarch",
-      "source_file": "fm.mp3"
+      "source_file": "fm.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_sramotamemphisphonkarchi2.mp3",
@@ -1756,7 +1404,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "sramotarch",
-      "source_file": "fuckingrandomshit.mp3"
+      "source_file": "fuckingrandomshit.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_fasterdeluxebyskyness202.mp3",
@@ -1780,7 +1429,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "faster-deluxe-by-skyness-2021.04.01_202410",
-      "source_file": "370Z - By Skyness.mp3"
+      "source_file": "370Z - By Skyness.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_funkveneno.mp3",
@@ -1805,7 +1455,8 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "funk-veneno",
-      "source_file": "FUNK VENENO.mp3"
+      "source_file": "FUNK VENENO.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_fasterdeluxebyskyness2022.mp3",
@@ -1829,7 +1480,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "faster-deluxe-by-skyness-2021.04.01",
-      "source_file": "370Z - By Skyness.mp3"
+      "source_file": "370Z - By Skyness.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phnk.mp3",
@@ -1855,7 +1507,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "phonk_202404",
-      "source_file": "Phönk.mp3"
+      "source_file": "Phönk.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_phnk2.mp3",
@@ -1881,7 +1534,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "phonk_202404",
-      "source_file": "Phönk.ogg"
+      "source_file": "Phönk.ogg",
+      "safety": "safe"
     },
     {
       "file": "sw_kosmoridernight.mp3",
@@ -1905,7 +1559,8 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "kosmorider-night",
-      "source_file": "Kosmorider-Night.mp3"
+      "source_file": "Kosmorider-Night.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_osamushojirootssearch.mp3",
@@ -1929,7 +1584,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "roots-search-soundtrack",
-      "source_file": "7. Stardust Slope.mp3"
+      "source_file": "7. Stardust Slope.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_osamushojirootssearch2.mp3",
@@ -1953,7 +1609,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "roots-search-soundtrack",
-      "source_file": "4. Scratch My Breast.mp3"
+      "source_file": "4. Scratch My Breast.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_themidnightnocturnalviny.mp3",
@@ -1977,7 +1634,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "nocturnal_202105",
-      "source_file": "Collateral.mp3"
+      "source_file": "Collateral.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_themidnightnocturnalviny2.mp3",
@@ -2001,7 +1659,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "nocturnal_202105",
-      "source_file": "Lightyears.mp3"
+      "source_file": "Lightyears.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_themidnightdaysofthunder.mp3",
@@ -2025,7 +1684,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "we-move-forward",
-      "source_file": "Gloria.mp3"
+      "source_file": "Gloria.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_themidnightdaysofthunder2.mp3",
@@ -2049,7 +1709,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "we-move-forward",
-      "source_file": "Days Of Thunder.mp3"
+      "source_file": "Days Of Thunder.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_perturbatoriamthenightvi.mp3",
@@ -2073,7 +1734,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "naked-tongues",
-      "source_file": "The New Black.mp3"
+      "source_file": "The New Black.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_perturbatoriamthenightvi2.mp3",
@@ -2097,7 +1759,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "naked-tongues",
-      "source_file": "Nexus Six_Interlude.mp3"
+      "source_file": "Nexus Six_Interlude.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_themidnighthorrorshowvin.mp3",
@@ -2121,7 +1784,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "neon-medusa",
-      "source_file": "The Stranger.mp3"
+      "source_file": "The Stranger.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_themidnighthorrorshowvin2.mp3",
@@ -2145,7 +1809,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "neon-medusa",
-      "source_file": "Because The Night.mp3"
+      "source_file": "Because The Night.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_carpenter.mp3",
@@ -2169,7 +1834,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "Carpenter-RetroPromenade",
-      "source_file": "16FullEclipsecatherinesTheme-Strsgn-Carpenter.mp3"
+      "source_file": "16FullEclipsecatherinesTheme-Strsgn-Carpenter.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_carpenter2.mp3",
@@ -2193,7 +1859,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "Carpenter-RetroPromenade",
-      "source_file": "07TombOfKhufu-AmplitudeProblem-Carpenter.mp3"
+      "source_file": "07TombOfKhufu-AmplitudeProblem-Carpenter.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_dlr076zoltanfreitagkrasn.mp3",
@@ -2217,7 +1884,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "DLR076",
-      "source_file": "02 - 2 Minutes Agony.mp3"
+      "source_file": "02 - 2 Minutes Agony.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_dlr076zoltanfreitagkrasn2.mp3",
@@ -2241,7 +1909,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "DLR076",
-      "source_file": "03 - Axiom (The Ending Hour).mp3"
+      "source_file": "03 - Axiom (The Ending Hour).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_carpenterbrutleatherterr.mp3",
@@ -2265,7 +1934,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "leather-terror-raw-wav",
-      "source_file": "A1  Opening Title.mp3"
+      "source_file": "A1  Opening Title.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_carpenterbrutleatherterr2.mp3",
@@ -2289,7 +1959,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "leather-terror-raw-wav",
-      "source_file": "C1  Night Prowler.mp3"
+      "source_file": "C1  Night Prowler.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_mitchmurdertherealdealvi.mp3",
@@ -2313,7 +1984,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "outpost-alpha",
-      "source_file": "Breakaway.mp3"
+      "source_file": "Breakaway.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_mitchmurdertherealdealvi2.mp3",
@@ -2337,7 +2009,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "outpost-alpha",
-      "source_file": "Prime Operator.mp3"
+      "source_file": "Prime Operator.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_powergloveplaybackvinylr.mp3",
@@ -2360,7 +2033,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "playback_202112",
-      "source_file": "A1 Sundown.mp3"
+      "source_file": "A1 Sundown.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_powergloveplaybackvinylr2.mp3",
@@ -2383,7 +2057,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "playback_202112",
-      "source_file": "C4 Last Breath.mp3"
+      "source_file": "C4 Last Breath.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_undead.mp3",
@@ -2407,7 +2082,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "ClusterBuster",
-      "source_file": "Cluster Buster/They Call Her One Eye/Vhs Logo (It's Not Dead Yet).mp3"
+      "source_file": "Cluster Buster/They Call Her One Eye/Vhs Logo (It's Not Dead Yet).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_undead2.mp3",
@@ -2431,7 +2107,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "ClusterBuster",
-      "source_file": "Cluster Buster/Total Terror/Total Terror.mp3"
+      "source_file": "Cluster Buster/Total Terror/Total Terror.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_protect.mp3",
@@ -2455,7 +2132,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "Protector101",
-      "source_file": "Protector 101/Black Friday 2_ Blood Money (The Uncut V/The Death Of Santa Claus.mp3"
+      "source_file": "Protector 101/Black Friday 2_ Blood Money (The Uncut V/The Death Of Santa Claus.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_protect2.mp3",
@@ -2479,7 +2157,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "Protector101",
-      "source_file": "Protector 101/Solitary Star/Hatch.mp3"
+      "source_file": "Protector 101/Solitary Star/Hatch.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_powerglovetrialsoftheblo.mp3",
@@ -2502,7 +2181,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "trials-of-the-blood-dragon-soundtrack",
-      "source_file": "A7 Open For Buisness.mp3"
+      "source_file": "A7 Open For Buisness.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_culture.mp3",
@@ -2526,7 +2206,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "VestronVulture",
-      "source_file": "Vestron Vulture/Cinco De Mayo/Fx.mp3"
+      "source_file": "Vestron Vulture/Cinco De Mayo/Fx.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_variousartistsmagnatron2.mp3",
@@ -2550,7 +2231,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "omnicron-woob",
-      "source_file": "Burning Saber (Isidor).mp3"
+      "source_file": "Burning Saber (Isidor).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_variousartistsmagnatron22.mp3",
@@ -2574,7 +2256,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "omnicron-woob",
-      "source_file": "Brute Force (Daniel Deluxe).mp3"
+      "source_file": "Brute Force (Daniel Deluxe).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_octobersunupdatedweekly.mp3",
@@ -2598,7 +2281,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "october-sun-breach-of-sighs-1",
-      "source_file": "October Sun - 006 - Frozen Garden 2.mp3"
+      "source_file": "October Sun - 006 - Frozen Garden 2.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_octobersunupdatedweekly2.mp3",
@@ -2622,7 +2306,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "october-sun-breach-of-sighs-1",
-      "source_file": "October Sun - 004 - Interstat 1.mp3"
+      "source_file": "October Sun - 004 - Interstat 1.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_discord.mp3",
@@ -2646,7 +2331,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "Jupiter-8",
-      "source_file": "Jupiter-8/(2014) Alien Hunting/Space Theme.mp3"
+      "source_file": "Jupiter-8/(2014) Alien Hunting/Space Theme.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_discord2.mp3",
@@ -2670,7 +2356,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "Jupiter-8",
-      "source_file": "Jupiter-8/(2014) Alien Hunting/Alien Hunting Theme.mp3"
+      "source_file": "Jupiter-8/(2014) Alien Hunting/Alien Hunting Theme.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_variousartistsunitedsovi.mp3",
@@ -2694,7 +2381,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "united-soviet-space-rangers",
-      "source_file": "08.Terniev - Behind the Magellanic Clouds.mp3"
+      "source_file": "08.Terniev - Behind the Magellanic Clouds.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_variousartistsunitedsovi2.mp3",
@@ -2718,7 +2406,8 @@
       "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "archive.org",
       "source_id": "united-soviet-space-rangers",
-      "source_file": "05.Harmonic Vibes - Event Horizon.mp3"
+      "source_file": "05.Harmonic Vibes - Event Horizon.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_beta.mp3",
@@ -2742,7 +2431,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "AlphaBoy",
-      "source_file": "Alpha Boy/Beverly Hills/The End.mp3"
+      "source_file": "Alpha Boy/Beverly Hills/The End.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_beta2.mp3",
@@ -2766,7 +2456,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "AlphaBoy",
-      "source_file": "Alpha Boy/VHS Rider EP/Commercial.mp3"
+      "source_file": "Alpha Boy/VHS Rider EP/Commercial.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_zombiehyperdrivehyperion.mp3",
@@ -2790,7 +2481,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "the-kid-with-the-silver-mask",
-      "source_file": "Intro.mp3"
+      "source_file": "Intro.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_zombiehyperdrivehyperion2.mp3",
@@ -2814,7 +2506,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "the-kid-with-the-silver-mask",
-      "source_file": "The Destroyer.mp3"
+      "source_file": "The Destroyer.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_low.mp3",
@@ -2838,7 +2531,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "1977-david-bowie-low",
-      "source_file": "12 - Some Are (previously unreleased).mp3"
+      "source_file": "12 - Some Are (previously unreleased).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_low2.mp3",
@@ -2862,7 +2556,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "1977-david-bowie-low",
-      "source_file": "02 - Breaking Glass.mp3"
+      "source_file": "02 - Breaking Glass.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_twilight.mp3",
@@ -2886,7 +2581,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "TwilightRacing",
-      "source_file": "Twilight Racing/The Sound Of A Speeding Heart/VHS Race.mp3"
+      "source_file": "Twilight Racing/The Sound Of A Speeding Heart/VHS Race.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_twilight2.mp3",
@@ -2910,7 +2606,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "TwilightRacing",
-      "source_file": "Twilight Racing/The Sound Of A Speeding Heart/Thrillgear.mp3"
+      "source_file": "Twilight Racing/The Sound Of A Speeding Heart/Thrillgear.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_mycr001timmythemonsterst.mp3",
@@ -2934,7 +2631,8 @@
       "license": "http://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "mycr001",
-      "source_file": "04 Take them home (Two Thousand Leagues remix).mp3"
+      "source_file": "04 Take them home (Two Thousand Leagues remix).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_mycr001timmythemonsterst2.mp3",
@@ -2958,7 +2656,8 @@
       "license": "http://creativecommons.org/licenses/by/4.0/",
       "source": "archive.org",
       "source_id": "mycr001",
-      "source_file": "02 Take them home (Di Murga remix).mp3"
+      "source_file": "02 Take them home (Di Murga remix).mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_exalottimesliceuscwr1410.mp3",
@@ -2982,7 +2681,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "exalot-time-slice",
-      "source_file": "09.Boy's Name is Max.mp3"
+      "source_file": "09.Boy's Name is Max.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_exalottimesliceuscwr14102.mp3",
@@ -3006,7 +2706,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "exalot-time-slice",
-      "source_file": "10.Time Slice.mp3"
+      "source_file": "10.Time Slice.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_torleywongthefinalselect.mp3",
@@ -3030,7 +2731,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/us/",
       "source": "archive.org",
       "source_id": "Torley_Wong_-_The_Final_Selection",
-      "source_file": "Torley_Wong-Monster_Cymbals.mp3"
+      "source_file": "Torley_Wong-Monster_Cymbals.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_torleywongthefinalselect2.mp3",
@@ -3054,7 +2756,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/us/",
       "source": "archive.org",
       "source_id": "Torley_Wong_-_The_Final_Selection",
-      "source_file": "Torley_Wong-_Lude_IV.mp3"
+      "source_file": "Torley_Wong-_Lude_IV.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_deusexsoundtrack.mp3",
@@ -3078,7 +2781,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "deus_ex_soundtrack",
-      "source_file": "41-Paris Cathedral Conversation.mp3"
+      "source_file": "41-Paris Cathedral Conversation.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_deusexsoundtrack2.mp3",
@@ -3102,7 +2806,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "deus_ex_soundtrack",
-      "source_file": "20-Oceanlab.mp3"
+      "source_file": "20-Oceanlab.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_bladerunner.mp3",
@@ -3126,7 +2831,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "BladeRunner_201802",
-      "source_file": "Blade Runner - Teil 1.mp3"
+      "source_file": "Blade Runner - Teil 1.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_bladerunner2.mp3",
@@ -3150,7 +2856,8 @@
       "license": "http://creativecommons.org/licenses/by-sa/3.0/",
       "source": "archive.org",
       "source_id": "BladeRunner_201802",
-      "source_file": "Blade Runner - Teil 2.mp3"
+      "source_file": "Blade Runner - Teil 2.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod.mp3",
@@ -3174,7 +2881,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "CyberpunkLibrarianEpisode57APrescriptionForYourSubscriptionAddiction",
-      "source_file": "Cyberpunk Librarian - Episode 57 - A Prescription for Your Subscription Addiction.mp3"
+      "source_file": "Cyberpunk Librarian - Episode 57 - A Prescription for Your Subscription Addiction.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod2.mp3",
@@ -3198,55 +2906,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "CyberpunkLibrarianEpisode57APrescriptionForYourSubscriptionAddiction",
-      "source_file": "Cyberpunk Librarian - Episode 57 - A Prescription for Your Subscription Addiction.ogg"
-    },
-    {
-      "file": "sw_deusexmankinddividedoste.mp3",
-      "title": "Deus Ex: Mankind Divided OST Extended",
-      "artist": "Sonic Mayhem, Michael McCann, Ed Harrison",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 107.7,
-      "drop_t": 47.74,
-      "duration_s": 80.0,
-      "energy": 0.592,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Sonic Mayhem, Michael McCann, Ed Harrison - Deus Ex: Mankind Divided OST Extended (http://creativecommons.org/publicdomain/mark/1.0/)",
-      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
-      "source": "archive.org",
-      "source_id": "deus_ex_mankind_divided_ost_extended",
-      "source_file": "21. Ed Harrison - Rippers.mp3"
-    },
-    {
-      "file": "sw_deusexmankinddividedoste2.mp3",
-      "title": "Deus Ex: Mankind Divided OST Extended",
-      "artist": "Sonic Mayhem, Michael McCann, Ed Harrison",
-      "genre": "electronic",
-      "mood": "hype",
-      "pillars": [
-        "movie",
-        "anime"
-      ],
-      "bpm": 71.8,
-      "drop_t": 41.1,
-      "duration_s": 80.0,
-      "energy": 0.657,
-      "tags": [
-        "edit",
-        "electronic"
-      ],
-      "credit": "Song: Sonic Mayhem, Michael McCann, Ed Harrison - Deus Ex: Mankind Divided OST Extended (http://creativecommons.org/publicdomain/mark/1.0/)",
-      "license": "http://creativecommons.org/publicdomain/mark/1.0/",
-      "source": "archive.org",
-      "source_id": "deus_ex_mankind_divided_ost_extended",
-      "source_file": "27. Sonic Mayhem - Adam Jensen 2.0 Trailer.mp3"
+      "source_file": "Cyberpunk Librarian - Episode 57 - A Prescription for Your Subscription Addiction.ogg",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod3.mp3",
@@ -3270,7 +2931,8 @@
       "license": "http://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "cyberpunk-librarian-episode-59",
-      "source_file": "Cyberpunk Librarian - Episode 59.mp3"
+      "source_file": "Cyberpunk Librarian - Episode 59.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod4.mp3",
@@ -3294,7 +2956,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "cyberpunk-librarian-episode-60",
-      "source_file": "Cyberpunk Librarian - Episode 60.mp3"
+      "source_file": "Cyberpunk Librarian - Episode 60.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod5.mp3",
@@ -3318,7 +2981,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "CyberpunkLibrarianEpisode54NexusAndEmpathy",
-      "source_file": "Cyberpunk Librarian - Episode 54- Nexus and Empathy.mp3"
+      "source_file": "Cyberpunk Librarian - Episode 54- Nexus and Empathy.mp3",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod6.mp3",
@@ -3342,7 +3006,8 @@
       "license": "http://creativecommons.org/publicdomain/mark/1.0/",
       "source": "archive.org",
       "source_id": "CyberpunkLibrarianEpisode54NexusAndEmpathy",
-      "source_file": "Cyberpunk Librarian - Episode 54- Nexus and Empathy.ogg"
+      "source_file": "Cyberpunk Librarian - Episode 54- Nexus and Empathy.ogg",
+      "safety": "safe"
     },
     {
       "file": "sw_cyberpunklibrarianepisod7.mp3",
@@ -3366,7 +3031,8 @@
       "license": "https://creativecommons.org/publicdomain/zero/1.0/",
       "source": "archive.org",
       "source_id": "cyberpunk-librarian-episode-63-my-favourite-operating-system",
-      "source_file": "Cyberpunk Librarian - Episode 63 - My Favourite Operating System.mp3"
+      "source_file": "Cyberpunk Librarian - Episode 63 - My Favourite Operating System.mp3",
+      "safety": "safe"
     }
   ]
 }

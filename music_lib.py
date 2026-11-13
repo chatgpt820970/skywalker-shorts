@@ -26,7 +26,10 @@ def catalog(AE: Path, exclude: list[str] | None = None) -> list[dict]:
     for t in lib.get("tracks") or []:
         if not t.get("file") or t["file"] in excl:
             continue
-        out.append({k: t.get(k) for k in ("file", "title", "artist", "genre", "mood", "bpm", "energy", "pillars")})
+        out.append({k: t.get(k) for k in (
+            "file", "title", "artist", "genre", "mood", "bpm", "energy", "pillars",
+            "safety", "drop_t",
+        )})
     return out
 
 
@@ -72,6 +75,15 @@ def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None
         g = (t.get("genre") or "").lower()
         if any(w in g for w in LIB_PILLAR_GENRE.get(p, ())):
             sc += 10
+        # Prefer phonk / drift / brazilian / slowed+reverb beat-drop tracks
+        if any(w in g for w in ("phonk", "funk", "slowed", "drift", "brazilian")):
+            sc += 14
+        # Prefer copyright-safer tracks; claim_risk only when nothing else fits
+        safety = (t.get("safety") or "").lower()
+        if safety == "safe":
+            sc += 16
+        elif safety == "claim_risk":
+            sc -= 10
         is_in = any(w in g for w in indian)
         if market == "IN" and is_in:
             sc += 12
@@ -80,6 +92,8 @@ def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None
         name = f"{t.get('title','')} {t.get('artist','')}".lower()
         if any(k and (k in name or name.split(' (')[0] in k) for k in picks):
             sc += 8
+        if t.get("drop_t") is not None:
+            sc += 3
         return sc
 
     pool = [t for t in tracks if t["file"] not in excl] or tracks
