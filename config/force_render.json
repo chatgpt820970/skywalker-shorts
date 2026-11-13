@@ -1,5 +1,5 @@
 {
-  "ids": ["test-improvements-v2-dryrun"],
+  "ids": [],
   "no_publish": true,
-  "note": "Fresh dry-run id after seamless-loop audio fix (v1 still in-flight on old code)."
+  "note": "Cleared after successful test-improvements-v2-dryrun. Set ids to force another dry-run."
 }
