@@ -1,0 +1,62 @@
+name: music-ingest
+
+# Grow music/library.json from legit CC/public-domain sources on GitHub (never on the box).
+# Uploads mp3s to the 'music' release. Does not rip commercial YouTube tracks.
+on:
+  workflow_dispatch:
+    inputs:
+      max_new:
+        description: "Max new tracks this run"
+        required: false
+        default: "120"
+      target:
+        description: "Target library size"
+        required: false
+        default: "250"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: music-ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ffmpeg + librosa
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install -q librosa numpy scipy soundfile
+      - name: Fetch existing library mp3s
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p music/lib
+          gh release download music -R "$GITHUB_REPOSITORY" -D music/lib --clobber || true
+          echo "local mp3s: $(ls music/lib/*.mp3 2>/dev/null | wc -l)"
+      - name: Ingest CC tracks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/ingest_music.py --max-new "${{ github.event.inputs.max_new || '120' }}" --target "${{ github.event.inputs.target || '250' }}"
+      - name: Commit library.json
+        run: |
+          git config user.name "skywalker-music"
+          git config user.email "actions@users.noreply.github.com"
+          git add music/library.json music/ingest_summary.json || true
+          git diff --cached --quiet && exit 0
+          git commit -m "music library: $(python3 -c 'import json; print(len(json.load(open("music/library.json"))["tracks"]))') tracks"
+          for i in 1 2 3 4; do git pull --rebase -q && git push && break; sleep 7; done
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f music/ingest_summary.json ]; then cat music/ingest_summary.json; else echo "no summary"; fi
+          python3 -c "import json; d=json.load(open('music/library.json')); print('library tracks:', len(d.get('tracks') or []))"

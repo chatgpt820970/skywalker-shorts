@@ -862,13 +862,15 @@ def score_scenes(mezz: Path, scenes: list[dict], trailer_dur: float | None = Non
 # ---------------------------------------------------------------------------
 # 3. Music analysis
 # ---------------------------------------------------------------------------
-def _pick_library(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "") -> dict | None:
+def _pick_library(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "",
+                 prefer: str | None = None, prefer_alts: list[str] | None = None) -> dict | None:
     """Trending edit songs (music/library.json + 'music' release); see music_lib.pick."""
     import music_lib
-    return music_lib.pick(AE, pillar, seed, exclude, salt)
+    return music_lib.pick(AE, pillar, seed, exclude, salt, prefer=prefer, prefer_alts=prefer_alts)
 
 
-def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "") -> dict:
+def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "",
+               prefer: str | None = None, prefer_alts: list[str] | None = None) -> dict:
     """Pick a credited, copyright-safe track for a pillar from music/credits.json.
 
     anime/celeb -> phonk/hype, movie -> epic, romance -> emotional, funny -> upbeat.
@@ -876,7 +878,7 @@ def pick_music(pillar: str, seed: str = "", exclude: list[str] | None = None, sa
     `exclude` + `salt` are used on retry-tier 3 to pick a different credited track.
     """
     import hashlib
-    lib_pick = _pick_library(pillar, seed, exclude, salt)
+    lib_pick = _pick_library(pillar, seed, exclude, salt, prefer=prefer, prefer_alts=prefer_alts)
     if lib_pick:
         return lib_pick
     cj = json.loads((AE / "music" / "credits.json").read_text())
@@ -1401,6 +1403,16 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         want = max(float(desired), floor)
         return min(want, cap)
 
+    gem2 = set()
+    try:
+        if (WORK / "arrangement.json").exists():
+            gem2 = set(json.loads((WORK / "arrangement.json").read_text()).get("act2") or [])
+    except Exception:
+        gem2 = set()
+
+    def in_gem2(s):
+        return f"{float(s['start']):.2f}-{float(s['end']):.2f}" in gem2
+
     # Hook: highest spectacle that is not a talking-head and fits ~3 pulses
     t = 0.0
     hook_vis = max(MIN_SHOT, min(dur_for(t, 3), MAX_SHOT))
@@ -1414,6 +1426,7 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         hook_cands = [s for s in usable_by_spec if s["dur"] >= MIN_SHOT and not blocked(s)]
     if not hook_cands:
         hook_cands = [s for s in usable_by_spec if not blocked(s)]
+    hook_cands.sort(key=lambda s: (in_gem2(s), float(s.get("gemini") or s.get("spectacle") or 0)), reverse=True)
     hook = hook_cands[0]
     hook_vis = shot_vis(hook, hook_vis, body)
     slots.append((hook_vis, hook, float(hook["start"])))
@@ -1453,6 +1466,8 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             gem = 0.0
             if g is not None:
                 gem = (15.0 if t < 0.5 else 6.0) * (float(g) - 5.0)
+            if in_gem2(s):
+                gem += 60.0 if t < 0.5 else 25.0
             return tension + speech_w + gem - pen
 
         cands.sort(key=key, reverse=True)
@@ -3602,6 +3617,37 @@ def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
     return rep_
 
 
+
+def apply_auto_music(args, *, prefer: str | None = None, prefer_alts: list[str] | None = None) -> Path:
+    """Pick a library track (Gemini choice first, hash fallback) and record credit + drop hint."""
+    global MUSIC_DROP_HINT
+    excl = [x.strip() for x in (args.exclude_music or "").split(",") if x.strip()]
+    tr = pick_music(args.pillar, args.item_id, exclude=excl, salt=args.music_salt or "",
+                    prefer=prefer, prefer_alts=prefer_alts)
+    args.music = tr["path"]
+    WORK.mkdir(parents=True, exist_ok=True)
+    try:
+        import dialogue as dmod
+        if tr.get("library"):
+            raise RuntimeError("trending library track: keep the original edit audio")
+        styled, note = dmod.style_music(
+            Path(tr["path"]), WORK / "music_styled.wav",
+            pillar=args.pillar or "", mood=tr.get("mood") or "",
+            bpm=tr.get("bpm"),
+        )
+        if note:
+            tr["path"] = str(styled)
+            tr["style"] = note
+            args.music = tr["path"]
+            print("Music style:", note)
+    except Exception as e:
+        print("music style skipped:", e)
+    MUSIC_DROP_HINT = tr.get("drop_t") if tr.get("library") else None
+    (WORK / "music_credit.json").write_text(json.dumps(tr, indent=2, ensure_ascii=False))
+    print("Music:", tr["file"], "|", tr["credit"].splitlines()[0], "|", tr.get("picked_by") or "hash")
+    return Path(args.music)
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -3677,31 +3723,9 @@ def main():
     TRAILER_END_SKIP = 0.0
     if args.out_res is not None:
         OUT_RES = int(args.out_res)
-    if args.pillar and args.music == "auto":
-        excl = [x.strip() for x in (args.exclude_music or "").split(",") if x.strip()]
-        tr = pick_music(args.pillar, args.item_id, exclude=excl, salt=args.music_salt or "")
-        args.music = tr["path"]
-        WORK.mkdir(parents=True, exist_ok=True)
-        try:
-            import dialogue as dmod
-            if tr.get("library"):
-                raise RuntimeError("trending library track: keep the original edit audio")
-            styled, note = dmod.style_music(
-                Path(tr["path"]), WORK / "music_styled.wav",
-                pillar=args.pillar or "", mood=tr.get("mood") or "",
-                bpm=tr.get("bpm"),
-            )
-            if note:
-                tr["path"] = str(styled)
-                tr["style"] = note
-                args.music = tr["path"]
-                print("Music style:", note)
-        except Exception as e:
-            print("music style skipped:", e)
-        global MUSIC_DROP_HINT
-        MUSIC_DROP_HINT = tr.get("drop_t") if tr.get("library") else None
-        (WORK / "music_credit.json").write_text(json.dumps(tr, indent=2, ensure_ascii=False))
-        print("Music:", tr["file"], "|", tr["credit"].splitlines()[0])
+    auto_music = bool(args.pillar and args.music == "auto")
+    # Auto music is picked after Gemini has seen the trailer (step 2c), so the song can match
+    # the footage. Deterministic hash pick is the fallback if Gemini is silent or over budget.
     if args.end_still is not None:
         END_STILL = float(args.end_still)
 
@@ -3916,8 +3940,15 @@ def main():
         import sky_ai
         cache = Path(os.environ.get("SKY_ROOT") or WORK) / f"gemini_scenes_{args.item_id or 'x'}.json"
         a1_lines = act1_candidates(scenes, transcript) if TWO_ACT else []
+        excl = [x.strip() for x in (args.exclude_music or "").split(",") if x.strip()]
+        try:
+            import music_lib as _mlib
+            songs = _mlib.catalog(AE, exclude=excl)
+        except Exception:
+            songs = []
         ranks = sky_ai.rank_scenes(mezz, scenes, transcript, HOOK_TEXT, WORK, cache=cache, lines=a1_lines,
-                                   act1_target=ACT1_FRAC * (TARGET_DUR + END_CARD), mode=EDIT_MODE)
+                                   act1_target=ACT1_FRAC * (TARGET_DUR + END_CARD), mode=EDIT_MODE,
+                                   songs=songs)
         if ranks and isinstance(ranks.get("_arrangement"), dict):
             arr = ranks.pop("_arrangement")
             by_id = {c["id"]: c for c in a1_lines}
@@ -3938,7 +3969,21 @@ def main():
     except Exception as e:
         print("  gemini scene pick skipped:", e)
 
-    print("=== 3. Music analysis ===")
+    print("=== 3. Music ===")
+    prefer = prefer_alts = None
+    try:
+        arr = json.loads((WORK / "arrangement.json").read_text()) if (WORK / "arrangement.json").exists() else {}
+        prefer = arr.get("song")
+        prefer_alts = arr.get("song_alts") or []
+        if prefer:
+            print(f"  gemini song pick: {prefer} alts={prefer_alts}")
+    except Exception:
+        pass
+    if auto_music:
+        music_path = apply_auto_music(args, prefer=prefer, prefer_alts=prefer_alts)
+    else:
+        music_path = Path(args.music)
+    print("=== 3b. Music analysis ===")
     global TWO_ACT_A
     TWO_ACT_A = None
     if TWO_ACT and EDIT_MODE == "two_act" and TEMPLATE == "whitebar":

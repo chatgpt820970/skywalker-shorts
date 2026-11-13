@@ -229,3 +229,39 @@ def test_edit_mode_choice():
          "voice_in_act2_dbfs": -99, "song_switches": 1, "act1_voice_dbfs": -17, "act2_song_dbfs": -12},
         True,
     )
+
+
+def test_gemini_song_choice_respects_exclude(tmp_path, monkeypatch):
+    import music_lib
+    lib = json.loads((ROOT / "music" / "library.json").read_text())
+    (tmp_path / "music" / "lib").mkdir(parents=True)
+    (tmp_path / "music" / "library.json").write_text(json.dumps(lib))
+    for tr in lib["tracks"]:
+        (tmp_path / "music" / "lib" / tr["file"]).write_bytes(b"x")
+    monkeypatch.setenv("SKY_MARKET", "US")
+    pick = music_lib.pick(tmp_path, "movie", "seed1", prefer="sw_metamorphosis.mp3")
+    assert pick["file"] == "sw_metamorphosis.mp3"
+    assert pick["picked_by"] == "gemini"
+    blocked = music_lib.pick(tmp_path, "movie", "seed1", prefer="sw_metamorphosis.mp3",
+                             exclude=["sw_metamorphosis.mp3"])
+    assert blocked["file"] != "sw_metamorphosis.mp3"
+    alt = music_lib.pick(tmp_path, "movie", "seed1", prefer="missing.mp3",
+                         prefer_alts=["sw_murderinmymind.mp3"])
+    assert alt["file"] == "sw_murderinmymind.mp3"
+    assert alt["picked_by"] == "gemini_alt"
+    hashed = music_lib.pick(tmp_path, "movie", "seed1")
+    assert hashed["picked_by"] == "hash"
+    assert hashed["file"]
+
+
+def test_ingest_license_and_slug():
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import ingest_music
+    assert ingest_music.license_ok("https://creativecommons.org/licenses/by/4.0/")
+    assert ingest_music.license_ok("https://creativecommons.org/publicdomain/zero/1.0/")
+    assert not ingest_music.license_ok("https://creativecommons.org/licenses/by-nc/4.0/")
+    assert not ingest_music.license_ok("https://creativecommons.org/licenses/by-nd/4.0/")
+    assert not ingest_music.license_ok("")
+    assert ingest_music.slugify("ELA PEIDA FUNK", "x") == "sw_elapeidafunk.mp3"
+    g, m, p, tags = ingest_music.tags_from_text("dark phonk drift")
+    assert g == "phonk" and "anime" in p

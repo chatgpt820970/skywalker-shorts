@@ -1,0 +1,31 @@
+{
+  "note": "Grow the edit-song library from legit, redistributable sources only (Internet Archive Creative Commons / public domain: CC0, CC-BY, CC-BY-SA). Do not rip commercial tracks from YouTube, Spotify, or SoundCloud. Ingest runs on GitHub Actions (scripts/ingest_music.py), not on a laptop. mp3s are loudnormed, analysed (BPM/drop/energy), uploaded to the 'music' release, and indexed in music/library.json. Same-song repeat window stays 8 videos.",
+  "target_count": 250,
+  "max_new_per_run": 120,
+  "min_duration_s": 25,
+  "max_keep_s": 80,
+  "pre_drop_s": 12,
+  "no_repeat_window": 8,
+  "queries": [
+    "phonk AND mediatype:(audio) AND (licenseurl:*creativecommons* OR licenseurl:*publicdomain*)",
+    "\"drift phonk\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "(title:phonk OR description:phonk) AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "synthwave AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "cyberpunk AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "\"dark electronic\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "\"trailer music\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "cinematic AND electronic AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "\"drum and bass\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "dnb AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "dubstep AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "hardstyle AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "\"brazilian funk\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "funk AND phonk AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "industrial AND electronic AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "\"action trailer\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "epic AND cinematic AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "bass AND \"high energy\" AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "techno AND dark AND mediatype:(audio) AND licenseurl:*creativecommons*",
+    "breakbeat AND mediatype:(audio) AND licenseurl:*creativecommons*"
+  ]
+}

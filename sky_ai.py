@@ -326,12 +326,13 @@ def _tile(frames: list[Path], dst: Path, cols: int = 5, w: int = 288) -> Path | 
 
 def rank_scenes(mezz: Path, scenes: list[dict], transcript: dict, hook: str, work: Path,
                 cache: Path | None = None, lines: list[dict] | None = None,
-                act1_target: float = 13.0, mode: str = "music_only") -> dict | None:
+                act1_target: float = 13.0, mode: str = "music_only",
+                songs: list[dict] | None = None) -> dict | None:
     """Score usable scenes 0-10 for a hooky edit and flag text/logo cards. One Gemini call."""
     kept = [s for s in scenes if not s.get("skip")]
     if len(kept) < 3:
         return None
-    key = "|".join(f"{float(s['start']):.2f}-{float(s['end']):.2f}" for s in kept) + f"|L{len(lines or [])}|M{mode}"
+    key = "|".join(f"{float(s['start']):.2f}-{float(s['end']):.2f}" for s in kept) + f"|L{len(lines or [])}|M{mode}|S{len(songs or [])}"
     if cache and cache.exists():
         try:
             c = json.loads(cache.read_text())
@@ -369,8 +370,10 @@ Score every shot 0-10 for how strongly it supports the hook and keeps viewers wa
 iconic moments, clear spoken lines). Also set card=true if the frame is mostly a studio/distributor LOGO, title card,
 date/"coming soon" card, rating card, credits, or on-screen text/typography rather than story footage.
 {_arrangement_brief(spoken, act1_target, mode)}
+{_song_brief(songs)}
 Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}], "act1": [line ids in play order],
-"act2": [shot indexes for the hype part, best first], "iconic_hook": bool}}"""
+"act2": [shot indexes for the hype part, best first], "iconic_hook": bool,
+"song": "exact file name from the library", "song_alts": ["backup file", "backup file"]}}"""
     out = gemini.generate_json(prompt, [sheet], purpose="scenes", temperature=0.2)
     if not isinstance(out, dict) or not isinstance(out.get("shots"), list):
         return None
@@ -383,7 +386,22 @@ Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}], "act1": [
             continue
         ranks[f"{float(s['start']):.2f}-{float(s['end']):.2f}"] = {
             "score": max(0.0, min(10.0, float(r.get("score") or 0))), "card": bool(r.get("card"))}
-    arr = {"act1": [], "act2": [], "iconic_hook": bool(out.get("iconic_hook"))}
+    arr = {"act1": [], "act2": [], "iconic_hook": bool(out.get("iconic_hook")),
+           "song": None, "song_alts": []}
+    allowed = {s.get("file") for s in (songs or []) if s.get("file")}
+    song = out.get("song")
+    if isinstance(song, dict):
+        song = song.get("file") or song.get("name")
+    if isinstance(song, str) and song in allowed:
+        arr["song"] = song
+    alts = out.get("song_alts") or []
+    if isinstance(alts, str):
+        alts = [alts]
+    for a in alts:
+        if isinstance(a, dict):
+            a = a.get("file") or a.get("name")
+        if isinstance(a, str) and a in allowed and a != arr.get("song") and a not in arr["song_alts"]:
+            arr["song_alts"].append(a)
     ids = {int(l["id"]) for l in (spoken or [])}
     for x in out.get("act1") or []:
         try:
@@ -437,6 +455,25 @@ Candidate spoken lines (id: source time, text):
 act1 = 1-4 line ids in the order they should play (total about {act1_target:.0f}s of speech, story order usually best).
 act2 = 8-14 shot indexes from the contact sheet with the strongest action/visuals/reveals (no talking heads), best first.
 iconic_hook = true only if the opening line itself is a genuinely iconic hook."""
+
+def _song_brief(songs: list[dict] | None) -> str:
+    if not songs:
+        return ""
+    rows = []
+    for s in songs[:300]:
+        rows.append(
+            f'{s.get("file")}: "{s.get("title") or ""}" / {s.get("artist") or ""} | '
+            f'{s.get("genre") or ""} {s.get("mood") or ""} bpm={s.get("bpm")} energy={s.get("energy")} '
+            f'pillars={",".join(s.get("pillars") or [])}'
+        )
+    return (
+        "\nPick the ONE library song that best matches this trailer's mood, genre and energy "
+        "(hype/dark/epic/fun/romance, plus language/market if obvious). Then name 2 backups. "
+        "Use the exact file name from this list. Prefer a pillar fit. Do not invent a file name.\n"
+        "Library (already excluding recently used songs):\n" + "\n".join(rows)
+    )
+
+
 
 
 def apply_scene_ranks(scenes: list[dict], ranks: dict, min_keep_s: float = 34.0) -> int:

@@ -12,12 +12,32 @@ LIB_PILLAR_GENRE = {
 }
 
 
-def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "") -> dict | None:
+def catalog(AE: Path, exclude: list[str] | None = None) -> list[dict]:
+    """Compact library rows for a Gemini prompt (no paths, no licenses)."""
+    lp = AE / "music" / "library.json"
+    if not lp.exists():
+        return []
+    try:
+        lib = json.loads(lp.read_text())
+    except Exception:
+        return []
+    excl = {x for x in (exclude or []) if x}
+    out = []
+    for t in lib.get("tracks") or []:
+        if not t.get("file") or t["file"] in excl:
+            continue
+        out.append({k: t.get(k) for k in ("file", "title", "artist", "genre", "mood", "bpm", "energy", "pillars")})
+    return out
+
+
+def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None, salt: str = "",
+         prefer: str | None = None, prefer_alts: list[str] | None = None) -> dict | None:
     """Trending edit songs from music/library.json (mp3s fetched from the 'music' release into music/lib).
 
-    Fit = pillar listed on the track + genre words for the pillar + market (IN items prefer Indian songs)
-    + song picks from trends/latest.json. `exclude` carries the last 8 renders' songs and earlier attempts,
-    so the same song never repeats within 8 consecutive videos. Returns None to fall back to credits.json.
+    If Gemini named a file (`prefer`, then `prefer_alts`) and it is in the library and not in
+    the last-N exclude list, that track is used. Otherwise a deterministic hash pick among
+    near-best scores (pillar/genre/market/trends). Same song never repeats within 8 videos.
+    Returns None to fall back to credits.json.
     """
     import hashlib
     if os.environ.get("SKY_MUSIC_SOURCE", "library") != "library":
@@ -63,17 +83,28 @@ def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None
         return sc
 
     pool = [t for t in tracks if t["file"] not in excl] or tracks
+    by_file = {t["file"]: t for t in pool}
+
+    def finish(t, how):
+        t = dict(t)
+        t["path"] = str(ldir / t["file"])
+        t["library"] = True
+        t["source"] = t.get("source") or "library"
+        t["pillar"] = p
+        t.setdefault("credit", f"Song: {t.get('artist')} - {t.get('title')}")
+        t["rank"] = score(t)
+        t["picked_by"] = how
+        return t
+
+    for how, name in [("gemini", prefer), * [("gemini_alt", a) for a in (prefer_alts or [])]]:
+        if name and name in by_file:
+            print(f"  music library: {how} chose {name}")
+            return finish(by_file[name], how)
+
     ranked = sorted(((score(t), t) for t in pool), key=lambda x: -x[0])
     best = ranked[0][0]
     top = [t for sc, t in ranked if sc >= best - 8]
     h = int(hashlib.sha1((f"{salt}|{seed or p}").encode()).hexdigest(), 16)
-    t = dict(top[h % len(top)])
-    t["path"] = str(ldir / t["file"])
-    t["library"] = True
-    t["source"] = "library"
-    t["pillar"] = p
-    t.setdefault("credit", f"Song: {t.get('artist')} - {t.get('title')}")
-    t["rank"] = score(t)
-    return t
+    return finish(top[h % len(top)], "hash")
 
 
