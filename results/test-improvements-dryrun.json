@@ -1,9 +1,9 @@
 {
   "id": "test-improvements-dryrun",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)",
-  "at": "2026-11-13 17:56 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43413298199",
+  "status": "failed",
+  "detail": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)",
+  "at": "2026-11-13 19:10 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43425194371",
   "slot": null,
   "title": "He never stopped saving them | blur fill dry-run | #edit",
   "hook": "He never stopped saving them",
@@ -26,50 +26,32 @@
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "err": "HTTP 503"
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.8-flash",
-      "key": "key1",
-      "s": 46.1,
+      "s": 10.0,
       "ok": true
-    },
-    {
-      "purpose": "hook",
-      "model": "gemini-3.8-flash",
-      "key": "key1",
-      "err": "HTTP 503"
     },
     {
       "purpose": "hook",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "err": "HTTP 503"
-    },
-    {
-      "purpose": "hook",
-      "model": "gemini-flash-latest",
-      "key": "key1",
-      "err": "HTTP 503"
-    },
-    {
-      "purpose": "hook",
-      "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 8.2,
+      "s": 9.4,
       "ok": true
     },
     {
       "purpose": "scenes",
-      "model": "gemini-3.1-flash-lite",
+      "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 15.7,
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 12.8,
       "ok": true
     }
   ],
   "backup_item": null,
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
@@ -77,21 +59,21 @@
       "ok": false,
       "error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -35}; auto_qc: audio silent or missing (mean_volume=None)",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
-      "music": "sw_variousartistsmagnatron2.mp3"
+      "music": "sw_montagemfujin.mp3"
     },
     {
       "attempt": 2,
       "ok": false,
       "error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -35}; auto_qc: audio silent or missing (mean_volume=None)",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
-      "music": "sw_variousartistsmagnatron2.mp3"
+      "music": "sw_montagemfujin.mp3"
     },
     {
       "attempt": 3,
       "ok": false,
       "error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
-      "music": "sw_metamorphosis.mp3"
+      "music": "sw_nsasssingles202220232.mp3"
     }
   ],
   "last_error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)"
