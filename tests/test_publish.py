@@ -75,6 +75,30 @@ def test_no_reason_why_template_anywhere():
         assert not hook_text.template_errors(h)
 
 
+def test_own_performance_joins_render_facts():
+    import trends
+    rows = trends.own_performance()
+    assert len(rows) == 12
+    hay = next(r for r in rows if "Haymitch" in (r.get("title") or ""))
+    assert hay["views"] == 10956
+    assert "Godless" in hay["music"] and "ncs_godless.mp3" in hay["music"]
+    assert hay["energy"] is True
+    assert abs(float(hay["drop_t"]) - 12.562) < 0.01
+    assert hay["slot"] == "06:30"
+    doom = next(r for r in rows if "Doctor Doom" in (r.get("title") or ""))
+    assert doom["views"] == 2660
+    assert "Adrenaline" in doom["music"]
+    assert doom["energy"] is True
+    assert doom["slot"] == "06:30"
+    maat = next(r for r in rows if "Maatrubhumi" in (r.get("title") or ""))
+    assert maat["views"] == 3
+    assert maat["energy"] is False
+    assert maat["drop_t"] is None
+    assert maat["slot"] == "22:30"
+    lucy = next(r for r in rows if "Lucy" in (r.get("title") or ""))
+    assert lucy["views"] == 5 and lucy["energy"] is False and lucy["slot"] == "17:30"
+
+
 def test_queue_hook_survives_when_gemini_is_down():
     item = {
         "id": "20261113-2230-demonslayer",

@@ -75,10 +75,15 @@ def check_item_hook_fields(item: dict) -> list[str]:
     """Check hook and title on a queue item. Description is not required to
     be fully English (source lines, hashtags), but the hook sentence that
     is copied into it should already match the English hook.
+
+    Template bans are included here so a queued item fails before render,
+    not only at the publish gate.
     """
     errors: list[str] = []
     for key in ("hook", "title"):
-        errors.extend(hook_language_errors(item.get(key) or "", label=key))
+        text = item.get(key) or ""
+        errors.extend(hook_language_errors(text, label=key))
+        errors.extend(template_errors(text, label=key))
     return errors
 
 
@@ -86,5 +91,5 @@ def require_english_hook(item: dict) -> None:
     errors = check_item_hook_fields(item)
     if errors:
         raise ValueError(
-            "Hook/title must be pure English (no Hindi/Hinglish). " + "; ".join(errors)
+            "Hook/title must be pure English and must not use a banned template. " + "; ".join(errors)
         )

@@ -7,7 +7,9 @@ songs), plus a best-effort yt-dlp search of trending edit Shorts (often bot-bloc
 The render step reads trends/latest.json (hook/title style + song_picks). Slot times are never
 changed automatically; posting_times_ist is advisory for the owner.
 """
-import glob, json, os, subprocess, sys
+from __future__ import annotations
+
+import glob, json, os, re, subprocess, sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -33,16 +35,93 @@ def yt_search_sample():
     return out[:24]
 
 
+def _slot_hhmm(slot):
+    text = str(slot or "")
+    if "T" in text:
+        return text.split("T", 1)[1][:5]
+    return text or None
+
+
+def _music_label(result: dict) -> str | None:
+    credit = (result.get("music_credit") or "").splitlines()
+    song = ""
+    if credit and credit[0].lower().startswith("song:"):
+        song = credit[0].split(":", 1)[1].strip()
+    file = result.get("music") or ""
+    if song and file:
+        return f"{song} ({file})"
+    return song or file or None
+
+
+def _title_key(title: str | None) -> str:
+    """Match stats titles to results even when the pipe/hashtag spacing differs."""
+    text = " ".join((title or "").split()).casefold()
+    text = re.sub(r"\s*\|\s*", " | ", text)
+    text = re.sub(r"\s+#", " #", text)
+    return text
+
+
+def _results_by_title() -> dict:
+    """Local results only. Prefer a finished render when titles collide."""
+    by_title = {}
+    for path in (REPO / "results").glob("*.json"):
+        try:
+            row = json.loads(path.read_text())
+        except Exception:
+            continue
+        key = _title_key(row.get("title"))
+        if not key:
+            continue
+        prev = by_title.get(key)
+        if prev and prev.get("status") == "done" and row.get("status") != "done":
+            continue
+        by_title[key] = row
+    return by_title
+
+
 def own_performance():
+    """Stats rows plus music / energy / drop / slot from results when stats omit them.
+
+    No network and no Gemini. The next trends synthesis can see which songs and
+    slots actually earned the views.
+    """
     st = {}
     try:
         st = json.loads((REPO / "stats" / "latest.json").read_text())
     except Exception:
         pass
+    by_title = _results_by_title()
     vids = []
-    for vid, x in (st.get("videos") or {}).items():
-        vids.append({"title": x.get("title"), "views": x.get("views"), "likes": x.get("likes"),
-                     "music": x.get("music"), "published": x.get("published")})
+    for _vid, x in (st.get("videos") or {}).items():
+        row = {
+            "title": x.get("title"),
+            "views": x.get("views"),
+            "likes": x.get("likes"),
+            "music": x.get("music"),
+            "published": x.get("published"),
+            "duration": x.get("duration"),
+            "energy": x.get("energy"),
+            "drop_t": x.get("drop_t"),
+            "slot": x.get("slot"),
+        }
+        result = by_title.get(_title_key(x.get("title")))
+        measured_drop = False
+        if result:
+            if not row.get("music"):
+                row["music"] = _music_label(result)
+            if row.get("energy") is None and "energy" in result:
+                row["energy"] = result.get("energy")
+            if row.get("drop_t") is None and "drop_t" in result:
+                row["drop_t"] = result.get("drop_t")
+                measured_drop = True
+            if not row.get("slot") and result.get("slot"):
+                row["slot"] = _slot_hhmm(result.get("slot"))
+        # Omit unknown fields. A joined render with drop_t null is a real "no drop".
+        clean = {k: v for k, v in row.items() if v is not None}
+        if measured_drop and result.get("drop_t") is None:
+            clean["drop_t"] = None
+        vids.append(clean)
+    vids.sort(key=lambda r: -(r.get("views") or 0))
     return vids[:30]
 
 
@@ -64,17 +143,17 @@ posting times for India + global audiences. Be specific and current; list song t
         purpose="trends-research", search=True) or ""
     prompt = f"""You are the growth strategist for "Skywalker", a YouTube Shorts channel posting 4 movie/trailer edits a day
 (slots 06:30 Hollywood, 12:30 Indian, 17:30 romance/funny, 22:30 Indian celeb or anime; IST). Layout is fixed (white
-English hook bar on top of the uncropped frame, lower-third subtitles, 20-32s).
+English hook bar on top of the uncropped frame, lower-third subtitles, aim about 20-28s, hard publish 18-32s).
 Fresh research notes:
 {research[:7000]}
 Best-effort YouTube search sample: {json.dumps(sample, ensure_ascii=False)[:2500]}
-Our own videos (views so far): {json.dumps(ours, ensure_ascii=False)[:3000]}
+Our own videos (views so far; music, energy, drop_t and slot are joined from local render results when stats omit them): {json.dumps(ours, ensure_ascii=False)[:6000]}
 Songs currently in our music library: {json.dumps(songs, ensure_ascii=False)}
 
 Return JSON with keys:
 "hook_styles": [5-8 short English hook formulas with an example each, 3-7 words, curiosity/emotion],
 "title_patterns": [3-5 patterns that fit "<hook> 💀 | <scene> | #edit"],
-"best_length_s": number (20-32),
+"best_length_s": number (prefer 20-28; about 24s with a beat drop has worked best),
 "posting_times_ist": [advisory list, do not change our slots],
 "caption_styles": [3-5 notes],
 "song_picks": [8-12 exact song titles (title only) best for our edits right now; prefer ones in our library],
@@ -87,7 +166,7 @@ Return JSON with keys:
     if not isinstance(data, dict):
         print("::warning::trends synthesis failed; keeping previous trends/latest.json")
         return 0 if (REPO / "trends" / "latest.json").exists() else 1
-    data["best_length_s"] = max(20, min(32, float(data.get("best_length_s") or 28)))
+    data["best_length_s"] = max(20, min(28, float(data.get("best_length_s") or 24)))
     data.update(generated_at=now.strftime("%Y-%m-%d %H:%M IST"), research_chars=len(research),
                 yt_sample=len(sample), own_videos=len(ours))
     (REPO / "trends").mkdir(exist_ok=True)

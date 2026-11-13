@@ -24,6 +24,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import glob, json, sys
+          from pathlib import Path
           sys.path.insert(0, ".")
           import hook_text
           seen, bad = set(), []
@@ -31,9 +32,17 @@ jobs:
               for it in json.load(open(f)):
                   if it["id"] in seen: bad.append("dup " + it["id"])
                   seen.add(it["id"])
-                  if it.get("status", "queued") == "queued" and it["slot"] >= "2026-11-12T17:30":
-                      e = hook_text.check_item_hook_fields(it)
-                      if e: bad.append(f"{it['id']}: {e}")
+                  if it.get("status", "queued") != "queued" or it["slot"] < "2026-11-12T17:30":
+                      continue
+                  rp = Path("results") / f"{it['id']}.json"
+                  if rp.exists():
+                      try:
+                          if json.loads(rp.read_text()).get("status") == "done":
+                              continue
+                      except Exception:
+                          pass
+                  e = hook_text.check_item_hook_fields(it)
+                  if e: bad.append(f"{it['id']}: {e}")
           print("\n".join(bad) or "queue ok")
           sys.exit(1 if bad else 0)
           PY

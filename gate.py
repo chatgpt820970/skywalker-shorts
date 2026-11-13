@@ -95,7 +95,9 @@ def run_gate(final: Path, *, qa_obj: dict, checks: dict, item: dict, work: Path 
     if len(title) > 100:
         fails.append("title over 100 chars")
     errs = hook_text.check_item_hook_fields(item)
-    errs += hook_text.template_errors(hook) + hook_text.template_errors(title, label="title")
+    for extra in hook_text.template_errors(hook) + hook_text.template_errors(title, label="title"):
+        if extra not in errs:
+            errs.append(extra)
     op = hook_text.opener(hook)
     if op and op in set(item.get("_avoid_openers") or []):
         errs.append(f"hook opener '{op}' repeats one of the last 10 videos")
