@@ -1,0 +1,98 @@
+{
+  "id": "test-improvements-dryrun",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)",
+  "at": "2026-11-13 17:56 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43413298199",
+  "slot": null,
+  "title": "He never stopped saving them | blur fill dry-run | #edit",
+  "hook": "He never stopped saving them",
+  "description": "He never stopped saving them. Dry-run test render for blur fill, bigger captions, cold open, seamless loop, and -14 LUFS. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+  "tags": [
+    "superman",
+    "dc",
+    "edit",
+    "shorts",
+    "trending",
+    "test"
+  ],
+  "queue_meta": null,
+  "gemini_meta": false,
+  "hook_source": null,
+  "hook_style": null,
+  "title_candidates": null,
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "s": 46.1,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 8.2,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 15.7,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -35}; auto_qc: audio silent or missing (mean_volume=None)",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_variousartistsmagnatron2.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -35}; auto_qc: audio silent or missing (mean_volume=None)",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_variousartistsmagnatron2.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): QA audio failed: {'ok': False, 'mean_volume_db': None, 'limit_db': -42}; auto_qc: audio silent or missing (mean_volume=None)"
+}
