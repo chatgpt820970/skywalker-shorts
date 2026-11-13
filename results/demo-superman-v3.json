@@ -1,0 +1,107 @@
+{
+  "id": "demo-superman-v3",
+  "status": "failed",
+  "detail": "gemini QC rejected 2 re-renders; backup item takes the slot: gemini QC reject: Act 2 contains spoken dialogue over the song ('Hey buddy', 'eyes up here', 'Let's do it Cronkite'), breaking the requirement for Act 2 to have no dialogue.; Subtitles are missing for most of the dialogue lines spoken throughout the edit.",
+  "at": "2026-11-13 07:34 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43341267504",
+  "slot": null,
+  "title": "David Corenswet's aura as Superman is unreal #superman #davidcorenswet #superhero",
+  "hook": "Superman didn't come here to negotiate",
+  "description": "Superman didn't come here to negotiate. Superman faces heavy political scrutiny and citywide disaster while standing firm as Earth's protector. From the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#superman #davidcorenswet #superhero #shorts #edit",
+  "tags": [
+    "superman",
+    "davidcorenswet",
+    "superhero",
+    "dc",
+    "jamesgunn",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Superman still saves everyone",
+    "title": "Superman still saves everyone | Superman returns to Metropolis | #edit",
+    "description": "Superman still saves everyone. Superman returns to Metropolis from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+    "tags": [
+      "superman",
+      "dc",
+      "davidcorenswet",
+      "jamesgunn",
+      "superhero",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "bold claim",
+  "title_candidates": [
+    {
+      "title": "David Corenswet's aura as Superman is unreal",
+      "click_score": 94.0
+    },
+    {
+      "title": "Lex Luthor realized he made a huge mistake",
+      "click_score": 90.0
+    },
+    {
+      "title": "This scene hits different when Superman steps in",
+      "click_score": 87.0
+    },
+    {
+      "title": "POV: You're watching Superman save Metropolis",
+      "click_score": 85.0
+    },
+    {
+      "title": "Nobody expected Superman to show up like this",
+      "click_score": 82.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "s": 8.7,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "s": 8.2,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "s": 26.0,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "gemini QC reject: Act 2 contains dialogue mixed over the hype song instead of pure music over beat-cut action, violating the required audio structure and creating a cluttered audio mix.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "gemini QC reject: Act 2 contains spoken dialogue over the song ('Hey buddy', 'eyes up here', 'Let's do it Cronkite'), breaking the requirement for Act 2 to have no dialogue.; Subtitles are missing for most of the dialogue lines spoken throughout the edit.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    }
+  ],
+  "last_error": "gemini QC reject: Act 2 contains spoken dialogue over the song ('Hey buddy', 'eyes up here', 'Let's do it Cronkite'), breaking the requirement for Act 2 to have no dialogue.; Subtitles are missing for most of the dialogue lines spoken throughout the edit.",
+  "qc_rejected": true
+}
