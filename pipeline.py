@@ -3114,33 +3114,49 @@ def _mix_music_only(music: dict, dur: float, bed: Path) -> Path | None:
         return bed
 
 
+def _has_audio_stream(path: Path) -> bool:
+    try:
+        out = subprocess.check_output(
+            ["ffprobe", "-v", "error", "-select_streams", "a:0",
+             "-show_entries", "stream=codec_type", "-of", "csv=p=0", str(path)],
+            text=True, stderr=subprocess.DEVNULL,
+        ).strip()
+        return bool(out)
+    except Exception:
+        return False
+
+
 def apply_seamless_loop(path: Path, loop_s: float = 0.5) -> Path:
     """Crossfade the last ~loop_s into the first ~loop_s so replays feel continuous.
 
     Operates on the fully composed frame (blur fill + plate + white hook bar) and
     the final mix. Duration stays the same; only the tail blends into the opener.
+
+    Uses plain subprocess (not ffmpeg_util.run) so a failed filter_complex is never
+    "recovered" into a video-only remux that drops the audio track.
     """
     try:
         dur = float(ffprobe_dur(path))
     except Exception:
         return path
     L = float(loop_s)
-    if dur < L * 4 + 2.0:
+    if dur < L * 4 + 2.0 or not _has_audio_stream(path):
         return path
     offset = max(0.05, dur - L)
     tmp = path.with_suffix(".loop.tmp.mp4")
+    # Video: main body + xfade(tail, head). Audio: same with acrossfade.
     fc = (
         f"[0:v]split=3[v0][v1][v2];"
         f"[v0]trim=0:{offset:.3f},setpts=PTS-STARTPTS[vmain];"
-        f"[v1]trim=start={offset:.3f},setpts=PTS-STARTPTS[vtail];"
-        f"[v2]trim=0:{L:.3f},setpts=PTS-STARTPTS[vhead];"
-        f"[vtail][vhead]xfade=transition=fade:duration={L:.3f}:offset=0[vxf];"
+        f"[v1]trim=start={offset:.3f},setpts=PTS-STARTPTS,fps={FPS}[vtail];"
+        f"[v2]trim=0:{L:.3f},setpts=PTS-STARTPTS,fps={FPS}[vhead];"
+        f"[vtail][vhead]xfade=transition=fade:duration={L:.3f}:offset=0,fps={FPS},format=yuv420p[vxf];"
         f"[vmain][vxf]concat=n=2:v=1:a=0[vout];"
         f"[0:a]asplit=3[a0][a1][a2];"
         f"[a0]atrim=0:{offset:.3f},asetpts=PTS-STARTPTS[amain];"
         f"[a1]atrim=start={offset:.3f},asetpts=PTS-STARTPTS[atail];"
         f"[a2]atrim=0:{L:.3f},asetpts=PTS-STARTPTS[ahead];"
-        f"[atail][ahead]acrossfade=d={L:.3f}:c1=tri:c2=tri[axf];"
+        f"[atail][ahead]acrossfade=d={L:.3f}[axf];"
         f"[amain][axf]concat=n=2:v=0:a=1[aout]"
     )
     cmd = [
@@ -3154,12 +3170,14 @@ def apply_seamless_loop(path: Path, loop_s: float = 0.5) -> Path:
         str(tmp),
     ]
     try:
-        run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if tmp.exists() and tmp.stat().st_size > 1000:
-            tmp.replace(path)
-            print(f"  seamless loop: last {L:.2f}s crossfades into first frame")
-        else:
+        r = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+        if r.returncode != 0 or not tmp.exists() or tmp.stat().st_size < 1000 or not _has_audio_stream(tmp):
+            err = (r.stderr or "")[-1200:]
+            print(f"  seamless loop skipped (keep original audio): exit={r.returncode} {err}")
             tmp.unlink(missing_ok=True)
+            return path
+        tmp.replace(path)
+        print(f"  seamless loop: last {L:.2f}s crossfades into first frame")
     except Exception as e:
         print(f"  seamless loop skipped: {e}")
         tmp.unlink(missing_ok=True)

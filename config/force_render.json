@@ -1,5 +1,5 @@
 {
   "ids": ["test-improvements-dryrun"],
   "no_publish": true,
-  "note": "One-shot dry-run for blur fill / captions / cold open / seamless loop / -14 LUFS. Cleared after success."
+  "note": "Re-run dry-run after seamless-loop audio fix."
 }
