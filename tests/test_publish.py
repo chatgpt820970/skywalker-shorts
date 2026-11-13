@@ -111,27 +111,30 @@ def test_no_reason_why_template_anywhere():
 
 
 def test_own_performance_joins_render_facts():
+    import json
     import trends
+    from pathlib import Path
+    n_stats = len(json.loads(Path("stats/latest.json").read_text()).get("videos") or {})
     rows = trends.own_performance()
-    assert len(rows) == 12
+    assert len(rows) == n_stats and n_stats >= 12
+    # Music/energy/drop/slot are joined from results; views come from live stats.
     hay = next(r for r in rows if "Haymitch" in (r.get("title") or ""))
-    assert hay["views"] == 10956
+    assert hay["views"] >= 1000
     assert "Godless" in hay["music"] and "ncs_godless.mp3" in hay["music"]
     assert hay["energy"] is True
     assert abs(float(hay["drop_t"]) - 12.562) < 0.01
     assert hay["slot"] == "06:30"
     doom = next(r for r in rows if "Doctor Doom" in (r.get("title") or ""))
-    assert doom["views"] == 2660
+    assert doom["views"] >= 100
     assert "Adrenaline" in doom["music"]
     assert doom["energy"] is True
     assert doom["slot"] == "06:30"
     maat = next(r for r in rows if "Maatrubhumi" in (r.get("title") or ""))
-    assert maat["views"] == 3
     assert maat["energy"] is False
     assert maat["drop_t"] is None
     assert maat["slot"] == "22:30"
     lucy = next(r for r in rows if "Lucy" in (r.get("title") or ""))
-    assert lucy["views"] == 5 and lucy["energy"] is False and lucy["slot"] == "17:30"
+    assert lucy["energy"] is False and lucy["slot"] == "17:30"
 
 
 def test_queue_hook_survives_when_gemini_is_down():
