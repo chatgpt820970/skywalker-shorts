@@ -18,16 +18,23 @@ import plan
 IST = timezone(timedelta(hours=5, minutes=30))
 
 
-def test_duration_gates_allow_18_to_32_aim_25():
+def test_duration_gates_allow_18_to_32_aim_20():
     assert pipeline.MIN_OUTPUT_DUR == 18.0
     assert gate.MIN_DUR == 18.0
+    assert gate.MAX_DUR == 32.6
     assert auto_qc.MIN_DURATION == 18.0
-    assert pipeline.MIN_UNIQUE_DUR == 25.0
+    assert auto_qc.AIM_DURATION == 20.0
+    assert auto_qc.AIM_DURATION_MAX == 28.0
+    assert pipeline.MIN_UNIQUE_DUR == 20.0
+    # A 26s queue target must not be pulled back up to the old 25.5s body floor.
+    assert pipeline.MIN_UNIQUE_DUR + 0.5 < 26
     assert auto_qc.duration_issue(18.0) is None
     assert auto_qc.duration_issue(22.23) is None
     assert auto_qc.duration_issue(17.9)
+    assert "20-28" in auto_qc.duration_issue(17.9)
     pipeline.RELAX = False
     pipeline._require_min_duration(18.0)
+    pipeline._require_min_duration(20.0)
     pipeline._require_min_duration(22.23)
 
 

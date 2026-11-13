@@ -1,17 +1,16 @@
 {
  "hook_styles": [
-  "This scene changed cinema forever (e.g. This scene changed cinema forever)",
-  "Nobody expected him to do this (e.g. Nobody expected him to do this)",
-  "When the villain was actually right (e.g. When the villain was actually right)",
-  "He did this stunt himself (e.g. He did this stunt himself)",
-  "The cold reaction says it all (e.g. The cold reaction says it all)",
-  "She didn't realize who he was (e.g. She didn't realize who he was)"
+  "Name the character and the action in 3-7 English words (e.g. Tanjiro entered the Infinity Castle)",
+  "Big-IP cold open, specific not generic (e.g. Doctor Doom terrifies every Avenger)",
+  "One concrete scene fact (e.g. Haymitch was never the same)",
+  "A stake the picture already shows (e.g. She married her own assassin)",
+  "A short curiosity line from the shot (e.g. Nobody leaves the village after dark)"
  ],
  "title_patterns": [
-  "When He Realized It Was Too Late 💀 | Fight Club Ending | #edit",
-  "This Cold Entrance Hit Different 💀 | Arjun Sarkar Police Scene | #edit",
-  "Nobody Was Ready For This Twist 💀 | Dramatic Scene | #edit",
-  "He Played With The Wrong Person 💀 | Badass Movie Moment | #edit"
+  "<hook> 💀 | <scene> | #edit",
+  "Tanjiro entered the Infinity Castle 💀 | Into the Infinity Castle | #edit",
+  "Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
+  "She married her own assassin 💀 | The wedding | #edit"
  ],
  "best_length_s": 24.0,
  "posting_times_ist": [
@@ -27,16 +26,16 @@
   "Maintain high contrast text without covering key visual elements of the clip."
  ],
  "song_picks": [
-  "Memory Reboot (Slowed)",
-  "Close Eyes",
-  "MONTAGEM FUJIN (Super Slowed)",
-  "MURDER IN MY MIND",
-  "Saiyaara (Slowed + Reverb)",
+  "Adrenaline",
+  "Godless",
   "Hukum",
-  "Winning Speech",
+  "MURDER IN MY MIND",
+  "Close Eyes",
   "METAMORPHOSIS",
-  "After Dark",
-  "PASSO BEM SOLTO (Slowed)"
+  "Monica",
+  "PASSO BEM SOLTO (Slowed)",
+  "Fear Song",
+  "MONTAGEM FUJIN (Super Slowed)"
  ],
  "songs_to_add": [
   "Montagem Rugido - DJ GBR",
@@ -61,11 +60,12 @@
   "movieclips"
  ],
  "avoid": [
-  "Slow intro frames without visual motion or punchy hook text within 1.5s.",
-  "Mismatched audio beat drops relative to video cuts.",
-  "Cropping horizontal movie clips into stretched vertical aspect ratio instead of letterbox framing.",
-  "Excessive visual clutter or heavy filters that obscure character faces.",
-  "Clips exceeding 32 seconds which degrade audience completion rate."
+  "Low-energy tracks with no beat drop on obscure or romcom titles.",
+  "Repeating a topic or title, including a same-day duplicate.",
+  "The banned 'The reason why' hook or title, and Hinglish titles.",
+  "Forcing unique footage past ~24s. Aim 20-28s with a drop. Hard minimum stays 18s. Do not exceed about 32s.",
+  "Slow intro frames without visual motion or a readable English hook in the first 1.5s.",
+  "Cropping the frame, stretched vertical video, or heavy filters over faces."
  ],
  "top_channels": [
   "Btsly Edits: High viral reach on Indian movie female character montages.",
@@ -75,13 +75,14 @@
   "k o o k t a e c a f e: High view count FMV edit formats using trending pop audio."
  ],
  "our_insights": [
-  "No initial video performance data available yet; channel is in baseline setup phase.",
-  "Slot timing allows testing Hollywood early morning and Indian cinema mid-day/night.",
-  "Keeping duration fixed at 20-32s ensures eligibility for top loop retention optimization.",
-  "Strict top-hook bar layout will create visual brand recognition across all 4 daily slots."
+  "13 Nov review of the 12 Nov 20:54 IST stats (12 videos, 20918 views, 3 subs). 06:30 Hollywood/big-IP action with a beat drop wins: Haymitch 10956 views (29s, 06:30, Godless, energy, drop ~12.6s) and Doctor Doom 2660 views (24s, 06:30, Adrenaline, energy, drop ~11s).",
+  "Low-energy tracks with no drop on obscure or romcom titles flopped: Maatrubhumi/Salman 3 views (31s, 22:30, Montagem Toma, energy false, no drop, Hinglish title) and Materialists/Lucy 5 views (33s, 17:30, teamo, energy false, no drop).",
+  "Do not repeat a topic or title. The same-day Godzilla Minus Zero duplicate got 43 views against 1229 for the original. Peddi still reached 1149 at 12:30 with Godless plus a drop even at 36s. Focker comedy reached 1123 at 17:30 without an energy edit.",
+  "English unique scene hooks only. Never the banned 'The reason why' template and never a Hinglish title. Raja Saab's Hinglish title still reached 958 with an energy edit, but the English big-IP hooks are the videos people actually watched.",
+  "Prefer about 24s (aim 20-28) with a music drop. Hard publish minimum stays 18s and the cap stays about 32s. The old 25s unique-shot floor wasted retries on cuts that already performed."
  ],
  "generated_at": "2026-11-12 18:25 IST",
  "research_chars": 0,
  "yt_sample": 24,
- "own_videos": 0
+ "own_videos": 12
 }

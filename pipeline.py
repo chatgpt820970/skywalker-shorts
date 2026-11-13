@@ -98,7 +98,7 @@ STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
 TARGET_DUR = 32.0
 MIN_OUTPUT_DUR = 18.0   # hard floor: never publish shorter than 18s
-MIN_UNIQUE_DUR = 25.0   # aim; relaxed to MIN_OUTPUT_DUR only on --relax
+MIN_UNIQUE_DUR = 20.0   # planner aim floor (about 20-28s). Hard publish min stays 18s; cap stays ~32s.
 END_CARD = 2.4
 END_STILL = 52.0           # Godzilla lightning still (mezzanine time)
 HOOK_TEXT = "Nobody was ready for this"
@@ -1020,12 +1020,12 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
 # ---------------------------------------------------------------------------
 def _require_min_duration(acc: float, *, where: str = "") -> None:
     """Fail closed: never hand a stub EDL shorter than the 18s hard floor.
-    25s is the aim, not a publish gate: 18-32s is allowed."""
+    Aim is about 20-28s. 18-32s may publish; the 20s figure is the planner aim, not a second gate."""
     prefix = f"{where}: " if where else ""
     if acc + 1e-6 < MIN_OUTPUT_DUR:
         raise SystemExit(
             f"{prefix}only {acc:.1f}s of unique clean shots "
-            f"(need ≥{MIN_OUTPUT_DUR:.0f}s, aim 25-32s); "
+            f"(need ≥{MIN_OUTPUT_DUR:.0f}s, aim 20-28s); "
             f"not repeating shots and not publishing a short cut"
         )
 
@@ -1248,13 +1248,14 @@ def act1_end(edl: list[dict] | None) -> float:
 
 def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
               transcript: dict | None = None) -> list[dict]:
-    """Pick a unique, tension-building cut list targeting 25–32s.
+    """Pick a unique, tension-building cut list aiming for about 20–28s.
 
     Uniqueness: a used source range [s, e] blocks [s-2, e+2], and any visually
     similar keyframe (pHash / histogram) is also rejected. Shots are 1.5–3.5s
     and are extended to the end of a complete spoken line (or that line is
-    dropped). If 25s of unique clean shots cannot be reached, we report it
-    rather than repeating a shot.
+    dropped). If the 18s hard floor of unique clean shots cannot be reached,
+    we report it rather than repeating a shot. The planner aims for ~20-28s;
+    the publish cap stays about 32s.
     """
     import similarity as sim
     try:
@@ -1321,7 +1322,7 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         if two:
             return two
 
-    # Fill the whole target with unique live shots (25–32s). An end-card still
+    # Fill the whole target with unique live shots (aim about 20–28s). An end-card still
     # is only added later if we still have a unique unused frame.
     MIN_SHOT = 1.5
     MAX_SHOT = 3.5
@@ -3580,8 +3581,9 @@ def main():
     ap.add_argument("--energy", action="store_true", help="Force energy edit (auto for anime/movie)")
     ap.add_argument("--qa-json", default=None, help="Write the combined QA report here")
     ap.add_argument("--relax", action="store_true",
-                    help="Retry tier 3: relax ONLY non-hard thresholds (shake/audio; aim 25s->20s). "
-                         "Never relaxes the 20s duration floor, no-crop, layout, or no-logo/title.")
+                    help="Retry tier 3: relax ONLY non-hard thresholds (shake/audio). "
+                         "Never relaxes the 18s duration floor, no-crop, layout, or no-logo/title. "
+                         "Aim stays about 20-28s.")
     ap.add_argument("--alt-scenes", action="store_true",
                     help="Retry tier 3: prefer a different (higher-motion) scene set")
     ap.add_argument("--exclude-music", default="",
@@ -3639,9 +3641,10 @@ def main():
         TARGET_DUR = float(args.target_dur)
     if args.end_card is not None:
         END_CARD = float(args.end_card)
-    # Hard rule: finished Short is 25-32s INCLUDING the end still. The planner
-    # overshoots its body target by ~1-3s on beat snapping (Peddi came out 35.8s),
+    # Aim about 20-28s INCLUDING the end still. Hard publish window stays 18-32s.
+    # The planner overshoots its body target by ~1-3s on beat snapping (Peddi came out 35.8s),
     # so plan the body short enough that body + end still lands <= 32s.
+    # MIN_UNIQUE_DUR (20s) is only the lower clamp on that body target, not a 25s retry gate.
     MAX_TOTAL_DUR = 32.0
     TARGET_DUR = max(MIN_UNIQUE_DUR + 0.5, min(TARGET_DUR, MAX_TOTAL_DUR) - END_CARD - 1.5)
     print(f"  body target {TARGET_DUR:.1f}s (+{END_CARD:.1f}s end still, cap {MAX_TOTAL_DUR:.0f}s)")
@@ -4014,7 +4017,7 @@ def main():
         report["warnings"] = list(report.get("warnings") or [])
         if meta.get("short_unique"):
             msg = (f"only {meta.get('unique_duration')}s of unique clean shots "
-                   f"(need ≥{meta.get('min_output') or meta.get('min_unique')}s, aim 25-32s); "
+                   f"(need ≥{meta.get('min_output') or meta.get('min_unique')}s, aim 20-28s); "
                    f"not repeating shots and not publishing a short cut")
             issues.append(msg)
             print("ERROR:", msg)
@@ -4024,7 +4027,7 @@ def main():
         out_dur = 0.0
     if out_dur + 1e-6 < MIN_OUTPUT_DUR:
         issues.append(
-            f"duration {out_dur:.2f}s below hard minimum {MIN_OUTPUT_DUR:.0f}s (aim 25-32s)"
+            f"duration {out_dur:.2f}s below hard minimum {MIN_OUTPUT_DUR:.0f}s (aim 20-28s)"
         )
     elif out_dur + 1e-6 < MIN_UNIQUE_DUR:
         warn = f"duration {out_dur:.2f}s under aim {MIN_UNIQUE_DUR:.0f}s (allowed {MIN_OUTPUT_DUR:.0f}-32s)"

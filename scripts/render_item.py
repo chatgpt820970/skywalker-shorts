@@ -431,7 +431,7 @@ def _is_short_failure(reason, qa) -> bool:
         str((qa or {}).get("unique_duration") or ""),
     ]).lower()
     keys = (
-        "hard minimum", "unique clean shots", "aim 25-32", "below target",
+        "hard minimum", "unique clean shots", "aim 25-32", "aim 20-28", "below target",
         "too short", "short unique", "not publishing a short cut",
         "duration ", "need ≥18", "need >=18", "need ≥20", "need >=20",
         "need ≥25", "need >=25", "hard minimum 18",

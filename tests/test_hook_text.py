@@ -67,10 +67,21 @@ def test_item_checks_hook_and_title():
     errs = hook_text.check_item_hook_fields(bad)
     assert any(e.startswith("hook") for e in errs)
     assert any(e.startswith("title") for e in errs)
+    assert any("banned" in e for e in errs)
     hook_text.require_english_hook({
-        "hook": "The reason why Doctor Doom terrifies every Avenger",
-        "title": "The reason why Doctor Doom terrifies every Avenger 💀 | #edit",
+        "hook": "Doctor Doom terrifies every Avenger",
+        "title": "Doctor Doom terrifies every Avenger 💀 | #edit",
     })
+
+
+def _rendered_done(item_id: str) -> bool:
+    path = REPO / "results" / f"{item_id}.json"
+    if not path.exists():
+        return False
+    try:
+        return json.loads(path.read_text()).get("status") == "done"
+    except Exception:
+        return False
 
 
 def test_upcoming_queue_hooks_are_english():
@@ -83,7 +94,14 @@ def test_upcoming_queue_hooks_are_english():
                 continue
             if slot < UPCOMING_FROM:
                 continue
-            errs = hook_text.check_item_hook_fields(item)
+            # Posted and replaced rows still carry the old template. Only items
+            # that can still render must pass the full hook/title check.
+            if item.get("status", "queued") == "queued" and not _rendered_done(item.get("id") or ""):
+                errs = hook_text.check_item_hook_fields(item)
+            else:
+                errs = []
+                for key in ("hook", "title"):
+                    errs.extend(hook_text.hook_language_errors(item.get(key) or "", label=key))
             if errs:
                 problems.append(f"{item.get('id')}: {'; '.join(errs)}")
     assert not problems, "upcoming hooks/titles must be English:\n" + "\n".join(problems)
