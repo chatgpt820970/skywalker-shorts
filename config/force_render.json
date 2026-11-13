@@ -1,5 +1,5 @@
 {
-  "ids": ["test-superman-dryrun"],
+  "ids": [],
   "no_publish": true,
-  "note": "One-shot dry-run test render. Clear ids after the test MP4 lands on the test-renders release."
+  "note": "Cleared after successful test-superman-dryrun. Set ids to force another dry-run."
 }

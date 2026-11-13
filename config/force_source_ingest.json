@@ -1,4 +1,5 @@
 {
-  "topics": "devilwearsprada2,hoppers,goodbadugly,sakamotodays",
-  "note": "One-shot source ingest for remaining Nov 14-16 topics without release assets."
+  "topics": "",
+  "enabled": false,
+  "note": "Set topics + enabled to re-trigger source-ingest on push."
 }

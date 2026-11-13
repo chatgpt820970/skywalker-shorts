@@ -350,11 +350,12 @@ def publish(final, fw, fh, up, used, qa, credit, qa_obj):
     asset_name = final.name
     if no_publish:
         # Keep a stable downloadable name on the shared test-renders tag.
-        asset_name = f"test-{iid}.mp4"
-        tagged = final.parent / asset_name
-        if tagged.resolve() != final.resolve():
-            tagged.write_bytes(final.read_bytes())
-        final = tagged
+        asset_name = final.name if final.name.startswith("test-") else f"test-{iid}.mp4"
+        if asset_name != final.name:
+            tagged = final.parent / asset_name
+            if tagged.resolve() != final.resolve():
+                tagged.write_bytes(final.read_bytes())
+            final = tagged
         notes = "[NO PUBLISH / DRY-RUN]\n" + notes
     r = subprocess.run(["gh", "release", "view", tag], capture_output=True)
     if r.returncode != 0:
@@ -591,7 +592,7 @@ def main():
         write("done", info["detail"], auto_retries=auto_retries, max_auto_retries=MAX_AUTO_RETRIES,
               attempts=attempts_log, last_error=None, **{k: v for k, v in info.items()
                 if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
-                         "music", "music_credit", "description_final", "gate")})
+                         "music", "music_credit", "description_final", "gate", "no_publish")})
         return 0
 
     # Attempt 2: sources-release fallback mp4
@@ -606,7 +607,7 @@ def main():
               max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=None,
               **{k: v for k, v in info.items()
                  if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
-                          "music", "music_credit", "description_final", "gate")})
+                          "music", "music_credit", "description_final", "gate", "no_publish")})
         return 0
 
     # Attempt 3: fallback + different music + alt scenes + relaxed non-hard thresholds
@@ -621,7 +622,7 @@ def main():
               max_auto_retries=MAX_AUTO_RETRIES, attempts=attempts_log, last_error=None,
               **{k: v for k, v in info.items()
                  if k in ("release_url", "asset_url", "qa", "drop_t", "energy", "source",
-                          "music", "music_credit", "description_final", "gate")})
+                          "music", "music_credit", "description_final", "gate", "no_publish")})
         return 0
 
     return _give_up(attempts_log, auto_retries)

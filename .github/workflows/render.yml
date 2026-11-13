@@ -67,7 +67,7 @@ jobs:
             echo "force_render ids=$F_IDS no_publish=$F_NP"
           fi
           python3 scripts/plan.py
-          echo "no_publish=${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}" >> "$GITHUB_OUTPUT"
+          # If force file had no ids, plan may still pick due items; that is fine.
       - id: flags
         run: |
           NP="${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}"

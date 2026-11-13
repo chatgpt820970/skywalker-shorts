@@ -1,5 +1,6 @@
 {
   "max_new": 120,
   "target": 280,
-  "note": "One-shot music ingest trigger via push (workflow_dispatch blocked for cloud agent token)."
+  "enabled": false,
+  "note": "Set enabled true or bump this file to re-trigger music-ingest on push."
 }

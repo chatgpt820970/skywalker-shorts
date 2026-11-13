@@ -48,8 +48,15 @@ jobs:
             printf '%s\n' "$YTDLP_COOKIES" > /tmp/ytdlp_cookies.txt
             export YTDLP_COOKIES_FILE=/tmp/ytdlp_cookies.txt
           fi
-          if [ -f config/force_source_ingest.json ] && [ -z "$TOPICS" ]; then
-            TOPICS=$(python3 -c "import json; print(json.load(open('config/force_source_ingest.json')).get('topics') or '')")
+          if [ -f config/force_source_ingest.json ]; then
+            EN=$(python3 -c "import json; d=json.load(open('config/force_source_ingest.json')); print('1' if d.get('enabled', True) else '0')")
+            if [ "$EN" = "0" ] && [ "${{ github.event_name }}" = "push" ]; then
+              echo "force_source_ingest disabled; skipping"
+              exit 0
+            fi
+            if [ -z "$TOPICS" ]; then
+              TOPICS=$(python3 -c "import json; print(json.load(open('config/force_source_ingest.json')).get('topics') or '')")
+            fi
           fi
           python3 scripts/ingest_sources.py --topics "${TOPICS:-}"
       - name: Summary
