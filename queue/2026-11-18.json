@@ -22,7 +22,7 @@
    "shorts",
    "trending"
   ],
-  "target_dur": 32,
+  "target_dur": 26,
   "status": "queued",
   "market": "US/UK",
   "fallback_release": "sources",
@@ -51,7 +51,7 @@
    "shorts",
    "trending"
   ],
-  "target_dur": 32,
+  "target_dur": 26,
   "status": "queued",
   "market": "IN",
   "fallback_release": "sources",
@@ -80,7 +80,7 @@
    "shorts",
    "trending"
   ],
-  "target_dur": 32,
+  "target_dur": 26,
   "status": "queued",
   "market": "US/UK",
   "fallback_release": "sources",
@@ -109,7 +109,7 @@
    "shorts",
    "trending"
   ],
-  "target_dur": 32,
+  "target_dur": 26,
   "status": "queued",
   "market": "IN",
   "fallback_release": "sources",

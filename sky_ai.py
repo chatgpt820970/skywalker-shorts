@@ -126,6 +126,48 @@ def fallback_hook(item: dict, dialogue: list[str], avoid: list[str]) -> str:
     return "Nobody was ready for this"
 
 
+def queue_hook_meta(item: dict, dialogue: list[str], avoid: list[str]) -> dict:
+    """Keep a queue hook that already passes the bar when Gemini is unavailable.
+
+    A rate-limit must not replace a specific English hook with a generic pool line.
+    A banned or Hinglish queue hook still falls through to the seeded fallback.
+    """
+    queued = " ".join((item.get("hook") or "").split())
+    if queued and not hook_errors(queued, avoid):
+        title = " ".join((item.get("title") or "").split())
+        desc = (item.get("description") or "").strip()
+        title_bad = (
+            not title
+            or bool(hook_text.template_errors(title, label="title"))
+            or bool(hook_text.hook_language_errors(title, label="title"))
+            or bool(banned_hits(title))
+        )
+        tags = [t for t in (item.get("tags") or []) if t not in ("edit", "shorts", "trending")][:3]
+        if title_bad or not desc:
+            film = film_name(item)
+            built = f"{queued.strip(chr(34))} | {film}" if film else queued
+            title = build_title(built, tags or ["movieedit"])
+            desc = build_description(queued, item, tags or ["movieedit"])
+        return {
+            "hook": queued,
+            "title": title,
+            "description": desc,
+            "hashtags": tags,
+            "source": "queue",
+        }
+    hook = fallback_hook(item, dialogue, avoid)
+    film = film_name(item)
+    tags = [t for t in (item.get("tags") or []) if t not in ("edit", "shorts", "trending")][:2] + ["movieedit"]
+    title = f"{hook.strip(chr(34))} | {film}" if film else hook
+    return {
+        "hook": hook,
+        "title": build_title(title, tags),
+        "hashtags": tags,
+        "description": build_description(hook, item, tags),
+        "source": "fallback",
+    }
+
+
 def build_title(title: str, hashtags: list[str]) -> str:
     title = " ".join((title or "").split())[:70].rstrip(" |-")
     tags = [t for t in hashtags if t][:3]
@@ -243,11 +285,7 @@ Return JSON: {{"hook": str, "titles": [{{"title": str, "click_score": n}}, ...5]
                     "description": build_description(hook, item, tags, str(out.get("line") or "")),
                     "style": out.get("style"), "source": "gemini", "title_candidates": cands}
     if not meta:
-        hook = fallback_hook(item, dialogue, avoid)
-        tags = [t for t in (item.get("tags") or []) if t not in ("edit", "shorts", "trending")][:2] + ["movieedit"]
-        title = f"{hook.strip(chr(34))} | {film}" if film else hook
-        meta = {"hook": hook, "title": build_title(title, tags), "hashtags": tags,
-                "description": build_description(hook, item, tags), "source": "fallback"}
+        meta = queue_hook_meta(item, dialogue, avoid)
     if meta.get("source") == "gemini":  # a fallback is never cached: the next attempt asks Gemini again (budget allowing)
         cache.write_text(json.dumps(meta, ensure_ascii=False))
     return meta
