@@ -164,5 +164,9 @@
       "low": [],
       "watched_video": true
     }
-  }
+  },
+  "buffer_post_id": "6af6cc0fac315c828ef637bf",
+  "buffer_status": "scheduled",
+  "buffer_due_at": "2026-11-13T10:30:00.000Z",
+  "buffer_created_at": "2026-11-13 14:06 IST"
 }
