@@ -1,0 +1,170 @@
+{
+  "id": "20261113-1330-zootopia2",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 2560x1066 source -> 2160x3840), QA ok",
+  "at": "2026-11-13 13:12 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43385101315",
+  "slot": "2026-11-13T13:30:00+05:30",
+  "title": "Judy and Nick's dangerous new case #zootopia2 #judyhopps #animation",
+  "hook": "Judy Hopps is going undercover",
+  "description": "Judy Hopps is going undercover. Judy and Nick go deep undercover to uncover the truth about the mysterious reptile threat looming over Zootopia. From the official Zootopia 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5AwtptT8X8k). All rights to the film/series belong to their owners; short commentary edit.\n#zootopia2 #judyhopps #animation #shorts #edit",
+  "tags": [
+    "zootopia2",
+    "judyhopps",
+    "animation",
+    "disney",
+    "nickwilde",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Judy can't trust anyone",
+    "title": "Judy can't trust anyone | Judy and Nick go undercover | #edit",
+    "description": "Judy can't trust anyone. Judy and Nick go undercover from the official Zootopia 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5AwtptT8X8k). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #zootopia2 #disney",
+    "tags": [
+      "zootopia2",
+      "disney",
+      "judyhopps",
+      "nickwilde",
+      "animation",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Judy and Nick's dangerous new case",
+      "click_score": 92.0
+    },
+    {
+      "title": "Nobody noticed the snakes in Zootopia 2",
+      "click_score": 88.0
+    },
+    {
+      "title": "Judy Hopps didn't come to play",
+      "click_score": 85.0
+    },
+    {
+      "title": "POV: you realize Zootopia is changing",
+      "click_score": 82.0
+    },
+    {
+      "title": "This Zootopia 2 scene hits different",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.8,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 5.2,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.7,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/zootopia2_trailer_h264.mp4",
+      "music": "sw_interworldrapturephonk.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261113-1330-zootopia2",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261113-1330-zootopia2/render-20261113-1330-zootopia2.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/zootopia2_trailer_h264.mp4",
+  "music": "sw_interworldrapturephonk.mp3",
+  "music_credit": "Song: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Judy Hopps is going undercover. Judy and Nick go deep undercover to uncover the truth about the mysterious reptile threat looming over Zootopia. From the official Zootopia 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5AwtptT8X8k). All rights to the film/series belong to their owners; short commentary edit.\n#zootopia2 #judyhopps #animation #shorts #edit\n\nMusic:\nSong: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.5,
+      "audio": true
+    },
+    "lufs": -12.4,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -12.3,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all quality standards: it is a clean music-only edit with a clear hook, proper layout, and no distracting elements."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "id": "20261113-1830-kalki2898ad",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-13 13:14 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43385101315",
+  "slot": "2026-11-13T18:30:00+05:30",
+  "title": "Ashwatthama's aura in this scene is unreal #kalki2898ad #ashwatthama #scifi",
+  "hook": "Ashwatthama awakens to challenge the god",
+  "description": "Ashwatthama awakens to challenge the god. An ancient warrior awakens to face the supreme power ruling a dystopian future. From the official Kalki 2898 AD trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=kQDd1AhGIHk). All rights to the film/series belong to their owners; short commentary edit.\n#kalki2898ad #ashwatthama #scifi #shorts #edit",
+  "tags": [
+    "kalki2898ad",
+    "ashwatthama",
+    "scifi",
+    "prabhas",
+    "amitabhbachchan",
+    "deepikapadukone",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Kalki's world is ending",
+    "title": "Kalki's world is ending | Prabhas faces Ashwatthama | #edit",
+    "description": "Kalki's world is ending. Prabhas faces Ashwatthama from the official Kalki 2898 AD trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=kQDd1AhGIHk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #kalki2898ad #prabhas",
+    "tags": [
+      "kalki2898ad",
+      "prabhas",
+      "amitabhbachchan",
+      "deepikapadukone",
+      "scifi",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "Character-focused curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Ashwatthama's aura in this scene is unreal",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment Ashwatthama reveals his true strength",
+      "click_score": 88.0
+    },
+    {
+      "title": "Nobody noticed the power Prabhas faces",
+      "click_score": 85.0
+    },
+    {
+      "title": "Ashwatthama didn't come to play",
+      "click_score": 82.0
+    },
+    {
+      "title": "POV: you are witnessing a divine war",
+      "click_score": 78.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key2",
+      "s": 49.0,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key2",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key2",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key2",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 8.2,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 4.9,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/kalki2898ad_trailer_h264.mp4",
+      "music": "sw_fearsong.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261113-1830-kalki2898ad",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261113-1830-kalki2898ad/render-20261113-1830-kalki2898ad.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 3.48,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/kalki2898ad_trailer_h264.mp4",
+  "music": "sw_fearsong.mp3",
+  "music_credit": "Song: Anirudh Ravichander - Fear Song",
+  "description_final": "Ashwatthama awakens to challenge the god. An ancient warrior awakens to face the supreme power ruling a dystopian future. From the official Kalki 2898 AD trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=kQDd1AhGIHk). All rights to the film/series belong to their owners; short commentary edit.\n#kalki2898ad #ashwatthama #scifi #shorts #edit\n\nMusic:\nSong: Anirudh Ravichander - Fear Song",
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.332993,
+      "audio": true
+    },
+    "lufs": -11.6,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -13.6,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video perfectly adheres to all requirements: it is a clean, song-only edit with no dialogue, features the correct hook text in a white bar, maintains the full uncropped frame, and is well-paced fo"
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}

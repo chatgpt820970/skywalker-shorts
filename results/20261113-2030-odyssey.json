@@ -1,0 +1,101 @@
+{
+  "id": "20261113-2030-odyssey",
+  "status": "retry_queued",
+  "detail": "all 2 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): only 16.4s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+  "at": "2026-11-13 14:05 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43385101315",
+  "slot": "2026-11-13T20:30:00+05:30",
+  "title": "Ithaca's king is coming back | Ithaca's king comes home | #edit",
+  "hook": "Ithaca's king is coming back",
+  "description": "Ithaca's king is coming back. Ithaca's king comes home from the official The Odyssey trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=f_bKjZeJBBI). All rights to the film/series belong to their owners; short commentary edit.\n#theodyssey #christophernolan #mattdamon #epic #newmovie",
+  "tags": [
+    "theodyssey",
+    "christophernolan",
+    "mattdamon",
+    "epic",
+    "newmovie",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": null,
+  "gemini_meta": false,
+  "hook_source": null,
+  "hook_style": null,
+  "title_candidates": null,
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 88.0,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.1,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.4,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 53.9,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.5,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 16.6s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_countdown_trailer_h264.mp4",
+      "music": "sw_interworldrapturephonk.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 16.4s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/odyssey_countdown_trailer_h264.mp4",
+      "music": "sw_canyoufeelmyheart.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): only 16.4s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut"
+}
