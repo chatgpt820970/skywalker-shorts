@@ -3,7 +3,7 @@ name: render
 on:
   push:
     branches: [main]
-    paths: ["queue/*.json"]
+    paths: ["queue/*.json", "config/force_render.json"]
   workflow_dispatch:
     inputs:
       ids:
@@ -36,7 +36,9 @@ permissions:
 # pending one, which is harmless). In-progress renders are never cancelled, and plan.py skips ids
 # another run is still rendering.
 concurrency:
-  group: render-${{ github.event_name == 'workflow_dispatch' && github.event.inputs.ids != '' && format('ids-{0}', github.run_id) || 'auto' }}
+  # Forced ids (dispatch or config/force_render.json) get their own group so they
+  # never wait behind the hourly auto planner.
+  group: render-${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.ids != '') && format('ids-{0}', github.run_id) || (github.event_name == 'push' && contains(toJSON(github.event.head_commit.modified), 'force_render.json') && format('force-{0}', github.run_id)) || 'auto' }}
   cancel-in-progress: false
 
 jobs:
@@ -45,6 +47,7 @@ jobs:
     outputs:
       ids: ${{ steps.p.outputs.ids }}
       count: ${{ steps.p.outputs.count }}
+      no_publish: ${{ steps.flags.outputs.no_publish }}
     steps:
       - uses: actions/checkout@v4
       - id: p
@@ -54,7 +57,25 @@ jobs:
           RETRY_FAILED: ${{ github.event.inputs.retry_failed || 'false' }}
           RENDER_AHEAD_HOURS: "8"
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/plan.py
+        run: |
+          # Optional one-shot force file (used when workflow_dispatch is unavailable).
+          if [ -f config/force_render.json ]; then
+            F_IDS=$(python3 -c "import json; d=json.load(open('config/force_render.json')); print(','.join(d.get('ids') or []))")
+            F_NP=$(python3 -c "import json; d=json.load(open('config/force_render.json')); print('1' if d.get('no_publish') else '0')")
+            if [ -n "$F_IDS" ] && [ -z "$IDS" ]; then export IDS="$F_IDS"; fi
+            echo "FORCE_NO_PUBLISH=$F_NP" >> "$GITHUB_ENV"
+            echo "force_render ids=$F_IDS no_publish=$F_NP"
+          fi
+          python3 scripts/plan.py
+          echo "no_publish=${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}" >> "$GITHUB_OUTPUT"
+      - id: flags
+        run: |
+          NP="${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}"
+          if [ "${FORCE_NO_PUBLISH:-0}" = "1" ]; then NP=1; fi
+          if [ -f config/force_render.json ]; then
+            NP=$(python3 -c "import json; d=json.load(open('config/force_render.json')); print('1' if d.get('no_publish') else '0')")
+          fi
+          echo "no_publish=$NP" >> "$GITHUB_OUTPUT"
 
   render:
     needs: plan
@@ -118,7 +139,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SKY_WHISPER_MODEL: small
-          SKY_NO_PUBLISH: ${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}
+          SKY_NO_PUBLISH: ${{ needs.plan.outputs.no_publish == '1' && '1' || '0' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}

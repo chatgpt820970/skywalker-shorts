@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches: [main]
-    paths: ["**.py", "music/library.json", "config/**", ".github/workflows/**", "tests/**"]
+    paths: ["**.py", "music/library.json", "config/**", ".github/workflows/**", "tests/**", "queue/**"]
   workflow_dispatch: {}
 
 jobs:

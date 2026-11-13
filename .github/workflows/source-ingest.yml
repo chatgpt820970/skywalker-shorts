@@ -10,6 +10,9 @@ on:
         description: "Comma-separated topic slugs (empty = catalog gaps)"
         required: false
         default: "devilwearsprada2,hoppers,goodbadugly,sakamotodays"
+  push:
+    branches: [main]
+    paths: ["config/force_source_ingest.json"]
   schedule:
     - cron: "30 3 * * *"
 
@@ -44,6 +47,9 @@ jobs:
           if [ -n "$YTDLP_COOKIES" ]; then
             printf '%s\n' "$YTDLP_COOKIES" > /tmp/ytdlp_cookies.txt
             export YTDLP_COOKIES_FILE=/tmp/ytdlp_cookies.txt
+          fi
+          if [ -f config/force_source_ingest.json ] && [ -z "$TOPICS" ]; then
+            TOPICS=$(python3 -c "import json; print(json.load(open('config/force_source_ingest.json')).get('topics') or '')")
           fi
           python3 scripts/ingest_sources.py --topics "${TOPICS:-}"
       - name: Summary
