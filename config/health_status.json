@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-13 14:24 IST",
+  "slots_checked": 12,
+  "ready": [
+    {
+      "slot": "2026-11-13T12:30:00+05:30",
+      "id": "20261113-1230-war2",
+      "how": "done"
+    },
+    {
+      "slot": "2026-11-13T13:30:00+05:30",
+      "id": "20261113-1330-zootopia2",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-13T16:00:00+05:30",
+      "id": "20261113-1600-projecthailmary",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-13T17:30:00+05:30",
+      "id": "20261113-1730-apothecarydiaries",
+      "how": "done"
+    },
+    {
+      "slot": "2026-11-13T18:30:00+05:30",
+      "id": "20261113-1830-kalki2898ad",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-13T20:30:00+05:30",
+      "id": "20261113-2030-odyssey",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-13T22:30:00+05:30",
+      "id": "20261113-2230-demonslayer",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T06:30:00+05:30",
+      "id": "20261114-0630-howtorobabank",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T09:00:00+05:30",
+      "id": "20261114-0900-runningman",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T11:30:00+05:30",
+      "id": "20261114-1130-mandalorian",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T12:30:00+05:30",
+      "id": "20261114-1230-kantara",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T13:30:00+05:30",
+      "id": "backup-zootopia2",
+      "how": "backup_pool"
+    }
+  ],
+  "short": [],
+  "backup_pool_size": 28,
+  "backup_pool_preuploaded": 26,
+  "spare_done": [],
+  "extra_ready_target": 2,
+  "ok": true
+}
