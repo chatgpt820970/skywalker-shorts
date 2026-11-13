@@ -21,7 +21,8 @@ def test_banned_words_ignore_safe_text():
 
 
 def test_gemini_disabled_without_key(monkeypatch, tmp_path):
-    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    for name in gemini.KEY_ENVS:
+        monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("SKY_GEMINI_BUDGET_FILE", str(tmp_path / "b.json"))
     assert gemini.generate_json("x", purpose="t") is None
     assert sky_ai.clip_hook_meta(Path("/nonexistent"), [], {}, tmp_path, "x") is None
@@ -34,6 +35,40 @@ def test_gemini_budget_cap(monkeypatch, tmp_path):
     monkeypatch.setenv("SKY_GEMINI_BUDGET_FILE", str(b))
     assert gemini.budget_left() == 0
     assert gemini.generate_json("x", purpose="t") is None  # no HTTP once the budget is spent
+
+
+def test_gemini_key_rotation(monkeypatch, tmp_path):
+    for name in gemini.KEY_ENVS:
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("SKY_GEMINI", "1")
+    monkeypatch.setenv("SKY_GEMINI_BUDGET_FILE", str(tmp_path / "b.json"))
+    assert gemini.KEY_ENVS == (
+        "GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3",
+        "GEMINI_API_KEY_4", "GEMINI_API_KEY_5", "GEMINI_API_KEY_6",
+    )
+    assert gemini._keys() == []
+    assert not gemini.available()
+    # Empty / whitespace keys are skipped; slots stay in order.
+    monkeypatch.setenv("GEMINI_API_KEY", "  ")
+    monkeypatch.setenv("GEMINI_API_KEY_3", "secret-three")
+    monkeypatch.setenv("GEMINI_API_KEY_2", "secret-two")
+    monkeypatch.setenv("GEMINI_API_KEY_6", "secret-six")
+    names = [n for n, _ in gemini._keys()]
+    assert names == ["GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_6"]
+    assert gemini.available()
+    # Last-good key is tried first; the budget stores the env name, never the secret.
+    (tmp_path / "b.json").write_text(__import__("json").dumps({"calls": 0, "http": 0, "good_key": "GEMINI_API_KEY_6"}))
+    ordered = [n for n, _ in gemini._ordered_keys()]
+    assert ordered[0] == "GEMINI_API_KEY_6"
+    assert ordered[1:] == ["GEMINI_API_KEY_2", "GEMINI_API_KEY_3"]
+    blob = (tmp_path / "b.json").read_text()
+    assert "secret-" not in blob
+    assert gemini._key_slot("GEMINI_API_KEY") == "key1"
+    assert gemini._key_slot("GEMINI_API_KEY_6") == "key6"
+    assert gemini._quota_error(429) and gemini._quota_error(503)
+    assert gemini._quota_error(403, b'{"error":{"status":"RESOURCE_EXHAUSTED"}}')
+    assert not gemini._quota_error(403, b'{"error":"PERMISSION_DENIED"}')
+    assert not gemini._quota_error(400)
 
 
 def test_scene_ranks_keep_enough_footage():
