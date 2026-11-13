@@ -13,6 +13,7 @@ from pathlib import Path
 
 import gemini
 import hook_text
+import perf
 
 BANNED = [
     "full movie", "leaked", "leak", "camrip", "free download", "download link", "fair use",
@@ -119,10 +120,26 @@ def fallback_hook(item: dict, dialogue: list[str], avoid: list[str]) -> str:
     if len(who.split()) > 3:
         who = "He"
     seed = int(hashlib.sha1((item.get("id") or "x").encode()).hexdigest(), 16)
+    # Prefer openers that historically performed (views), with exploration via seed walk.
+    try:
+        _perf = perf.load_perf()
+    except Exception:
+        _perf = {}
+    ranked = []
     for k in range(len(FALLBACK_HOOKS)):
         h = FALLBACK_HOOKS[(seed + k) % len(FALLBACK_HOOKS)].format(who=who)
-        if not hook_errors(h, avoid):
-            return h
+        if hook_errors(h, avoid):
+            continue
+        bonus = 0.0
+        if _perf:
+            try:
+                bonus = float(perf.hook_opener_penalty(_perf, h))
+            except Exception:
+                bonus = 0.0
+        ranked.append((bonus, -k, h))
+    if ranked:
+        ranked.sort(reverse=True)
+        return ranked[0][2]
     return "Nobody was ready for this"
 
 

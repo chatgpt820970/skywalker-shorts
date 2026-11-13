@@ -7,12 +7,14 @@ deletes posts. Used by trends.yml and can be run manually.
 from __future__ import annotations
 
 import json
+import random
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
+import perf  # noqa: E402
 import slot_times  # noqa: E402
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -90,10 +92,27 @@ def fill_day(day: str, catalog: list[dict], used: set[str]) -> int:
     if not need:
         return 0
     added = 0
-    # rotate catalog: prefer unused slugs
+    # rotate catalog: prefer unused slugs, weighted by stats performance
     pool = [t for t in catalog if t["slug"] not in used]
     if not pool:
         pool = list(catalog)
+    try:
+        perf_data = perf.load_perf(REPO)
+    except Exception:
+        perf_data = {}
+    rng = random.Random(day)
+
+    def topic_rank(t: dict) -> float:
+        base = 0.0
+        if perf_data:
+            try:
+                base = float(perf.topic_bonus(perf_data, t.get("tags"), t.get("pillar")))
+            except Exception:
+                base = 0.0
+        # Exploration jitter so we do not lock onto one pillar forever.
+        return base + rng.random() * 4.0
+
+    pool = sorted(pool, key=topic_rank, reverse=True)
     pi = 0
     for iso in need:
         hhmm = iso[11:16]

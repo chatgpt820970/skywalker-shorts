@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """Rule-based lower-third captions that answer the hook.
 
-4-5 lines, synced every 4s, at Y=1420 on a 1080x1920 frame (moved down
-if that would cover the footage plate). Bold text, yellow/white keywords,
-thick black stroke. ASS output.
-
-Optional LLM rewrite only if an API key is already in the environment;
-keys are never committed and no paid API is required.
+Dialogue cues only (word-accurate). Big bold white text with a thick black
+outline + soft shadow, readable on a phone. Positioned in the lower third
+inside the YouTube Shorts safe zone (above the like/comment UI).
 """
 from __future__ import annotations
 
@@ -15,19 +12,24 @@ import re
 from pathlib import Path
 
 W, H = 1080, 1920
-DEFAULT_Y = 1420
+# Safe zone: keep captions above ~220px from the bottom (Shorts right-rail UI).
+# Alignment 8 = top-center; MarginV is pixels from the top.
+SAFE_BOTTOM_PAD = 240
+DEFAULT_Y = H - SAFE_BOTTOM_PAD - 90  # ~1590 — lower third, still above UI
 INTERVAL = 4.0
 N_MIN, N_MAX = 4, 5
+# Phone-readable: larger than the old 52px, heavy outline.
+FONT_SIZE = 78
+OUTLINE = 8
+SHADOW = 3
 
 
 def _answer_templates(hook: str, words: str = "") -> list[str]:
     h = (hook or "").strip()
-    # "The reason why X ..."
     m = re.match(r"(?i)^the reason why\s+(.+?)([\s.!?]*)$", h)
     subject = m.group(1).strip() if m else h
     subject = re.sub(r"\s+", " ", subject).rstrip(".!?")
     short = words.strip() if words else ""
-    # keep subject readable
     if len(subject) > 42:
         subject = subject[:40].rsplit(" ", 1)[0]
     name = short or (subject.split()[0] if subject else "this")
@@ -38,7 +40,6 @@ def _answer_templates(hook: str, words: str = "") -> list[str]:
         f"Watch once — you will feel it",
         f"{name} hits different in this scene" if short else "This is the scene everyone is talking about",
     ]
-    # de-dupe / tighten
     out, seen = [], set()
     for ln in lines:
         k = ln.lower()
@@ -53,7 +54,6 @@ def _maybe_llm(hook: str, drafts: list[str]) -> list[str]:
     key = os.environ.get("OPENAI_API_KEY") or os.environ.get("XAI_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
     if not key:
         return drafts
-    # Keep this best-effort and short; never fail the render.
     try:
         import json, urllib.request
         if os.environ.get("OPENAI_API_KEY"):
@@ -85,9 +85,7 @@ def generate_lines(hook: str, words: str = "", dur: float = 32.0,
                    dialogue: list[dict] | None = None) -> list[dict]:
     """Lower-thirds: word-accurate dialogue cues only.
 
-    Generic filler ('The moment X changed everything', etc.) is never used.
-    If `dialogue` is a list of {t0,t1,text} cues from the transcript, those
-    are returned (clamped to duration). Otherwise no lower-thirds are emitted.
+    Generic filler is never used. If `dialogue` is empty, no lower-thirds.
     The top white hook bar is independent and stays as-is.
     """
     caps = []
@@ -108,10 +106,8 @@ def _keyword_ass(text: str) -> str:
     parts = text.split()
     if not parts:
         return text
-    # last two words as keywords when the line is long enough
     n_kw = 2 if len(parts) >= 4 else 1
     head, tail = parts[:-n_kw], parts[-n_kw:]
-    # ASS: &H00BBGGRR (yellow ~ 00D7FFFF-ish; use 0000FFFF for yellow)
     kw = r"{\c&H00FFFF&}" + " ".join(tail) + r"{\c&H00FFFFFF&}"
     if head:
         return " ".join(head) + " " + kw
@@ -119,21 +115,27 @@ def _keyword_ass(text: str) -> str:
 
 
 def caption_y(plate_bottom: int | None = None) -> int:
-    """Y=1420 unless that would sit on the footage; then just below the plate."""
+    """Lower-third Y inside the Shorts safe zone (above bottom UI).
+
+    Prefer DEFAULT_Y (~1590). If the uncropped plate extends that low, sit
+    just under the plate but never below H - SAFE_BOTTOM_PAD.
+    """
+    floor = H - SAFE_BOTTOM_PAD
     y = DEFAULT_Y
     if plate_bottom is not None and plate_bottom > 0:
-        # keep a 16px gap under the plate if 1420 would overlap
-        if y < plate_bottom + 16:
-            y = min(H - 80, plate_bottom + 24)
-    return int(y)
+        # Prefer just under the plate when the plate is high (letterbox 16:9).
+        under = int(plate_bottom) + 28
+        if under < floor:
+            y = max(y, under) if under > DEFAULT_Y - 80 else under
+        # Plate covers the whole canvas: keep safe-zone DEFAULT_Y on top of footage
+        # only when music_only has no plate gap — still clamp to floor.
+        y = min(y, floor - 40)
+    return int(max(1200, min(y, floor - 40)))
 
 
 def write_ass(path: Path, caps: list[dict], plate_bottom: int | None = None, font: str = "Poppins") -> Path:
     y = caption_y(plate_bottom)
-    # Alignment 8 = top-center; MarginV is offset from top when alignment is 8? 
-    # In ASS, Alignment 2 is bottom-center, MarginV is from the bottom.
-    # Use Alignment 8 (top center) with MarginV = y.
-    # PlayRes 1080x1920.
+    # Bold (-1), thick outline, soft shadow. Alignment 8 = top-center; MarginV from top.
     header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {W}
@@ -143,11 +145,12 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Lower,{font},52,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,5,0,8,40,40,{y},1
+Style: Lower,{font},{FONT_SIZE},&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,{OUTLINE},{SHADOW},8,36,36,{y},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
+
     def ts(t: float) -> str:
         t = max(0.0, t)
         h = int(t // 3600)
@@ -157,8 +160,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
     events = []
     for c in caps:
-        ev = f"Dialogue: 0,{ts(c['t0'])},{ts(c['t1'])},Lower,,0,0,0,,{_keyword_ass(c['text'])}"
-        events.append(ev)
+        # Force bold + outline per-event in case a player ignores the style.
+        body = r"{\b1\bord%d\shad%d\fsp1}" % (OUTLINE, SHADOW) + _keyword_ass(c["text"])
+        events.append(f"Dialogue: 0,{ts(c['t0'])},{ts(c['t1'])},Lower,,0,0,0,,{body}")
     path = Path(path)
     path.write_text(header + "\n".join(events) + "\n", encoding="utf-8")
     return path

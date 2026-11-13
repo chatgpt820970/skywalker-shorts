@@ -1,5 +1,5 @@
 {
-  "ids": [],
+  "ids": ["test-improvements-dryrun"],
   "no_publish": true,
-  "note": "Cleared after successful test-superman-dryrun. Set ids to force another dry-run."
+  "note": "One-shot dry-run for blur fill / captions / cold open / seamless loop / -14 LUFS. Cleared after success."
 }

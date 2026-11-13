@@ -8,8 +8,9 @@ Default template (caption-bar, from the "Rocket knew something" style):
   in the bar, fully on-screen, never cut.
 - The full UNCROPPED source frame, scaled to 1080 width, sits DIRECTLY
   below the bar with no gap. Bar + frame form one block, centered
-  vertically on the canvas. Never crop the source; leftover space is
-  plain black (no blur).
+  vertically on the canvas. Never crop the source; leftover letterbox
+  space is filled with a heavily blurred, slightly darkened, scaled-up
+  copy of the SAME clip (no black bars).
 - Moody/desaturated cinematic grade, stabilized, no Ken Burns.
 - No text is burned onto the footage itself.
 - HARD: never include studio/distributor logo intros (Netflix N, Warner,
@@ -69,7 +70,8 @@ W, H = 1080, 1920
 FPS = 30            # output / mux frame rate (auto_qc requires >= 30)
 # Caption-bar template: tight white hook bar directly above the
 # uncropped 1080-wide frame. Bar + frame are one block, centered
-# vertically on a black 1080x1920 canvas. Never crop the source.
+# vertically on a 1080x1920 canvas with blurred letterbox fill.
+# Never crop the source.
 BAR_PAD_Y = 30             # padding above and below the hook text
 SEP_H = 2                  # 2px hairline at the bottom of the bar (no gap)
 # BAR_H is computed from the text; this is only a fallback estimate
@@ -1413,22 +1415,51 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
     def in_gem2(s):
         return f"{float(s['start']):.2f}-{float(s['end']):.2f}" in gem2
 
-    # Hook: highest spectacle that is not a talking-head and fits ~3 pulses
+    # Cold open (~1s): most action-heavy / bright / high-motion shot first.
+    # Avoid dark or slow openings — frame-diff motion + luma from score_scenes.
+    COLD_OPEN = 1.05
+    COLD_MIN = 0.85
     t = 0.0
-    hook_vis = max(MIN_SHOT, min(dur_for(t, 3), MAX_SHOT))
+    hook_vis = max(COLD_MIN, min(COLD_OPEN, dur_for(t, 2), MAX_SHOT))
+
+    def cold_open_key(s):
+        motion = float(s.get("motion") or 0)
+        luma = float(s.get("luma") or 0)
+        spectacle = float(s.get("spectacle") or 0)
+        g = s.get("gemini")
+        gem = (float(g) - 5.0) * 10.0 if g is not None else 0.0
+        dark_pen = max(0.0, 50.0 - luma) * 1.5
+        slow_pen = max(0.0, 10.0 - motion) * 2.5
+        return (
+            motion * 2.5
+            + max(0.0, luma - 35.0) * 0.4
+            + spectacle * 0.6
+            + gem
+            + (50.0 if in_gem2(s) else 0.0)
+            - dark_pen
+            - slow_pen
+            - float(s.get("skin") or 0) * 20.0
+            - float(s.get("black") or 0) * 40.0
+        )
+
     hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids and s["skin"] < 0.20
-                  and s["dur"] >= MIN_SHOT and not blocked(s, s["start"], s["start"] + min(hook_vis, s["dur"]))]
+                  and s["dur"] >= COLD_MIN
+                  and not blocked(s, s["start"], s["start"] + min(hook_vis, s["dur"]))]
     if not hook_cands:
-        hook_vis = max(MIN_SHOT, min(dur_for(t, 2), MAX_SHOT))
         hook_cands = [s for s in usable_by_spec if s["id"] not in used_ids
-                      and s["dur"] >= MIN_SHOT and not blocked(s, s["start"], s["start"] + min(hook_vis, s["dur"]))]
+                      and s["dur"] >= COLD_MIN
+                      and not blocked(s, s["start"], s["start"] + min(hook_vis, s["dur"]))]
     if not hook_cands:
-        hook_cands = [s for s in usable_by_spec if s["dur"] >= MIN_SHOT and not blocked(s)]
+        hook_cands = [s for s in usable_by_spec if s["dur"] >= COLD_MIN and not blocked(s)]
     if not hook_cands:
         hook_cands = [s for s in usable_by_spec if not blocked(s)]
-    hook_cands.sort(key=lambda s: (in_gem2(s), float(s.get("gemini") or s.get("spectacle") or 0)), reverse=True)
+    hook_cands.sort(key=cold_open_key, reverse=True)
     hook = hook_cands[0]
-    hook_vis = shot_vis(hook, hook_vis, body)
+    hook_vis = shot_vis(hook, hook_vis, body, min_shot=COLD_MIN)
+    print(
+        f"  cold-open scene {hook.get('id')} mot={float(hook.get('motion') or 0):.1f} "
+        f"luma={float(hook.get('luma') or 0):.0f} vis={hook_vis:.2f}s"
+    )
     slots.append((hook_vis, hook, float(hook["start"])))
     mark_used(hook, hook["start"], hook["start"] + hook_vis)
     t += hook_vis
@@ -2976,12 +3007,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
 
 def prepare_bed(music: dict, dur: float, dst: Path) -> Path:
-    """Extract, fade, and loudnorm the music window once (no double-trim)."""
+    """Extract, fade, and loudnorm the music window once (no double-trim).
+
+    Target ~-14 LUFS (YouTube Shorts loudness). End fade is tiny so the
+    seamless-loop crossfade can stitch last→first without a quiet tail.
+    """
     start = music["start"]
+    fade_out = 0.05
     afilt = (
         f"atrim=start={start:.3f}:duration={dur:.3f},asetpts=PTS-STARTPTS,"
-        f"afade=t=in:st=0:d=0.03,afade=t=out:st={max(0.1, dur-0.9):.3f}:d=0.9,"
-        f"loudnorm=I=-11:TP=-1.5:LRA=8,aresample=48000"
+        f"afade=t=in:st=0:d=0.03,afade=t=out:st={max(0.05, dur - fade_out):.3f}:d={fade_out:.3f},"
+        f"loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000"
     )
     run([
         "ffmpeg", "-y", "-i", str(music["path"]),
@@ -3046,7 +3082,8 @@ def _mix_two_act(music: dict, dur: float, src: Path | None, edl: list[dict]) -> 
         song = WORK / "song_act2.wav"
         L = max(0.5, dur - T)
         run(["ffmpeg", "-y", "-ss", f"{d:.3f}", "-t", f"{L + 0.05:.3f}", "-i", str(music["path"]), "-af",
-             f"loudnorm=I=-11:TP=-1.5:LRA=8,afade=t=in:st=0:d=0.02,afade=t=out:st={max(0.1, L - 0.9):.3f}:d=0.9,"
+             f"loudnorm=I=-14:TP=-1.5:LRA=11,afade=t=in:st=0:d=0.02,"
+             f"afade=t=out:st={max(0.05, L - 0.05):.3f}:d=0.05,"
              f"aresample=48000", "-c:a", "pcm_s16le", str(song)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         tr = {}
         tp = WORK / "transcript.json"
@@ -3077,6 +3114,75 @@ def _mix_music_only(music: dict, dur: float, bed: Path) -> Path | None:
         return bed
 
 
+def apply_seamless_loop(path: Path, loop_s: float = 0.5) -> Path:
+    """Crossfade the last ~loop_s into the first ~loop_s so replays feel continuous.
+
+    Operates on the fully composed frame (blur fill + plate + white hook bar) and
+    the final mix. Duration stays the same; only the tail blends into the opener.
+    """
+    try:
+        dur = float(ffprobe_dur(path))
+    except Exception:
+        return path
+    L = float(loop_s)
+    if dur < L * 4 + 2.0:
+        return path
+    offset = max(0.05, dur - L)
+    tmp = path.with_suffix(".loop.tmp.mp4")
+    fc = (
+        f"[0:v]split=3[v0][v1][v2];"
+        f"[v0]trim=0:{offset:.3f},setpts=PTS-STARTPTS[vmain];"
+        f"[v1]trim=start={offset:.3f},setpts=PTS-STARTPTS[vtail];"
+        f"[v2]trim=0:{L:.3f},setpts=PTS-STARTPTS[vhead];"
+        f"[vtail][vhead]xfade=transition=fade:duration={L:.3f}:offset=0[vxf];"
+        f"[vmain][vxf]concat=n=2:v=1:a=0[vout];"
+        f"[0:a]asplit=3[a0][a1][a2];"
+        f"[a0]atrim=0:{offset:.3f},asetpts=PTS-STARTPTS[amain];"
+        f"[a1]atrim=start={offset:.3f},asetpts=PTS-STARTPTS[atail];"
+        f"[a2]atrim=0:{L:.3f},asetpts=PTS-STARTPTS[ahead];"
+        f"[atail][ahead]acrossfade=d={L:.3f}:c1=tri:c2=tri[axf];"
+        f"[amain][axf]concat=n=2:v=0:a=1[aout]"
+    )
+    cmd = [
+        "ffmpeg", "-y", "-i", str(path),
+        "-filter_complex", fc,
+        "-map", "[vout]", "-map", "[aout]",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "17",
+        "-pix_fmt", "yuv420p", "-r", str(FPS),
+        "-c:a", "aac", "-b:a", "192k",
+        "-movflags", "+faststart",
+        str(tmp),
+    ]
+    try:
+        run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if tmp.exists() and tmp.stat().st_size > 1000:
+            tmp.replace(path)
+            print(f"  seamless loop: last {L:.2f}s crossfades into first frame")
+        else:
+            tmp.unlink(missing_ok=True)
+    except Exception as e:
+        print(f"  seamless loop skipped: {e}")
+        tmp.unlink(missing_ok=True)
+    return path
+
+
+def _loudnorm_final(audio: Path, dur: float) -> Path:
+    """Final mix loudness to ~-14 LUFS (YouTube Shorts target)."""
+    dst = WORK / "audio_lufs14.wav"
+    try:
+        run([
+            "ffmpeg", "-y", "-i", str(audio),
+            "-t", f"{float(dur) + 0.05:.3f}",
+            "-af", "loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000",
+            "-c:a", "pcm_s16le", str(dst),
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if dst.exists() and dst.stat().st_size > 1000:
+            return dst
+    except Exception as e:
+        print(f"  final loudnorm skipped: {e}")
+    return audio
+
+
 def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: float,
               overlay_text: bool = OVERLAY_TEXT, src: Path | None = None,
               edl: list[dict] | None = None) -> Path:
@@ -3091,6 +3197,7 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
     if audio is None:
         # Last-resort fallback (non-whitebar / unexpected): never the default for whitebar Shorts.
         audio = _mix_source_and_music(bed, dur, src=src, edl=edl)
+    audio = _loudnorm_final(Path(audio), dur)
     enc = [
         "-c:v", "libx264", "-preset", "fast", "-crf", "17",
         "-pix_fmt", "yuv420p", "-r", str(FPS),
@@ -3215,12 +3322,26 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         print(f"  lower-thirds {len(caps)} dialogue lines at Y={layout['caption_y']} (plate ends {plate_bottom})")
     except Exception as e:
         print(f"  lower-thirds skipped: {e}")
+    # Blurred / darkened cover of the SAME clip behind the uncropped plate.
+    # Plate stays width-fit and uncropped; empty top/bottom (16:9 letterbox) is
+    # filled with scale-to-cover + heavy gblur + slight darken — never black bars.
+    # White hook bar stays on top of the plate block.
     vfilt = (
-        f"[0:v]pad={W}:{H}:0:{lay['video_y']}:color=black[bg];"
+        f"[0:v]split=2[fg][bgraw];"
+        f"[bgraw]scale={W}:{H}:force_original_aspect_ratio=increase,"
+        f"crop={W}:{H},gblur=sigma=36:steps=3,"
+        f"eq=brightness=-0.14:saturation=0.80:contrast=0.95,setsar=1[bg];"
+        f"[fg]setpts=PTS-STARTPTS[plate];"
+        f"[bg][plate]overlay=0:{lay['video_y']}:format=auto[comp];"
         f"[2:v]format=rgb24[bar];"
-        f"[bg][bar]overlay=0:{lay['bar_y']}:format=auto{fx},format=yuv420p{ass_extra}[v]"
+        f"[comp][bar]overlay=0:{lay['bar_y']}:format=auto{fx},format=yuv420p{ass_extra}[v]"
     )
-    print(f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) + dialogue/music…")
+    layout["blur_fill"] = True
+    (WORK / "layout.json").write_text(json.dumps(layout, default=str))
+    print(
+        f"Muxing tight whitebar (bar {bar_h}px + plate {ph}px @{lay['bar_y']}) "
+        f"on blurred fill + dialogue/music…"
+    )
     cmd = [
         "ffmpeg", "-y",
         "-i", str(silent),
@@ -3231,6 +3352,7 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         *enc, str(out),
     ]
     run(cmd)
+    apply_seamless_loop(out, loop_s=0.5)
     return out
 
 

@@ -9,7 +9,7 @@ Pipeline for the YouTube channel Skywalker (@Skywalker-k3i).
 
 ## HARD RULES
 - NEVER crop the source frame. The full original aspect ratio must be visible.
-- whitebar (default): a tight white caption bar (bold black italic hook, ~30px padding) sits directly on top of the full frame (1080 wide), with no gap. Bar + frame form one block centered vertically on a black 1080x1920 canvas.
+- whitebar (default): a tight white caption bar (bold black italic hook, ~30px padding) sits directly on top of the full frame (1080 wide), with no gap. Bar + frame form one block centered vertically on a 1080x1920 canvas; leftover letterbox is a blurred/darkened cover of the same clip (never black bars, never crop).
 - Hook language: the white top-bar hook, the YouTube title, and the hook sentence in the description must be pure English only. No Hindi, no Hinglish, no Devanagari (never lines like "sabko hypnotise kar deta hai" or "playground ka hero ban gaya"). Film titles and character names may stay as they are. `hook_text.py` enforces this when a Short is rendered. Body subtitles may follow the trailer audio, including Hindi; do not rewrite those into English just to match the hook.
 - depthtext: big 3D words behind the subject. postcard: a logo + name + hook header directly above the clip. Same no-crop rule.
 - Nothing is written on the footage itself. Stabilized, no shake.

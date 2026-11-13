@@ -5,6 +5,8 @@ import json
 import os
 from pathlib import Path
 
+import perf
+
 LIB_PILLAR_GENRE = {
     "anime": ("phonk", "rock", "dark"), "movie": ("phonk", "rock", "dark", "mass", "slowed"),
     "celeb": ("mass", "swag", "phonk", "punjabi"), "romance": ("romance", "slowed", "bollywood", "urdu", "pop"),
@@ -68,6 +70,11 @@ def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None
         pass
     indian = ("bollywood", "punjabi", "south", "hindi", "urdu")
 
+    try:
+        _perf = perf.load_perf(AE)
+    except Exception:
+        _perf = {}
+
     def score(t):
         sc = 0.0
         if p in (t.get("pillars") or []):
@@ -94,6 +101,12 @@ def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None
             sc += 8
         if t.get("drop_t") is not None:
             sc += 3
+        # Weight toward songs that historically earned views (with exploration).
+        if _perf:
+            try:
+                sc += float(perf.song_bonus(_perf, t))
+            except Exception:
+                pass
         return sc
 
     pool = [t for t in tracks if t["file"] not in excl] or tracks
@@ -117,8 +130,9 @@ def pick(AE: Path, pillar: str, seed: str = "", exclude: list[str] | None = None
 
     ranked = sorted(((score(t), t) for t in pool), key=lambda x: -x[0])
     best = ranked[0][0]
-    top = [t for sc, t in ranked if sc >= best - 8]
-    h = int(hashlib.sha1((f"{salt}|{seed or p}").encode()).hexdigest(), 16)
+    # Wider near-best band so exploration can escape a single winner.
+    top = [t for sc, t in ranked if sc >= best - 10]
+    h = int(hashlib.sha1((f"{salt}|{seed or p}|perf").encode()).hexdigest(), 16)
     return finish(top[h % len(top)], "hash")
 
 
