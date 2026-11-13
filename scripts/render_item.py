@@ -381,7 +381,12 @@ def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, excl
         cmd += ["--exclude-music", ",".join(excl_all)]
     if music_salt:
         cmd += ["--music-salt", music_salt]
+    mode = (item.get("edit_mode") or os.environ.get("SKY_EDIT_MODE") or "").strip().lower()
+    if mode in ("music_only", "two_act"):
+        cmd += ["--edit-mode", mode]
     env = dict(os.environ, SKY_WORK=str(work), SKY_ROOT=str(OUT), SKY_MARKET=(item.get("market") or "").upper())
+    if mode in ("music_only", "two_act"):
+        env["SKY_EDIT_MODE"] = mode
     if (item.get("market") or "").upper() == "IN" or item.get("dialogue_lang") in ("hi", "te", "ta"):
         # Hindi/South dubs: whisper-small output was garbled ("पेवरेट ग्रिकेट").
         # medium + forced language is far closer to the real lines (~3 min CPU).
@@ -515,6 +520,7 @@ def attempt(n, *, force_fallback=False, relax=False, alt_scenes=False, exclude_m
                                "gate": g, "error": "publish gate failed: " + "; ".join(g["failures"])[:600]}
             extra = publish(final, fw, fh, up, used, checks, credit, qa)
             extra["gate"] = g
+            extra["edit_mode"] = (qa or {}).get("edit_mode") or item.get("edit_mode")
         except Exception as e:
             return False, {"attempt": n, "ok": False, "error": f"upscale/release failed: {e}",
                            "source": used, "music": credit.get("file"), "qa": checks}

@@ -224,7 +224,40 @@ def mix_two_act(dialogue_bed: Path, song: Path, dst: Path, dur: float, T: float,
     return res
 
 
+def mix_music_only(song: Path, dst: Path, dur: float, work: Path) -> dict:
+    """Song at full level from t=0. No trailer audio (no dialogue, no trailer music/SFX)."""
+    work = Path(work)
+    n = int(dur * SR)
+    music = _read(song)
+    music = np.pad(music, ((0, max(0, n - len(music))), (0, 0)))[:n]
+    music = music * 10 ** (min(0.0, MUSIC_DB + 2) / 20)
+    peak = float(np.abs(music).max() or 1)
+    if peak > 0.97:
+        music = music * (0.97 / peak)
+    _write(dst, music)
+
+    def rms_db(x):
+        return round(db(float(np.sqrt((x ** 2).mean()))) if len(x) else -99.0, 1)
+
+    res = {
+        "mode": "music_only",
+        "isolated": False,
+        "speech_segments": 0,
+        "act2_song_dbfs": rms_db(music),
+        "voice_dbfs": -99.0,
+        "song_switches": 1,
+    }
+    (work / "audio_check.json").write_text(json.dumps(res))
+    print(f"  music-only mix: {res}")
+    return res
+
+
 def check_errors(res: dict | None, speech_expected: bool) -> list[str]:
+    if res and res.get("mode") == "music_only":
+        errs = []
+        if res.get("act2_song_dbfs", -99) < -30:
+            errs.append(f"music-only song too quiet ({res.get('act2_song_dbfs')} dBFS)")
+        return errs
     if res and res.get("mode") == "two_act":
         errs = []
         if res.get("song_in_act1_dbfs", -99) > -50:

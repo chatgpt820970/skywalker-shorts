@@ -150,10 +150,47 @@ def test_audio_check_gate():
 
 def test_two_act_audio_gate():
     import vocal_mix
-    good = {"mode": "two_act", "isolated": True, "act1_frac": 0.46, "song_in_act1_dbfs": -99, "voice_in_act2_dbfs": -99,
+    good = {"mode": "two_act", "isolated": True, "act1_frac": 0.30, "song_in_act1_dbfs": -99, "voice_in_act2_dbfs": -99,
             "song_switches": 1, "act1_voice_dbfs": -17, "act2_song_dbfs": -12}
     assert not vocal_mix.check_errors(good, True)
     assert vocal_mix.check_errors(dict(good, song_switches=5), True)
     assert vocal_mix.check_errors(dict(good, song_in_act1_dbfs=-20), True)
     assert vocal_mix.check_errors(dict(good, act1_frac=0.8), True)
     assert not vocal_mix.check_errors(dict(good, isolated=False), True)  # Demucs fallback never fails a slot
+
+
+def test_edit_mode_choice():
+    import edit_mode
+    import vocal_mix
+
+    # Stable 3-of-4 music_only / 1-of-4 two_act split from the item id.
+    modes = [edit_mode.default_edit_mode(f"20261114-0630-item{i:03d}") for i in range(200)]
+    n_two = sum(1 for m in modes if m == "two_act")
+    n_mus = sum(1 for m in modes if m == "music_only")
+    assert n_mus + n_two == 200
+    # sha1 buckets are stable and ~1/4 two_act (allow ordinary hash jitter).
+    assert 35 <= n_two <= 65 and n_mus == 200 - n_two
+
+    mus = next(f"id{i}" for i in range(80) if edit_mode.default_edit_mode(f"id{i}") == "music_only")
+    two = next(f"id{i}" for i in range(80) if edit_mode.default_edit_mode(f"id{i}") == "two_act")
+    assert edit_mode.choose_edit_mode(mus) == "music_only"
+    assert edit_mode.choose_edit_mode(two) == "two_act"
+    # Gemini may upgrade music_only to two_act only for an iconic dialogue hook.
+    assert edit_mode.choose_edit_mode(mus, iconic_hook=True) == "two_act"
+    # An explicit override always wins (demo / forced music_only).
+    assert edit_mode.choose_edit_mode(mus, override="music_only", iconic_hook=True) == "music_only"
+    assert edit_mode.choose_edit_mode(two, override="music_only") == "music_only"
+    assert edit_mode.choose_edit_mode(mus, override="two_act") == "two_act"
+    # Same id always maps to the same bucket.
+    assert edit_mode.item_mode_bucket("demo-superman-v4") == edit_mode.item_mode_bucket("demo-superman-v4")
+
+    good = {"mode": "music_only", "act2_song_dbfs": -12, "speech_segments": 0}
+    assert not vocal_mix.check_errors(good, True)
+    assert not vocal_mix.check_errors(good, False)
+    assert vocal_mix.check_errors(dict(good, act2_song_dbfs=-40), False)
+    # 0.46 is now over the 0.45 two-act cap (owner: ~30%, max 38/45).
+    assert vocal_mix.check_errors(
+        {"mode": "two_act", "isolated": True, "act1_frac": 0.46, "song_in_act1_dbfs": -99,
+         "voice_in_act2_dbfs": -99, "song_switches": 1, "act1_voice_dbfs": -17, "act2_song_dbfs": -12},
+        True,
+    )

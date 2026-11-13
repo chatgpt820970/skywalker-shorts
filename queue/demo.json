@@ -10,7 +10,7 @@
   "template": "whitebar",
   "hook": "The reason why Fool Night has everyone talking",
   "words": "FOOL NIGHT",
-  "title": "The reason why Fool Night has everyone talking 💀 | The flower-tree transformation | #edit",
+  "title": "The reason why Fool Night has everyone talking \ud83d\udc80 | The flower-tree transformation | #edit",
   "description": "The reason why Fool Night has everyone talking. Energy edit (beat cuts, ramp, drop flash + punch-in) from the official Netflix Anime Fool Night trailer.\nSource: official trailer (https://www.youtube.com/watch?v=2Qg_AfPF2sM).\n#edit #shorts #foolnight",
   "tags": [
    "foolnight",
@@ -143,7 +143,37 @@
   "market": "US/UK",
   "fallback_release": "sources",
   "fallback_asset": "superman_trailer_h264.mp4",
+  "status": "retired",
+  "note": "Demo v3: two-act (short dialogue then song+action). Retired after owner asked for mostly song-only edits (no character voice) with a minority two-act mix."
+ },
+ {
+  "id": "demo-superman-v4",
+  "pillar": "movie",
+  "source_url": "https://www.youtube.com/watch?v=Ox8ZLF6cGM0",
+  "fallback_mp4": [
+   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/superman_trailer_h264.mp4"
+  ],
+  "template": "whitebar",
+  "hook": "Superman still saves everyone",
+  "words": "SUPERMAN",
+  "title": "Superman still saves everyone | Superman returns to Metropolis | #edit",
+  "description": "Superman still saves everyone. Superman returns to Metropolis from the official Superman trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=Ox8ZLF6cGM0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #superman #dc",
+  "tags": [
+   "superman",
+   "dc",
+   "davidcorenswet",
+   "jamesgunn",
+   "superhero",
+   "edit",
+   "shorts",
+   "trending"
+  ],
+  "target_dur": 32,
+  "market": "US/UK",
+  "fallback_release": "sources",
+  "fallback_asset": "superman_trailer_h264.mp4",
   "status": "queued",
-  "note": "Demo v3: two-act (act 1 isolated dialogue only, act 2 hype song + beat-cut action), Gemini arranges. No slot, never posted."
+  "edit_mode": "music_only",
+  "note": "Demo v4: music_only (hype song from second 0, no character voice, beat-cut action, white hook bar only). Forced music_only so the owner can review the new majority style. No slot, never posted."
  }
 ]

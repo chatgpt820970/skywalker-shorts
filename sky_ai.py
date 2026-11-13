@@ -326,12 +326,12 @@ def _tile(frames: list[Path], dst: Path, cols: int = 5, w: int = 288) -> Path | 
 
 def rank_scenes(mezz: Path, scenes: list[dict], transcript: dict, hook: str, work: Path,
                 cache: Path | None = None, lines: list[dict] | None = None,
-                act1_target: float = 13.0) -> dict | None:
+                act1_target: float = 13.0, mode: str = "music_only") -> dict | None:
     """Score usable scenes 0-10 for a hooky edit and flag text/logo cards. One Gemini call."""
     kept = [s for s in scenes if not s.get("skip")]
     if len(kept) < 3:
         return None
-    key = "|".join(f"{float(s['start']):.2f}-{float(s['end']):.2f}" for s in kept) + f"|L{len(lines or [])}"
+    key = "|".join(f"{float(s['start']):.2f}-{float(s['end']):.2f}" for s in kept) + f"|L{len(lines or [])}|M{mode}"
     if cache and cache.exists():
         try:
             c = json.loads(cache.read_text())
@@ -354,22 +354,23 @@ def rank_scenes(mezz: Path, scenes: list[dict], transcript: dict, hook: str, wor
     sheet = _tile(frames, work / "gem_scenes.jpg")
     if not sheet:
         return None
-    lines = []
+    spoken = lines  # act-1 candidate dicts from the caller; do not overwrite
+    shot_lines = []
     for i, s in enumerate(kept):
         words = [w.get("word", "") for w in (transcript.get("words") or [])
                  if float(s["start"]) <= float(w.get("start", -1)) < float(s["end"])]
-        lines.append(f"{i}: {float(s['start']):.1f}-{float(s['end']):.1f}s speech=\"{' '.join(words)[:80]}\"")
+        shot_lines.append(f"{i}: {float(s['start']):.1f}-{float(s['end']):.1f}s speech=\"{' '.join(words)[:80]}\"")
     prompt = f"""You are the editor of a viral YouTube Shorts trailer edit. Hook on screen: "{hook}".
 The contact sheet shows candidate shots, each labelled with a yellow index number (one frame per shot).
 Shot list with time ranges and spoken words:
-{chr(10).join(lines)}
+{chr(10).join(shot_lines)}
 
 Score every shot 0-10 for how strongly it supports the hook and keeps viewers watching (faces, emotion, action, reveals,
 iconic moments, clear spoken lines). Also set card=true if the frame is mostly a studio/distributor LOGO, title card,
 date/"coming soon" card, rating card, credits, or on-screen text/typography rather than story footage.
-{_arrangement_brief(lines, act1_target)}
+{_arrangement_brief(spoken, act1_target, mode)}
 Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}], "act1": [line ids in play order],
-"act2": [shot indexes for the hype part, best first]}}"""
+"act2": [shot indexes for the hype part, best first], "iconic_hook": bool}}"""
     out = gemini.generate_json(prompt, [sheet], purpose="scenes", temperature=0.2)
     if not isinstance(out, dict) or not isinstance(out.get("shots"), list):
         return None
@@ -382,8 +383,8 @@ Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}], "act1": [
             continue
         ranks[f"{float(s['start']):.2f}-{float(s['end']):.2f}"] = {
             "score": max(0.0, min(10.0, float(r.get("score") or 0))), "card": bool(r.get("card"))}
-    arr = {"act1": [], "act2": []}
-    ids = {int(l["id"]) for l in (lines or [])}
+    arr = {"act1": [], "act2": [], "iconic_hook": bool(out.get("iconic_hook"))}
+    ids = {int(l["id"]) for l in (spoken or [])}
     for x in out.get("act1") or []:
         try:
             if int(x) in ids and int(x) not in arr["act1"]:
@@ -402,10 +403,31 @@ Return JSON: {{"shots": [{{"i": int, "score": number, "card": bool}}], "act1": [
     return ranks
 
 
-def _arrangement_brief(lines: list[dict] | None, act1_target: float) -> str:
+def _arrangement_brief(lines: list[dict] | None, act1_target: float, mode: str = "music_only") -> str:
+    ls = "\n".join(
+        f'L{l["id"]}: {float(l["start"]):.1f}-{float(l["end"]):.1f}s "{l["text"][:90]}"'
+        for l in (lines or [])[:40]
+    )
+    if mode != "two_act":
+        extra = ""
+        if ls:
+            extra = (
+                "Candidate spoken lines (id: source time, text):\n"
+                f"{ls}\n"
+                "ONLY if one of those lines is a genuinely iconic, scroll-stopping hook on its own "
+                "(a famous or shocking line, not ordinary trailer chatter), set iconic_hook=true and "
+                "act1 to that 1-2 line id(s). Otherwise iconic_hook=false and act1=[].\n"
+            )
+        return (
+            "\nDefault structure for this Short: a song-only edit. Hype song from second 0 over the best "
+            "action/visual shots cut on the beat. NO character voice, NO dialogue subtitles. Score shots for "
+            "spectacle, action, and hook power (faces, reveals, motion — not talking heads).\n"
+            "act2 = 8-14 shot indexes from the contact sheet with the strongest action/visuals/reveals, "
+            "best first (that first shot is the cold open).\n"
+            f"{extra}"
+        )
     if not lines:
         return ""
-    ls = "\n".join(f'L{l["id"]}: {float(l["start"]):.1f}-{float(l["end"]):.1f}s "{l["text"][:90]}"' for l in lines[:40])
     return f"""
 You also ARRANGE the Short in two acts. ACT 1 (first ~{act1_target:.0f}s): only the characters talking, no music, so
 pick the spoken lines that tell a mini-story and make people curious (setup, tension, a strong last line that leads
@@ -413,7 +435,8 @@ into the hype). ACT 2: the hype song at full volume over the best action/visual 
 Candidate spoken lines (id: source time, text):
 {ls}
 act1 = 1-4 line ids in the order they should play (total about {act1_target:.0f}s of speech, story order usually best).
-act2 = 8-14 shot indexes from the contact sheet with the strongest action/visuals/reveals (no talking heads), best first."""
+act2 = 8-14 shot indexes from the contact sheet with the strongest action/visuals/reveals (no talking heads), best first.
+iconic_hook = true only if the opening line itself is a genuinely iconic hook."""
 
 
 def apply_scene_ranks(scenes: list[dict], ranks: dict, min_keep_s: float = 34.0) -> int:
@@ -521,12 +544,35 @@ def qc_judge(video: Path, work: Path, hook: str, title: str, description: str) -
         ac = json.loads((work / "audio_check.json").read_text())
     except Exception:
         pass
+    mode = (ac.get("mode") or "")
+    if mode == "music_only":
+        expected = (
+            "Expected: a tight WHITE bar with black italic English hook text directly on top of the full, uncropped "
+            "landscape movie frame, centered on black. This is a SONG-ONLY edit: the hype song plays at full level "
+            "from second 0 over beat-cut action/visuals. There is NO character voice, NO trailer audio, and NO "
+            "lower-third dialogue subtitles (that is correct — do not reject for missing dialogue or captions). "
+            "Nothing else is written on the footage. The first shot should be the strongest hook visual."
+        )
+        speech_crit = (
+            "speech_clarity (10 if there is no leftover trailer voice/SFX under the song and the song is clean and loud; "
+            "low only if character dialogue or trailer music is still mixed in)"
+        )
+        cap_crit = ("captions (10 if there are no dialogue subtitles — they are not used in song-only edits; "
+                    "low only if leftover or garbled subs appear)")
+        reject_bits = "logo/title card, cropped picture, leftover trailer voice under the song, non-English hook/title, a different film"
+    else:
+        expected = (
+            "Expected: a tight WHITE bar with black italic English hook text directly on top of the full, uncropped "
+            "landscape movie frame, centered on black; only lower-third dialogue subtitles under the picture; nothing else on the footage. "
+            "Audio structure: ACT 1 (opening, about 30%, never more than ~38%) = only the characters talking, crystal clear, NO song; "
+            "ACT 2 = the hype song at full level over beat-cut action, no dialogue. The song must start once and never pop in and out between lines."
+        )
+        speech_crit = "speech_clarity (every spoken line clear, no music under act-1 dialogue, song never toggling in/out, no muddy mix)"
+        cap_crit = "captions (subtitles real dialogue and in sync)"
+        reject_bits = "logo/title card, cropped picture, muddy/inaudible dialogue, garbage captions, non-English hook/title, a different film"
     prompt = f"""You are the final quality judge for a YouTube Short (vertical 9:16, {dur:.1f}s) before it is published.
 You get the finished video itself (watch it AND listen to it) plus an image of 8 frames sampled across it.
-Expected: a tight WHITE bar with black italic English hook text directly on top of the full, uncropped landscape
-movie frame, centered on black; only lower-third dialogue subtitles under the picture; nothing else on the footage.
-Audio structure: ACT 1 (opening, ideally 40-55%; shorter is fine if the trailer has little clean dialogue) = only the characters talking, crystal clear, NO song; ACT 2 = the hype song
-at full level over beat-cut action, no dialogue. The song must start once and never pop in and out between lines.
+{expected}
 Hook in the white bar: "{hook}"
 Title: "{title}"
 Description: "{description[:300]}"
@@ -536,16 +582,15 @@ Measured audio: {json.dumps(ac)[:400]}
 Score 0-10 each:
 hook (scroll-stopping, specific to this clip, pure English, readable in 1s),
 title (curiosity/emotion, character-focused, English, would you tap it),
-speech_clarity (every spoken line clear, no music under act-1 dialogue, song never toggling in/out, no muddy mix),
+{speech_crit},
 shake (10 = steady; low if footage is jittery/handheld-shaky in a distracting way),
 crop (10 = full uncropped frame; low if faces/heads are cut by a zoom or the picture is cropped),
 length (pacing fits {dur:.0f}s; no dead air, no abrupt cut-off),
 layout (white bar flush on top, black canvas, nothing else written on the footage),
 clean_footage (no studio logo intro, title/date/rating card, watermark, or repeated shot),
-captions (subtitles real dialogue and in sync),
+{cap_crit},
 post_worthy (overall: would a top edit channel post this as is?).
-Set reject=true for any clear hard failure (logo/title card, cropped picture, muddy/inaudible dialogue, garbage
-captions, non-English hook/title, a different film) or if it is simply not post-worthy.
+Set reject=true for any clear hard failure ({reject_bits}) or if it is simply not post-worthy.
 Return JSON: {{"scores": {{"hook": n, "title": n, "speech_clarity": n, "shake": n, "crop": n, "length": n,
 "layout": n, "clean_footage": n, "captions": n, "post_worthy": n}}, "reject": bool, "reasons": [str]}}"""
     media = [p for p in (proxy, sheet) if p]
@@ -561,7 +606,13 @@ Return JSON: {{"scores": {{"hook": n, "title": n, "speech_clarity": n, "shake": 
         except Exception:
             pass
     hard = {"speech_clarity": 5, "crop": 5, "layout": 5, "clean_footage": 5, "shake": 4, "hook": 5}
-    low = [k for k, v in scores.items() if v < hard.get(k, 4)]
+    if mode == "music_only":
+        # Missing dialogue/subtitles is the point of a song-only edit.
+        hard.pop("speech_clarity", None)
+        skip = {"captions"}
+    else:
+        skip = set()
+    low = [k for k, v in scores.items() if k not in skip and v < hard.get(k, 4)]
     if scores.get("post_worthy") is not None and scores["post_worthy"] < 6:
         low.append("post_worthy")
     reject = bool(out.get("reject")) or bool(low)

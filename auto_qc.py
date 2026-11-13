@@ -384,6 +384,11 @@ def check(path: Path, layout: dict | None = None, caption_y: int = 1420) -> dict
     # Relax the old "captions must appear somewhere" rule when we know there is no speech.
     if (not cap_cues) and (not speech_wins):
         issues[:] = [x for x in issues if x != "lower-third captions not visible"]
+    if (layout or {}).get("edit_mode") == "music_only":
+        issues[:] = [x for x in issues
+                     if x != "lower-third captions not visible"
+                     and not str(x).startswith("dialogue")
+                     and not str(x).startswith("speech detected")]
     # Near-duplicate shots in the output.
     dupes = check_duplicate_shots(path, layout, dur)
     if dupes:

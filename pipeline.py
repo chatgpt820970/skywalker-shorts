@@ -80,6 +80,10 @@ MUSIC_DROP_HINT = None     # library drop timestamp (seconds into the song)
 TWO_ACT = os.environ.get("SKY_TWO_ACT", "1") == "1"   # act 1 dialogue only, act 2 song only
 ACT1_FRAC, ACT1_MAX_FRAC, ACT1_MIN_S = 0.30, 0.38, 3.0  # owner: short dialogue, long action
 TWO_ACT_A = None           # planned act-1 length (s), set before music analysis
+# Most Shorts are song-only (no character voice). ~1 in 4 uses two-act.
+from edit_mode import choose_edit_mode, default_edit_mode, item_mode_bucket  # noqa: E402
+EDIT_MODE = "music_only"   # music_only | two_act
+FORCED_EDIT_MODE = False
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
 # No fixed opening/ending time lock: the best story scenes may come from
@@ -982,7 +986,27 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
         rel[0] = 0.0
     drop_rel = None
     d = None
-    if ENERGY or TWO_ACT_A:
+    if EDIT_MODE == "music_only":
+        # Hype from second 0: start the window on (or a hair before) the drop.
+        dur_m = float(times[-1])
+        hint = globals().get("MUSIC_DROP_HINT")
+        if hint is not None and 0.0 <= float(hint) <= max(0.0, dur_m - target) and len(pulse):
+            d = float(pulse[int(np.argmin(np.abs(pulse - float(hint))))])
+            print(f"  music-only drop from library hint {float(hint):.2f}s -> beat {d:.2f}s")
+        if d is None:
+            d = find_drop(y, sr, pulse, 0.0, max(1.0, dur_m - min(target, dur_m * 0.6)))
+        if d is not None:
+            start = max(0.0, d - 0.15)
+            on = pulse[pulse <= start + 0.05]
+            start = float(on[-1]) if len(on) else start
+            drop_rel = max(0.0, d - start)
+            rel = pulse[(pulse >= start - 0.02) & (pulse <= start + win + 0.5)] - start
+            rel = np.unique(np.round(np.clip(rel, 0, None), 4))
+            if rel.size == 0 or rel[0] > 0.15:
+                rel = np.insert(rel, 0, 0.0)
+            else:
+                rel[0] = 0.0
+    elif ENERGY or TWO_ACT_A:
         # Align the music drop with the reveal at ~38% of the edit (two-act: with the start of act 2).
         reveal_at = float(TWO_ACT_A) if TWO_ACT_A else max(4.0, 0.38 * target)
         dur_m = float(times[-1])
@@ -1229,6 +1253,7 @@ def plan_two_act(scenes: list[dict], music: dict, target: float, transcript: dic
         print(f"    line {c['start']:.1f}-{c['end']:.1f}s: {c['text'][:70]!r}")
     meta = {"unique_duration": round(acc, 3), "target": float(target), "min_unique": MIN_UNIQUE_DUR,
             "min_output": MIN_OUTPUT_DUR, "short_unique": bool(acc + 1e-6 < MIN_OUTPUT_DUR), "n_shots": len(edl),
+            "edit_mode": "two_act",
             "two_act": {"act1_end": round(T, 3), "lines": [c["text"] for c in act1], "drop_abs": d}}
     try:
         (WORK / "plan_meta.json").write_text(json.dumps(meta, indent=2))
@@ -1240,6 +1265,14 @@ def plan_two_act(scenes: list[dict], music: dict, target: float, transcript: dic
 
 def is_two_act(edl: list[dict] | None) -> bool:
     return any(it.get("act") == 1 for it in (edl or []))
+
+
+def is_music_only(edl: list[dict] | None = None) -> bool:
+    if any(it.get("mode") == "music_only" for it in (edl or [])):
+        return True
+    if is_two_act(edl):
+        return False
+    return EDIT_MODE == "music_only"
 
 
 def act1_end(edl: list[dict] | None) -> float:
@@ -1311,16 +1344,17 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         for s in usable:
             s.setdefault("speech", 0.0)
 
-    if TWO_ACT and transcript and TEMPLATE == "whitebar":
+    if TWO_ACT and EDIT_MODE == "two_act" and transcript and TEMPLATE == "whitebar":
         try:
             two = plan_two_act(scenes, music, target, transcript, usable)
         except SystemExit:
             raise
         except Exception as e:
-            print(f"  two-act plan failed ({e}); classic edit")
+            print(f"  two-act plan failed ({e}); music-only edit")
             two = None
         if two:
             return two
+        print("  two-act: not enough clean dialogue; falling back to music-only")
 
     # Fill the whole target with unique live shots (aim about 20–28s). An end-card still
     # is only added later if we still have a unique unused frame.
@@ -1411,13 +1445,15 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             progress = min(1.0, max(0.0, t / max(body, 1.0)))
             tension = float(s.get("spectacle") or 0) * (0.75 + 0.7 * progress)
             speech = float(s.get("speech") or 0)
+            # music_only: prefer action/visuals, never talking heads. two_act/classic may keep a line.
+            speech_w = -2.0 * speech if EDIT_MODE == "music_only" else speech
             # Gemini editor score (0-10) on the actual frame. Research: open on the strongest moment in the
             # first second (cold open), so the opener weighs it 2.5x more than later picks.
             g = s.get("gemini")
             gem = 0.0
             if g is not None:
                 gem = (15.0 if t < 0.5 else 6.0) * (float(g) - 5.0)
-            return tension + speech + gem - pen
+            return tension + speech_w + gem - pen
 
         cands.sort(key=key, reverse=True)
         return cands[0]
@@ -1474,7 +1510,9 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             break
 
     # Snap / extend every window to complete spoken lines, then rebuild used ranges.
-    if dmod and transcript and (transcript.get("words") or transcript.get("segments")):
+    # music_only never stretches cuts to finish a line — there is no dialogue in the cut.
+    if (EDIT_MODE != "music_only" and dmod and transcript
+            and (transcript.get("words") or transcript.get("segments"))):
         new_slots = []
         used_ranges = []
         used_scenes = []
@@ -1554,6 +1592,10 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
             kept.append(it)
         edl = kept
     acc = float(edl[-1]["t1"]) if edl else 0.0
+    if TEMPLATE == "whitebar":
+        for it in edl:
+            it["mode"] = "music_only"
+        print(f"  MUSIC-ONLY: song from t=0 at full level, {len(edl)} beat-cut shot(s), no character voice")
     meta = {
         "unique_duration": round(acc, 3),
         "target": float(target),
@@ -1561,6 +1603,7 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         "min_output": MIN_OUTPUT_DUR,
         "short_unique": bool(acc + 1e-6 < MIN_OUTPUT_DUR),
         "n_shots": len(edl),
+        "edit_mode": "music_only" if TEMPLATE == "whitebar" else EDIT_MODE,
     }
     try:
         (WORK / "plan_meta.json").write_text(json.dumps(meta, indent=2))
@@ -3005,16 +3048,33 @@ def _mix_two_act(music: dict, dur: float, src: Path | None, edl: list[dict]) -> 
         return None
 
 
+def _mix_music_only(music: dict, dur: float, bed: Path) -> Path | None:
+    """Song bed only: no trailer dialogue, music, or SFX."""
+    try:
+        import vocal_mix
+        mixed = WORK / "mixed.wav"
+        (WORK / "audio_check.json").unlink(missing_ok=True)
+        vocal_mix.mix_music_only(bed, mixed, dur, WORK)
+        (WORK / "speech_windows.json").write_text(json.dumps({"source": [], "output": []}))
+        return mixed if mixed.exists() and mixed.stat().st_size > 1000 else bed
+    except Exception as e:
+        print(f"  music-only mix failed ({e}); using song bed")
+        return bed
+
+
 def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: float,
               overlay_text: bool = OVERLAY_TEXT, src: Path | None = None,
               edl: list[dict] | None = None) -> Path:
-    """Mux original dialogue + ducked music. Whitebar pads footage under the hook bar."""
+    """Mux audio + whitebar hook. music_only = song only; two_act = dialogue then song."""
     bed = WORK / "bed.wav"
     prepare_bed(music, dur, bed)
     audio = None
-    if is_two_act(edl):
+    if is_music_only(edl):
+        audio = _mix_music_only(music, dur, bed)
+    elif is_two_act(edl):
         audio = _mix_two_act(music, dur, src, edl)
     if audio is None:
+        # Last-resort fallback (non-whitebar / unexpected): never the default for whitebar Shorts.
         audio = _mix_source_and_music(bed, dur, src=src, edl=edl)
     enc = [
         "-c:v", "libx264", "-preset", "fast", "-crf", "17",
@@ -3102,7 +3162,10 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
         tp = WORK / "transcript.json"
         if tp.exists():
             tr = json.loads(tp.read_text())
-        if edl and (tr.get("words") or tr.get("segments")):
+        if is_music_only(edl):
+            # Song-only: no character voice, so no lower-third dialogue subtitles.
+            cues, speech_out = [], []
+        elif edl and (tr.get("words") or tr.get("segments")):
             mapped = dmod.map_words_to_output(edl, tr.get("words") or [])
             mapped = dmod.drop_incomplete_lines(mapped, edl, tr.get("segments") or [])
             src_windows = dmod.speech_windows_from_transcript(tr)
@@ -3127,6 +3190,7 @@ def mux_final(silent: Path, music: dict, ass: Path, grad: Path, out: Path, dur: 
             layout["speech_windows_uncaptioned"] = speech_out
             speech_out = []
         layout["speech_windows"] = speech_out
+        layout["edit_mode"] = "music_only" if is_music_only(edl) else ("two_act" if is_two_act(edl) else EDIT_MODE)
         (WORK / "layout.json").write_text(json.dumps(layout, default=str))
         (WORK / "subtitles.json").write_text(json.dumps(caps, indent=2, ensure_ascii=False))
         if caps:
@@ -3578,6 +3642,8 @@ def main():
                     help="Optional Ken Burns zoom factor (off by default; e.g. 1.07)")
     ap.add_argument("--pillar", default=None, help="anime|movie|celeb|romance|funny (music + energy)")
     ap.add_argument("--item-id", default="", help="Queue item id (music picker seed)")
+    ap.add_argument("--edit-mode", default="", choices=["", "music_only", "two_act"],
+                    help="Force music_only (song from t=0, no voice) or two_act. Default: 3/4 hash split.")
     ap.add_argument("--energy", action="store_true", help="Force energy edit (auto for anime/movie)")
     ap.add_argument("--qa-json", default=None, help="Write the combined QA report here")
     ap.add_argument("--relax", action="store_true",
@@ -3598,7 +3664,12 @@ def main():
                     help="Output long-edge (1080 or 2160). Default 2160 (4K upscale in render_item).")
     args = ap.parse_args()
     global END_STILL, ENERGY, RELAX, ALT_SCENES, MEZZ_FOR_SHAKE, TRAILER_OPEN_SKIP, TRAILER_END_SKIP, OUT_RES
+    global EDIT_MODE, FORCED_EDIT_MODE
     ENERGY = bool(args.energy or (args.pillar or "").lower() in ("anime", "movie"))
+    ov = (args.edit_mode or os.environ.get("SKY_EDIT_MODE") or "").strip().lower()
+    FORCED_EDIT_MODE = ov in ("music_only", "two_act")
+    EDIT_MODE = choose_edit_mode(args.item_id, ov or None)
+    print(f"  edit mode: {EDIT_MODE}" + (" (forced)" if FORCED_EDIT_MODE else f" (hash of {args.item_id or 'item'})"))
     RELAX = bool(args.relax)
     ALT_SCENES = bool(args.alt_scenes)
     # Time lock stays off regardless of leftover flag values.
@@ -3846,13 +3917,18 @@ def main():
         cache = Path(os.environ.get("SKY_ROOT") or WORK) / f"gemini_scenes_{args.item_id or 'x'}.json"
         a1_lines = act1_candidates(scenes, transcript) if TWO_ACT else []
         ranks = sky_ai.rank_scenes(mezz, scenes, transcript, HOOK_TEXT, WORK, cache=cache, lines=a1_lines,
-                                   act1_target=ACT1_FRAC * (TARGET_DUR + END_CARD))
+                                   act1_target=ACT1_FRAC * (TARGET_DUR + END_CARD), mode=EDIT_MODE)
         if ranks and isinstance(ranks.get("_arrangement"), dict):
             arr = ranks.pop("_arrangement")
             by_id = {c["id"]: c for c in a1_lines}
             arr["act1_times"] = [[by_id[i]["start"], by_id[i]["end"]] for i in arr.get("act1", []) if i in by_id]
             (WORK / "arrangement.json").write_text(json.dumps(arr, indent=2))
-            print(f"  gemini arrangement: act1 lines {arr.get('act1')} | act2 shots {len(arr.get('act2') or [])}")
+            print(f"  gemini arrangement: act1 lines {arr.get('act1')} | act2 shots {len(arr.get('act2') or [])}"
+                  f" | iconic_hook={bool(arr.get('iconic_hook'))}")
+            if (not FORCED_EDIT_MODE and EDIT_MODE == "music_only" and arr.get("iconic_hook")
+                    and arr.get("act1_times")):
+                EDIT_MODE = "two_act"
+                print("  gemini: iconic dialogue hook — switching this item to two-act")
         if ranks:
             n = sky_ai.apply_scene_ranks(scenes, ranks)
             print(f"  gemini re-scored {n} scene(s)")
@@ -3865,11 +3941,11 @@ def main():
     print("=== 3. Music analysis ===")
     global TWO_ACT_A
     TWO_ACT_A = None
-    if TWO_ACT and TEMPLATE == "whitebar":
+    if TWO_ACT and EDIT_MODE == "two_act" and TEMPLATE == "whitebar":
         try:
             a1 = sum(c["vis"] for c in choose_act1(scenes, transcript, TARGET_DUR + END_CARD))
             TWO_ACT_A = a1 if a1 >= ACT1_MIN_S else None
-            print(f"  two-act: planned act 1 = {a1:.1f}s of dialogue" + ("" if TWO_ACT_A else " (too little; classic edit)"))
+            print(f"  two-act: planned act 1 = {a1:.1f}s of dialogue" + ("" if TWO_ACT_A else " (too little; music-only)"))
         except Exception as e:
             print(f"  two-act pre-plan failed: {e}")
     music = analyze_music(music_path, TARGET_DUR)
@@ -4008,6 +4084,7 @@ def main():
     report["issues"] = issues
     report["drop_t"] = DROP_T
     report["energy"] = ENERGY
+    report["edit_mode"] = "music_only" if is_music_only(edl) else ("two_act" if is_two_act(edl) else EDIT_MODE)
     try:
         meta = json.loads((WORK / "plan_meta.json").read_text()) if (WORK / "plan_meta.json").exists() else {}
     except Exception:
