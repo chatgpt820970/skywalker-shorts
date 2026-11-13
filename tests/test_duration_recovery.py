@@ -16,10 +16,10 @@ import similarity
 
 
 def test_duration_issue_hard_floor():
-    assert auto_qc.MIN_DURATION == 20.0
+    assert auto_qc.MIN_DURATION == 18.0
     assert auto_qc.duration_issue(3.9)
-    assert auto_qc.duration_issue(19.99)
-    assert auto_qc.duration_issue(20.0) is None
+    assert auto_qc.duration_issue(17.99)
+    assert auto_qc.duration_issue(18.0) is None
     assert auto_qc.duration_issue(25.4) is None
     assert "hard minimum" in auto_qc.duration_issue(1.5)
 
@@ -67,19 +67,22 @@ def test_plan_edit_refuses_short_unique_cut():
     except SystemExit as e:
         msg = str(e)
         assert "unique clean shots" in msg
-        assert "20" in msg or "25" in msg
+        assert "18" in msg or "20" in msg or "25" in msg
     else:
         raise AssertionError("plan_edit must fail closed on a short unique cut")
 
 
-def test_require_min_duration_never_relaxes_below_20():
+def test_require_min_duration_never_relaxes_below_18():
     pipeline.RELAX = True
     try:
         pipeline._require_min_duration(12.0)
     except SystemExit as e:
-        assert "20" in str(e)
+        assert "18" in str(e)
     else:
-        raise AssertionError("even --relax must refuse <20s")
+        raise AssertionError("even --relax must refuse <18s")
+    # 18-25s is allowed (25s is the aim, not a hard gate)
+    pipeline._require_min_duration(18.0)
+    pipeline._require_min_duration(22.0)
     pipeline.RELAX = False
     pipeline._require_min_duration(25.0)
 

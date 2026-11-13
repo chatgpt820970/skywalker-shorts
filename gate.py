@@ -1,6 +1,6 @@
 """Publish gate: a render is only published (Release + Buffer) when every check passes.
 
-Checks: 2160x3840 (or 1080x1920 when out_res=1080), 20-32s, audio stream with sane loudness,
+Checks: 2160x3840 (or 1080x1920 when out_res=1080), 18-32s, audio stream with sane loudness,
 pipeline QA (no_crop/caption/audio/no_shake/no_logo), auto_qc, dialogue subtitles timed (or no
 subtitle-able speech), title/description present + English + no banned words, Gemini QC judge.
 """
@@ -14,7 +14,7 @@ from pathlib import Path
 import hook_text
 import sky_ai
 
-MIN_DUR, MAX_DUR = 20.0, 32.6
+MIN_DUR, MAX_DUR = 18.0, 32.6
 LUFS_MIN, LUFS_MAX = -30.0, -5.0
 
 

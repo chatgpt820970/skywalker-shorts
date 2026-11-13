@@ -433,7 +433,8 @@ def _is_short_failure(reason, qa) -> bool:
     keys = (
         "hard minimum", "unique clean shots", "aim 25-32", "below target",
         "too short", "short unique", "not publishing a short cut",
-        "duration ", "need ≥20", "need >=20", "need ≥25", "need >=25",
+        "duration ", "need ≥18", "need >=18", "need ≥20", "need >=20",
+        "need ≥25", "need >=25", "hard minimum 18",
     )
     return any(k in blob for k in keys)
 

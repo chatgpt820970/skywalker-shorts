@@ -67,6 +67,24 @@ jobs:
           subprocess.check_call(cmd)
           PY
 
+      - name: Dispatch backup topic for failed slots
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BACKUPS_ONLY: "true"
+          RENDER_AHEAD_HOURS: "6"
+        run: |
+          set -euo pipefail
+          # results are committed after the render job; pull until they appear
+          for i in 1 2 3 4; do git pull --ff-only -q || true; sleep 3; done
+          ids=$(python3 scripts/plan.py | awk -F= '/^ids_csv=/{print $2}')
+          if [ -z "$ids" ]; then
+            echo "no failed-slot backups to dispatch"
+            exit 0
+          fi
+          echo "dispatching backup(s): $ids"
+          n=$(python3 -c "print(len('$ids'.split(',')))")
+          gh workflow run render.yml -f "ids=$ids" -f "max=$n"
       - name: Self-heal cancelled render/publish runs
         if: always()
         env:

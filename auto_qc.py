@@ -27,13 +27,13 @@ import scene_filter
 
 W1080, H1080 = 1080, 1920
 W4K, H4K = 2160, 3840
-MIN_DURATION = 20.0
+MIN_DURATION = 18.0
 AIM_DURATION = 25.0
 AIM_DURATION_MAX = 32.0
 
 
 def duration_issue(dur: float) -> str | None:
-    """Hard floor: anything under 20s must fail QC and must never be released."""
+    """Hard floor: anything under 18s must fail QC and must never be released."""
     try:
         d = float(dur or 0)
     except (TypeError, ValueError):

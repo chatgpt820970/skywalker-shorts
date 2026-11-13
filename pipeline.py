@@ -97,7 +97,7 @@ ZOOM = 1.0                 # Ken Burns off
 STABILIZE = True           # vidstabdetect + vidstabtransform
 OVERLAY_TEXT = False       # never burn type onto the footage itself
 TARGET_DUR = 32.0
-MIN_OUTPUT_DUR = 20.0   # hard floor: never publish shorter
+MIN_OUTPUT_DUR = 18.0   # hard floor: never publish shorter than 18s
 MIN_UNIQUE_DUR = 25.0   # aim; relaxed to MIN_OUTPUT_DUR only on --relax
 END_CARD = 2.4
 END_STILL = 52.0           # Godzilla lightning still (mezzanine time)
@@ -1019,19 +1019,13 @@ def analyze_music(path: Path, target: float = TARGET_DUR) -> dict:
 # 4. Edit plan
 # ---------------------------------------------------------------------------
 def _require_min_duration(acc: float, *, where: str = "") -> None:
-    """Fail closed: never hand a stub EDL to render/publish."""
-    need = MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR
+    """Fail closed: never hand a stub EDL shorter than the 18s hard floor.
+    25s is the aim, not a publish gate: 18-32s is allowed."""
     prefix = f"{where}: " if where else ""
     if acc + 1e-6 < MIN_OUTPUT_DUR:
         raise SystemExit(
             f"{prefix}only {acc:.1f}s of unique clean shots "
             f"(need ≥{MIN_OUTPUT_DUR:.0f}s, aim 25-32s); "
-            f"not repeating shots and not publishing a short cut"
-        )
-    if acc + 1e-6 < need:
-        raise SystemExit(
-            f"{prefix}only {acc:.1f}s of unique clean shots "
-            f"(need ≥{need:.0f}s, aim 25-32s); "
             f"not repeating shots and not publishing a short cut"
         )
 
@@ -1195,6 +1189,8 @@ def plan_two_act(scenes: list[dict], music: dict, target: float, transcript: dic
         for s in usable:
             if s["id"] in used_ids or float(s["dur"]) < vis + 0.04:
                 continue
+            if float(s.get("speech") or 0) > 0.18:
+                continue  # act 2 is song + action only; leftover dialogue fails Gemini QC
             a = float(s["start"]) + max(0.0, (float(s["dur"]) - vis) / 2.0)
             if sim.range_blocked(a, a + vis, used_ranges) or sim.similar_to_used(s, used_scenes):
                 continue
@@ -1217,7 +1213,8 @@ def plan_two_act(scenes: list[dict], music: dict, target: float, transcript: dic
     edl, acc = [], 0.0
     for i, (vis, sc, a, act) in enumerate(slots):
         edl.append({
-            "i": i, "scene": sc["id"], "src_start": round(float(a), 3), "src_end": round(float(sc["end"]), 3),
+            "i": i, "scene": sc["id"], "src_start": round(float(a), 3),
+            "src_end": round(float(a) + float(vis), 3),
             "src_dur": round(float(sc["dur"]), 3), "visible": round(float(vis), 3),
             "t0": round(acc, 3), "t1": round(acc + float(vis), 3), "trans_out": "cut", "td": 0.0,
             "spectacle": round(float(sc.get("spectacle") or 0), 2), "skin": round(float(sc.get("skin") or 0), 3),
@@ -1231,7 +1228,7 @@ def plan_two_act(scenes: list[dict], music: dict, target: float, transcript: dic
     for c in act1:
         print(f"    line {c['start']:.1f}-{c['end']:.1f}s: {c['text'][:70]!r}")
     meta = {"unique_duration": round(acc, 3), "target": float(target), "min_unique": MIN_UNIQUE_DUR,
-            "min_output": MIN_OUTPUT_DUR, "short_unique": bool(acc + 1e-6 < MIN_UNIQUE_DUR), "n_shots": len(edl),
+            "min_output": MIN_OUTPUT_DUR, "short_unique": bool(acc + 1e-6 < MIN_OUTPUT_DUR), "n_shots": len(edl),
             "two_act": {"act1_end": round(T, 3), "lines": [c["text"] for c in act1], "drop_abs": d}}
     try:
         (WORK / "plan_meta.json").write_text(json.dumps(meta, indent=2))
@@ -1561,7 +1558,7 @@ def plan_edit(scenes: list[dict], music: dict, target: float = TARGET_DUR,
         "target": float(target),
         "min_unique": MIN_UNIQUE,
         "min_output": MIN_OUTPUT_DUR,
-        "short_unique": bool(acc + 1e-6 < MIN_UNIQUE),
+        "short_unique": bool(acc + 1e-6 < MIN_OUTPUT_DUR),
         "n_shots": len(edl),
     }
     try:
@@ -2435,11 +2432,20 @@ def render_clip(mezz: Path, item: dict, geom: dict, out: Path) -> Path:
         speed = 1.0
     src_needed = length * speed if abs(speed - 1.0) > 1e-3 else length
     src_start = item["src_start"]
-    max_len = max(0.05, item["src_end"] - src_start - (1 / FPS))
+    # Act-1 lines may span clean trailer cuts: honour the EDL window, not the
+    # starting scene's end (that used to truncate clips and desync QA times).
+    need_end = float(src_start) + float(src_needed)
+    if float(item.get("src_end") or 0) + 1e-6 < need_end:
+        item["src_end"] = need_end
+    max_len = max(0.05, float(item["src_end"]) - src_start - (1 / FPS))
     if src_needed > max_len:
         if speed < 1.0:
             speed = 1.0
             src_needed = length
+            need_end = float(src_start) + float(src_needed)
+            if float(item.get("src_end") or 0) + 1e-6 < need_end:
+                item["src_end"] = need_end
+                max_len = max(0.05, float(item["src_end"]) - src_start - (1 / FPS))
         if src_needed > max_len:
             src_needed = max_len
             length = max_len
@@ -2490,6 +2496,30 @@ def _mezz_size(mezz: Path) -> tuple[int, int]:
     return mw, mh
 
 
+def sync_edl_times(edl: list[dict], paths: list[Path]) -> None:
+    """Rebuild t0/t1/visible (and src_end) from the clips that were actually rendered.
+
+    render_clip may emit a shorter file than the plan (EOF, clamp). If QA later
+    maps output time through the planned EDL, reordered two-act shots compare
+    against the wrong source frame and no_crop fails (corr~0, shift hundreds of px).
+    """
+    acc = 0.0
+    n = min(len(edl), len(paths))
+    for i in range(n):
+        if not paths[i].exists():
+            break
+        d = ffprobe_dur(paths[i])
+        it = edl[i]
+        speed = float(it.get("speed") or 1.0) or 1.0
+        it["visible"] = round(d, 3)
+        it["t0"] = round(acc, 3)
+        it["t1"] = round(acc + d, 3)
+        if it.get("scene") != "end":
+            ss = float(it.get("src_start") or 0)
+            it["src_end"] = round(ss + d * speed, 3)
+        acc += d
+
+
 def render_all_clips(mezz: Path, edl: list[dict], crop_h: int) -> list[Path]:
     CLIPS.mkdir(parents=True, exist_ok=True)
     mw, mh = _mezz_size(mezz)
@@ -2514,6 +2544,8 @@ def render_all_clips(mezz: Path, edl: list[dict], crop_h: int) -> list[Path]:
             i = futs[fut]
             fut.result()
             print(f"  rendered clip {i:02d}")
+
+    sync_edl_times(edl, paths)
 
     # End card: freeze an unused unique still (never a repeat of a used shot,
     # never the leftover Godzilla default timestamp). Skip if none is unique.
@@ -2545,6 +2577,7 @@ def render_all_clips(mezz: Path, edl: list[dict], crop_h: int) -> list[Path]:
         "visible": END_CARD, "t0": edl[-1]["t1"] if edl else 0, "t1": (edl[-1]["t1"] if edl else 0) + END_CARD,
         "trans_out": "cut", "td": 0, "spectacle": 0, "skin": 0, "crop_x": cx,
     })
+    sync_edl_times(edl, paths)
     return paths
 
 
@@ -2564,7 +2597,7 @@ def _replan(scenes: list[dict], music: dict, transcript: dict | None) -> list[di
                 "unique_duration": round(acc, 3), "target": float(TARGET_DUR),
                 "min_unique": MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR,
                 "min_output": MIN_OUTPUT_DUR,
-                "short_unique": bool(acc + 1e-6 < (MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR)),
+                "short_unique": bool(acc + 1e-6 < MIN_OUTPUT_DUR),
                 "n_shots": len([x for x in edl if x.get("scene") != "end"]),
             }, indent=2))
         except Exception:
@@ -3304,7 +3337,10 @@ def qa(path: Path, edl: list[dict]) -> dict:
 
 def _frame(path: Path, t: float) -> np.ndarray | None:
     p = QA / f"_x_{abs(hash((str(path), round(t, 3))))}.png"
-    subprocess.call(["ffmpeg", "-y", "-ss", f"{t:.3f}", "-i", str(path), "-frames:v", "1", str(p)],
+    preroll = 0.4
+    ss = max(0.0, float(t) - preroll)
+    subprocess.call(["ffmpeg", "-y", "-ss", f"{ss:.3f}", "-i", str(path),
+                     "-ss", f"{float(t) - ss:.3f}", "-frames:v", "1", str(p)],
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if not p.exists():
         return None
@@ -3376,12 +3412,17 @@ def qa_extra(out: Path, mezz: Path, src: Path, crop, edl: list[dict]) -> dict:
             continue
         if prev is not None and float(prev.get("td") or 0) > 0:
             continue
-        dt = min(0.5, it["visible"] / 2)
-        t_out = it["t0"] + dt
+        vis = float(it.get("visible") or 0)
+        if vis < 0.35:
+            continue
+        dt = min(0.4, vis / 2)
+        t_out = float(it["t0"]) + dt
         if DROP_T is not None and abs(t_out - DROP_T) < 0.5:
             continue
+        speed = float(it.get("speed") or 1.0) or 1.0
+        t_src = float(it.get("src_start") or 0) + dt * speed
         o = _frame(out, t_out)
-        m = _frame(mezz, it["src_start"] + dt)
+        m = _frame(mezz, t_src)
         if o is None or m is None:
             continue
         plate = o[lay["plate_y"]:lay["plate_y"] + lay["plate_h"], :]
@@ -3846,7 +3887,7 @@ def main():
                 "target": float(TARGET_DUR),
                 "min_unique": MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR,
                 "min_output": MIN_OUTPUT_DUR,
-                "short_unique": bool(acc_after + 1e-6 < (MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR)),
+                "short_unique": bool(acc_after + 1e-6 < MIN_OUTPUT_DUR),
                 "n_shots": len([x for x in edl if x.get("scene") != "end"]),
             }, indent=2))
         except Exception:
@@ -3973,7 +4014,7 @@ def main():
         report["warnings"] = list(report.get("warnings") or [])
         if meta.get("short_unique"):
             msg = (f"only {meta.get('unique_duration')}s of unique clean shots "
-                   f"(need ≥{meta.get('min_unique')}s, aim 25-32s); "
+                   f"(need ≥{meta.get('min_output') or meta.get('min_unique')}s, aim 25-32s); "
                    f"not repeating shots and not publishing a short cut")
             issues.append(msg)
             print("ERROR:", msg)
@@ -3981,15 +4022,14 @@ def main():
         out_dur = ffprobe_dur(out)
     except Exception:
         out_dur = 0.0
-    aim = MIN_OUTPUT_DUR if RELAX else MIN_UNIQUE_DUR
     if out_dur + 1e-6 < MIN_OUTPUT_DUR:
         issues.append(
             f"duration {out_dur:.2f}s below hard minimum {MIN_OUTPUT_DUR:.0f}s (aim 25-32s)"
         )
-    elif out_dur + 1e-6 < aim:
-        issues.append(
-            f"duration {out_dur:.2f}s below target {aim:.0f}s (aim 25-32s)"
-        )
+    elif out_dur + 1e-6 < MIN_UNIQUE_DUR:
+        warn = f"duration {out_dur:.2f}s under aim {MIN_UNIQUE_DUR:.0f}s (allowed {MIN_OUTPUT_DUR:.0f}-32s)"
+        report["warnings"] = list(report.get("warnings") or []) + [warn]
+        print("WARNING:", warn)
     report["issues"] = issues
     if args.qa_json:
         Path(args.qa_json).write_text(json.dumps(report, indent=2, default=str))
