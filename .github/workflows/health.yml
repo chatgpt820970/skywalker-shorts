@@ -1,0 +1,49 @@
+name: health
+
+# Verify next 24h slots are covered; keep backup pool healthy; auto-fill queue.
+on:
+  schedule:
+    - cron: "5,35 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: health
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fill queue + health check
+        id: h
+        run: |
+          python3 scripts/fill_queue.py || true
+          set +e
+          python3 scripts/health_check.py
+          set -e
+          short=$(python3 -c "import json; print(','.join(json.load(open('config/health_status.json')).get('short') or []))")
+          pre=$(python3 -c "import json; print(int(json.load(open('config/health_status.json')).get('backup_pool_preuploaded') or 0))")
+          echo "short=$short" >> "$GITHUB_OUTPUT"
+          if [ -n "$short" ] || [ "$pre" -lt 20 ]; then echo "need_backup=1" >> "$GITHUB_OUTPUT"; else echo "need_backup=0" >> "$GITHUB_OUTPUT"; fi
+          git config user.name "skywalker-health"
+          git config user.email "actions@users.noreply.github.com"
+          git add config/health_status.json queue/ || true
+          git diff --cached --quiet || {
+            git commit -m "health: $(date -u +%F-%H%M)"
+            for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
+          }
+      - name: Dispatch render when coverage is short
+        if: steps.h.outputs.need_backup == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run render.yml -f max=2 -f retry_failed=false || true

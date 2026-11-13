@@ -34,11 +34,15 @@ jobs:
           GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
           GEMINI_API_KEY_6: ${{ secrets.GEMINI_API_KEY_6 }}
         run: python3 scripts/trends.py
-      - name: Commit trends
+      - name: Auto-fill 8 IST slots/day
+        run: python3 scripts/fill_queue.py
+      - name: Health check (next 24h + backup pool)
+        run: python3 scripts/health_check.py || true
+      - name: Commit trends + queue fill
         run: |
           git config user.name "skywalker-trends"
           git config user.email "actions@users.noreply.github.com"
-          git add trends/ || true
+          git add trends/ queue/ config/health_status.json || true
           git diff --cached --quiet && exit 0
-          git commit -m "trends: $(date -u +%F)"
+          git commit -m "trends+queue: $(date -u +%F)"
           for i in 1 2 3 4; do git pull --rebase -q && git push && break; sleep 7; done

@@ -1,5 +1,5 @@
 {
-  "note": "Backup pool for the 8-slot IST day. If every queued item for a slot ends 'failed' (after the in-job ladder + auto-retry) and nothing in that slot is done, plan.py renders the first unused backup item for that slot (id <YYYYMMDD-HHMM>-<slug>) so no slot is skipped. Keep 8+ unique topics here (not already in the daily queue). The first three have sources-release fallbacks already uploaded; the rest use official YouTube trailers (yt-dlp at render).",
+  "note": "Backup pool (>=20) for the 8-slot IST day. Every item should have a sources-release fallback_asset so a failed render can swap topics without downloading from YouTube. plan.py renders backup-<slug>@YYYYMMDD-HHMM when a slot fails. Aim for 2+ spare ready renders per day; health_check.py verifies the next 24h.",
   "items": [
     {
       "id": "backup-zootopia2",
@@ -123,7 +123,12 @@
         "trending"
       ],
       "target_dur": 32,
-      "market": "US/UK"
+      "market": "US/UK",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fnaf2_trailer_h264.mp4"
+      ],
+      "fallback_release": "sources",
+      "fallback_asset": "fnaf2_trailer_h264.mp4"
     },
     {
       "id": "backup-jurassicworldrebirth",
@@ -143,7 +148,12 @@
         "trending"
       ],
       "target_dur": 32,
-      "market": "US/UK"
+      "market": "US/UK",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/jurassicworldrebirth_trailer_h264.mp4"
+      ],
+      "fallback_release": "sources",
+      "fallback_asset": "jurassicworldrebirth_trailer_h264.mp4"
     },
     {
       "id": "backup-f1themovie",
@@ -183,7 +193,495 @@
         "trending"
       ],
       "target_dur": 32,
-      "market": "US/UK"
+      "market": "US/UK",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/nobody2_trailer_h264.mp4"
+      ],
+      "fallback_release": "sources",
+      "fallback_asset": "nobody2_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-missionimpossible",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=fsQgc9pCyDU",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/missionimpossible_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Ethan Hunt has one last mission",
+      "words": "FINAL RECKONING",
+      "title": "Ethan Hunt has one last mission | The Final Reckoning begins | #edit",
+      "description": "Ethan Hunt has one last mission. The Final Reckoning begins from the official Mission: Impossible trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #missionimpossible",
+      "tags": [
+        "missionimpossible",
+        "tomcruise",
+        "action",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "missionimpossible_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-gladiator2",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=JY7_-dzWK40",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/gladiator2_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Rome wants blood again",
+      "words": "GLADIATOR II",
+      "title": "Rome wants blood again | Lucius enters the arena | #edit",
+      "description": "Rome wants blood again. Lucius enters the arena from the official Gladiator II trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #gladiator2",
+      "tags": [
+        "gladiator2",
+        "ridleyscott",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "gladiator2_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-venom3",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=__2bjWbetsA",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/venom3_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Venom's last dance starts now",
+      "words": "LAST DANCE",
+      "title": "Venom's last dance starts now | Eddie and Venom face Knull | #edit",
+      "description": "Venom's last dance starts now. From the official Venom: The Last Dance trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #venom",
+      "tags": [
+        "venom",
+        "tomhardy",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "venom3_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-deadpool3",
+      "pillar": "funny",
+      "source_url": "https://www.youtube.com/watch?v=73_1biulkYk",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Deadpool dragged Wolverine into this",
+      "words": "DEADPOOL",
+      "title": "Deadpool dragged Wolverine into this | the MCU's messiest team-up | #edit",
+      "description": "Deadpool dragged Wolverine into this. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #deadpool",
+      "tags": [
+        "deadpool",
+        "wolverine",
+        "marvel",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "deadpool3_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-dune2",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=Way9Dexny3w",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Paul Atreides became something else",
+      "words": "DUNE PART TWO",
+      "title": "Paul Atreides became something else | the desert answers | #edit",
+      "description": "Paul Atreides became something else. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #dune",
+      "tags": [
+        "dune",
+        "duneparttwo",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "dune2_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-alienromulus",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=x0XDEhP4MQs",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/alienromulus_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Something woke up on the station",
+      "words": "ROMULUS",
+      "title": "Something woke up on the station | Alien: Romulus | #edit",
+      "description": "Something woke up on the station. From the official Alien: Romulus trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #alienromulus",
+      "tags": [
+        "alienromulus",
+        "horror",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "alienromulus_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-twisters",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=jufrkwWbAy0",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/twisters_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "The sky turned against them",
+      "words": "TWISTERS",
+      "title": "The sky turned against them | Twisters | #edit",
+      "description": "The sky turned against them. From the official Twisters trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #twisters",
+      "tags": [
+        "twisters",
+        "glenpowell",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "twisters_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-furiosa",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=XJ55q4YikzA",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/furiosa_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "She took the wasteland back",
+      "words": "FURIOSA",
+      "title": "She took the wasteland back | Furiosa | #edit",
+      "description": "She took the wasteland back. From the official Furiosa trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #furiosa",
+      "tags": [
+        "furiosa",
+        "madmax",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "furiosa_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-civilwar",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=aDyQxtg0V2w",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/civilwar_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "America split in front of their lens",
+      "words": "CIVIL WAR",
+      "title": "America split in front of their lens | Civil War | #edit",
+      "description": "America split in front of their lens. From the official Civil War trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #civilwar",
+      "tags": [
+        "civilwar",
+        "a24",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "civilwar_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-despicableme4",
+      "pillar": "funny",
+      "source_url": "https://www.youtube.com/watch?v=LtNYiHjd4Aw",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "The Minions broke everything again",
+      "words": "DESPICABLE ME",
+      "title": "The Minions broke everything again | Despicable Me | #edit",
+      "description": "The Minions broke everything again. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #despicableme",
+      "tags": [
+        "despicableme",
+        "minions",
+        "animation",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "despicableme4_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-predatorbadlands",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=43R9l7EkJwE",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/predatorbadlands_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "The hunter became prey",
+      "words": "BADLANDS",
+      "title": "The hunter became prey | A young Predator hunts alone | #edit",
+      "description": "The hunter became prey. From the official Predator: Badlands trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #predator",
+      "tags": [
+        "predator",
+        "predatorbadlands",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "predatorbadlands_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-runningman",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=KD18ddeFuyM",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/runningman_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "The whole nation is hunting him",
+      "words": "RUNNING MAN",
+      "title": "The whole nation is hunting him | The Running Man | #edit",
+      "description": "The whole nation is hunting him. From the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #therunningman",
+      "tags": [
+        "therunningman",
+        "glenpowell",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "runningman_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-mortalkombat2",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=b24oG7qCwp4",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mortalkombat2_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Earth belongs to Shao Kahn",
+      "words": "MORTAL KOMBAT",
+      "title": "Earth belongs to Shao Kahn | Mortal Kombat II | #edit",
+      "description": "Earth belongs to Shao Kahn. From the official Mortal Kombat II trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #mortalkombat",
+      "tags": [
+        "mortalkombat",
+        "action",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "mortalkombat2_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-toystory5",
+      "pillar": "funny",
+      "source_url": "https://www.youtube.com/watch?v=-Ax3Zmd9S_o",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/toystory5_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Tech is replacing Bonnie's toys",
+      "words": "TOY STORY",
+      "title": "Tech is replacing Bonnie's toys | Toy Story 5 | #edit",
+      "description": "Tech is replacing Bonnie's toys. From the official Toy Story 5 trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #toystory5",
+      "tags": [
+        "toystory5",
+        "pixar",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "toystory5_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-sololeveling",
+      "pillar": "anime",
+      "source_url": "https://www.youtube.com/watch?v=byJ7pxxhaDY",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/sololeveling_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Sung Jinwoo's power finally awoke",
+      "words": "SOLO LEVELING",
+      "title": "Sung Jinwoo's power finally awoke | Solo Leveling | #edit",
+      "description": "Sung Jinwoo's power finally awoke. From the official Solo Leveling trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #sololeveling",
+      "tags": [
+        "sololeveling",
+        "anime",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "sololeveling_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-avatarfireandash",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=nb_fFj_0rq8",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/avatarfireandash_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Pandora is burning",
+      "words": "FIRE AND ASH",
+      "title": "Pandora is burning | The Ash People attack | #edit",
+      "description": "Pandora is burning. From the official Avatar: Fire and Ash trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #avatar",
+      "tags": [
+        "avatar",
+        "avatarfireandash",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "avatarfireandash_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-wickedforgood",
+      "pillar": "romance",
+      "source_url": "https://www.youtube.com/watch?v=R2Xubj7lazE",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/wickedforgood_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Elphaba had to let go",
+      "words": "WICKED: FOR GOOD",
+      "title": "Elphaba had to let go | Elphaba and Fiyero's last choice | #edit",
+      "description": "Elphaba had to let go. From the official Wicked: For Good trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #wicked",
+      "tags": [
+        "wicked",
+        "wickedforgood",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "wickedforgood_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-chainsawman",
+      "pillar": "anime",
+      "source_url": "https://www.youtube.com/watch?v=tAzAhDNdehs",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/chainsawman_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Denji fell for Reze",
+      "words": "REZE ARC",
+      "title": "Denji fell for Reze | Denji meets Reze | #edit",
+      "description": "Denji fell for Reze. From the official Chainsaw Man Reze Arc trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #chainsawman",
+      "tags": [
+        "chainsawman",
+        "anime",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "chainsawman_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-onepiece",
+      "pillar": "anime",
+      "source_url": "https://www.youtube.com/watch?v=2QjJMT554Bc",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/onepiece_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "Egghead changes One Piece forever",
+      "words": "ONE PIECE",
+      "title": "Egghead changes One Piece forever | Luffy on Egghead Island | #edit",
+      "description": "Egghead changes One Piece forever. From the official ONE PIECE Egghead Arc trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #onepiece",
+      "tags": [
+        "onepiece",
+        "anime",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "onepiece_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-tronares",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=YShVEXb7-ic",
+      "fallback_mp4": [
+        "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/tronares_trailer_h264.mp4"
+      ],
+      "template": "whitebar",
+      "hook": "The Grid came for us",
+      "words": "TRON: ARES",
+      "title": "The Grid came for us | Ares enters the real world | #edit",
+      "description": "The Grid came for us. From the official Tron: Ares trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #tron",
+      "tags": [
+        "tron",
+        "tronares",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 26,
+      "market": "US/UK",
+      "fallback_release": "sources",
+      "fallback_asset": "tronares_trailer_h264.mp4"
     }
   ]
 }
