@@ -1,0 +1,149 @@
+{
+  "note": "Official free trailers/clips only (720p+). No DRM/OTT rips. Chain order: studio/press -> trailer sites -> platforms (DM/Vimeo/Archive/...) -> Indian free clips -> YouTube last. content_kind may be trailer or best/action/fight/romance/emotional scene from official clip channels.",
+  "clip_queries": [
+    "{film} official trailer",
+    "{film} official teaser",
+    "{film} best scene official",
+    "{film} fight scene official",
+    "{film} action scene official",
+    "{film} romance scene official",
+    "{film} emotional scene official",
+    "{film} official clip"
+  ],
+  "official_channels": {
+    "marvel": ["Marvel Entertainment", "Marvel UK"],
+    "disney": ["Walt Disney Studios", "Pixar", "Disney+"],
+    "warner": ["Warner Bros. Pictures", "DC"],
+    "sony": ["Sony Pictures Entertainment"],
+    "universal": ["Universal Pictures", "Focus Features"],
+    "paramount": ["Paramount Pictures"],
+    "lionsgate": ["Lionsgate Movies"],
+    "a24": ["A24"],
+    "netflix": ["Netflix", "Netflix Anime", "Netflix India"],
+    "prime": ["Prime Video"],
+    "apple": ["Apple TV"],
+    "crunchyroll": ["Crunchyroll"],
+    "toho": ["TOHO"],
+    "tseries": ["T-Series", "T-Series Tamil", "T-Series Telugu"],
+    "yrf": ["YRF"],
+    "dharma": ["Dharma Productions"],
+    "hombale": ["Hombale Films"],
+    "mythri": ["Mythri Movie Makers"],
+    "sun": ["Sun Pictures"],
+    "lyca": ["Lyca Productions"],
+    "geetha": ["Geetha Arts"],
+    "movieclips": ["Movieclips", "Fandango Movieclips"],
+    "imdb": ["IMDb"]
+  },
+  "topics": {
+    "runningman": {
+      "content_kind": "trailer",
+      "archive_urls": [
+        "https://archive.org/download/the-running-man-2025-trailer-1-1080p-lossless-x265"
+      ],
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=KD18ddeFuyM"
+      ],
+      "platform_urls": [
+        "https://www.dailymotion.com/video/x9u83ec"
+      ],
+      "scene_urls": []
+    },
+    "mandalorian": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=IHWlvwu8t1w",
+        "https://www.youtube.com/watch?v=DNmOzJWnptU"
+      ],
+      "scene_urls": []
+    },
+    "fantasticfour": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=pAsmrKyMqaA"
+      ],
+      "scene_urls": []
+    },
+    "mortalkombat2": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=b24oG7qCwp4"
+      ],
+      "scene_urls": []
+    },
+    "bonetemple": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=uWWzVfc8mhY"
+      ]
+    },
+    "devilwearsprada2": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=e9HXmMnUEdE",
+        "https://www.youtube.com/watch?v=PMd1at7OwiE",
+        "https://www.youtube.com/watch?v=9c-DrMe8o5Q",
+        "https://www.youtube.com/watch?v=gFJIo2aoP24"
+      ],
+      "platform_urls": [
+        "https://www.dailymotion.com/video/xa08t6i"
+      ]
+    },
+    "hoppers": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=rzysdbZgkMg",
+        "https://www.youtube.com/watch?v=PypDSyIRRSs",
+        "https://www.youtube.com/watch?v=hJnAHzo4-KI"
+      ],
+      "platform_urls": [
+        "https://www.dailymotion.com/video/x9u83ec",
+        "https://www.dailymotion.com/video/x9u5nq0"
+      ]
+    },
+    "toystory5": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=-Ax3Zmd9S_o"
+      ]
+    },
+    "wakeupdeadman": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=0hc8yz5-d5Y"
+      ]
+    },
+    "goodbadugly": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=XkLRfH1oF3I",
+        "https://www.youtube.com/watch?v=bJbZAXbF3Xo",
+        "https://www.youtube.com/watch?v=jl-sgSDwJHs",
+        "https://www.youtube.com/watch?v=hasUDn4yvJQ"
+      ]
+    },
+    "sakamotodays": {
+      "content_kind": "trailer",
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=9TbmxbckSjE",
+        "https://www.youtube.com/watch?v=fPopd3ZOGUY",
+        "https://www.youtube.com/watch?v=G_tIlhPC1Ys",
+        "https://www.youtube.com/watch?v=KqXEcl4Whj4"
+      ],
+      "platform_urls": [
+        "https://www.dailymotion.com/video/x9c2lug"
+      ],
+      "scene_urls": []
+    },
+    "sololeveling": {
+      "content_kind": "trailer",
+      "archive_urls": [
+        "https://archive.org/download/solo-leveling-season-2-arise-from-the-shadow-official-hindi-dub-trailer-crunchyroll-india-1080p"
+      ],
+      "youtube_urls": [
+        "https://www.youtube.com/watch?v=byJ7pxxhaDY"
+      ],
+      "scene_urls": []
+    }
+  }
+}

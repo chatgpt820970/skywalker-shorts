@@ -59,6 +59,7 @@ if _hook_errs:
 import gate
 import gemini
 import sky_ai
+import sourcing
 
 os.environ.setdefault("SKY_GEMINI_BUDGET_FILE", str(OUT / f"gemini_budget_{iid}.json"))
 QUEUE_META = {k: item.get(k) for k in ("hook", "title", "description", "tags")}
@@ -264,61 +265,40 @@ def list_source_siblings():
 
 
 def download_source(src, force_fallback=False, skip=None):
-    errors, used = [], None
+    """Long official fallback chain (sourcing.py): GitHub sources release ->
+    studio/press -> trailer/clip sites -> DM/Vimeo/Archive/Bilibili/... ->
+    Indian free clips -> YouTube last (cookies only if a download-only account
+    is provided via YTDLP_COOKIES_FILE). Also tries best-scene / official-clip
+    catalog URLs, not trailers alone.
+    """
+    errors = []
     skip = set(skip or [])
-    if not force_fallback and item.get("source_url") and item.get("source_url") not in skip:
-        for attempt in range(2):
-            ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-            r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
-                                "-4", "--user-agent", ua,
-                                "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
-                                "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
-                                item["source_url"]], capture_output=True, text=True)
-            if r.returncode == 0 and _ok_src(src):
-                return item["source_url"], []
-            errors.append("yt-dlp: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
-            time.sleep(5)
+    # Always try the in-repo fallback / sources-release ladder first when forced
+    # or when YouTube is known-blocked; sourcing.build_candidate_urls already
+    # ranks github release assets first.
     used, ferr = download_fallback(src, skip=skip)
     errors.extend(ferr)
     if used and not _is_skipped(used, skip):
         return used, errors
-    # Other official trailers / teasers listed on the item, then sibling
-    # assets already sitting on the sources release.
-    extras = []
-    for u in item.get("alt_source_urls") or []:
-        extras.append(("alt", u))
-    for u in list_source_siblings():
-        extras.append(("sibling", u))
-    for kind, u in extras:
-        if not u or _is_skipped(u, skip) or _is_skipped(f"gh:{u}", skip):
-            continue
-        if "youtube.com" in u or "youtu.be" in u:
-            src.unlink(missing_ok=True)
-            ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-            r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
-                                "-4", "--user-agent", ua,
-                                "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
-                                "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
-                                u], capture_output=True, text=True)
-            if r.returncode == 0 and _ok_src(src):
-                return u, errors
-            errors.append("yt-dlp alt: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
-            continue
-        ok, info = download_url(u, src)
-        if ok:
-            return info, errors
-        errors.append(info)
-        # Non-YouTube hosts (IMDb, DailyMotion, Archive, Vimeo, ...): yt-dlp after direct curl fails.
-        src.unlink(missing_ok=True)
-        ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        r = subprocess.run(["yt-dlp", "--no-playlist", "--remote-components", "ejs:github",
-                            "-4", "--user-agent", ua,
-                            "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
-                            "--merge-output-format", "mp4", "-o", str(src), "--force-overwrites",
-                            u], capture_output=True, text=True)
-        if r.returncode == 0 and _ok_src(src):
-            return u, errors
-        errors.append("yt-dlp alt: " + (r.stderr.strip().splitlines() or ["?"])[-1][:300])
+
+    siblings = list_source_siblings()
+    allow_yt = os.environ.get("SKY_ALLOW_YOUTUBE", "1") != "0"
+
+    def _log(u):
+        print(f"  try source: {u[:120]}", flush=True)
+
+    used, serr = sourcing.download_source(
+        item, src,
+        force_fallback=force_fallback,
+        skip=skip,
+        sibling_urls=siblings,
+        allow_youtube=allow_yt,
+        on_try=_log,
+    )
+    errors.extend(serr)
+    if used and not _is_skipped(used, skip):
+        return used, errors
+
     # Optional last-resort: official/legal Pexels clip if a key is already in the env.
     # Never required; never committed.
     pex = _try_pexels(src)
@@ -357,20 +337,39 @@ def publish(final, fw, fh, up, used, qa, credit, qa_obj):
     desc = item.get("description", "")
     if credit.get("credit"):
         desc = desc.rstrip() + "\n\nMusic:\n" + credit["credit"]
+    # Prefer safe-track credit; always keep license line for description.
     notes = f"{item.get('title','')}\n\n{desc}\n\nTags: {', '.join(item.get('tags', []))}\nSource: {used}\nRun: {run_url}"
-    tag = f"render-{iid}"
+    no_publish = (
+        os.environ.get("SKY_NO_PUBLISH", "").lower() in ("1", "true", "yes")
+        or os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes")
+        or bool(item.get("demo"))
+        or bool(item.get("no_publish"))
+    )
+    # Test / demo renders go to the test-renders release (never Buffer/YouTube).
+    tag = "test-renders" if no_publish else f"render-{iid}"
+    asset_name = final.name
+    if no_publish:
+        # Keep a stable downloadable name on the shared test-renders tag.
+        asset_name = f"test-{iid}.mp4"
+        tagged = final.parent / asset_name
+        if tagged.resolve() != final.resolve():
+            tagged.write_bytes(final.read_bytes())
+        final = tagged
+        notes = "[NO PUBLISH / DRY-RUN]\n" + notes
     r = subprocess.run(["gh", "release", "view", tag], capture_output=True)
     if r.returncode != 0:
-        subprocess.check_call(["gh", "release", "create", tag, str(final), "--title", f"render {iid}", "--notes", notes])
+        title = f"test renders" if no_publish else f"render {iid}"
+        subprocess.check_call(["gh", "release", "create", tag, str(final), "--title", title, "--notes", notes])
     else:
         subprocess.check_call(["gh", "release", "upload", tag, str(final), "--clobber"])
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     return dict(
         release_url=f"https://github.com/{repo}/releases/tag/{tag}",
-        asset_url=f"https://github.com/{repo}/releases/download/{tag}/{final.name}",
+        asset_url=f"https://github.com/{repo}/releases/download/{tag}/{asset_name}",
         qa=qa, drop_t=qa_obj.get("drop_t"), energy=qa_obj.get("energy"), source=used,
         music=credit.get("file"), music_credit=credit.get("credit"), description_final=desc,
-        detail=f"rendered {fw}x{fh} ({up}), QA ok",
+        detail=f"rendered {fw}x{fh} ({up}), QA ok" + (" [no-publish]" if no_publish else ""),
+        no_publish=no_publish,
     )
 
 def run_pipeline(src, out, qa_json, work, *, relax=False, alt_scenes=False, exclude_music=None, music_salt=""):

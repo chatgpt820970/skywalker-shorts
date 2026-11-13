@@ -39,4 +39,13 @@ Usage: `python pipeline.py --template whitebar|depthtext|postcard --out out.mp4 
 - Prefer shots that contain a complete spoken line; cuts are snapped so a word is never sliced in half.
 
 ## Music
-`music/credits.json` lists the 18 tracks the picker may use (NCS + Kevin MacLeod CC BY 4.0) with exact credit text, BPM, mood and license URL. The credit is appended to the Release notes / `description_final`. Romance prefers mid-tempo emotional NCS; anime/celeb prefers phonk. A slowed+reverb style may be applied to the credited file (the credit still names the original track). Copyrighted trending songs are never downloaded.
+`music/library.json` is the live edit-song library (target ~250–280 tracks: phonk / drift phonk / Brazilian phonk / slowed+reverb / fast-edit). Each track has `license`, `credit`, and `safety` (`safe` or `claim_risk`). Gemini prefers safe tracks and puts the beat drop on the strongest shot. Credits are appended to the Short description. Podcasts, OST dumps and junk are rejected at ingest (`music-ingest.yml` on GitHub Actions; Internet Archive CC + Pixabay/FMA queries). `music/credits.json` remains the last-resort NCS / Kevin MacLeod fallback.
+
+## Source chain
+`sourcing.py` + `scripts/render_item.py` try official hosts in order: GitHub `sources` release → studio/press kits → IMDb / Movieclips / Apple Trailers → DailyMotion / Vimeo / Internet Archive / Bilibili / Facebook / Instagram / X / Reddit / TikTok → Indian free clip sites → YouTube last (optional download-only cookies via `YTDLP_COOKIES` secret — never the Skywalker account). Content is not trailer-only: best/fight/romance/emotional scenes from official clip channels are first-class. No DRM / paid OTT rips.
+
+## Queue + backups
+Eight IST slots/day (`config/slots.json`). `scripts/fill_queue.py` (from `trends.yml` / `health.yml`) auto-fills missing slots from `config/topic_catalog.json`. `config/backup_pool.json` holds ≥20 pre-uploaded backup topics; a failed render swaps to the next unused backup so a slot is never empty. `scripts/health_check.py` verifies the next 24h.
+
+## Dry-run / test render
+`workflow_dispatch` on `render.yml` with `no_publish=true` renders to the `test-renders` GitHub release and is skipped by Buffer publish.

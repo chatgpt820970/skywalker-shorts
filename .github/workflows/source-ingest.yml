@@ -1,0 +1,52 @@
+name: source-ingest
+
+# Download official free trailers/clips (Archive.org, DailyMotion, Vimeo, …)
+# and upload to the sources release. Never DRM/OTT rips. YouTube last and only
+# with an optional download-only cookies secret (never Skywalker channel cookies).
+on:
+  workflow_dispatch:
+    inputs:
+      topics:
+        description: "Comma-separated topic slugs (empty = catalog gaps)"
+        required: false
+        default: "devilwearsprada2,hoppers,goodbadugly,sakamotodays"
+  schedule:
+    - cron: "30 3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ffmpeg + yt-dlp
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install -q "yt-dlp[default]" curl_cffi
+      - name: Ingest official sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TOPICS: ${{ github.event.inputs.topics }}
+          # Optional: download-only Google account cookies (never Skywalker).
+          YTDLP_COOKIES: ${{ secrets.YTDLP_COOKIES }}
+        run: |
+          if [ -n "$YTDLP_COOKIES" ]; then
+            printf '%s\n' "$YTDLP_COOKIES" > /tmp/ytdlp_cookies.txt
+            export YTDLP_COOKIES_FILE=/tmp/ytdlp_cookies.txt
+          fi
+          python3 scripts/ingest_sources.py --topics "${TOPICS:-}"
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f out/source_ingest_summary.json ]; then cat out/source_ingest_summary.json; fi
