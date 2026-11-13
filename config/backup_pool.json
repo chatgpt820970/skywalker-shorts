@@ -1,5 +1,5 @@
 {
-  "note": "Backup pool for the 8-slot IST day. If every queued item for a slot ends 'failed' (after the in-job ladder + auto-retry) and nothing in that slot is done, plan.py renders the first unused backup item for that slot (id <YYYYMMDD-HHMM>-<slug>) so no slot is skipped. Keep 8+ unique topics here with sources uploaded. Existing items: zootopia2, kalki2898ad, superman.",
+  "note": "Backup pool for the 8-slot IST day. If every queued item for a slot ends 'failed' (after the in-job ladder + auto-retry) and nothing in that slot is done, plan.py renders the first unused backup item for that slot (id <YYYYMMDD-HHMM>-<slug>) so no slot is skipped. Keep 8+ unique topics here (not already in the daily queue). The first three have sources-release fallbacks already uploaded; the rest use official YouTube trailers (yt-dlp at render).",
   "items": [
     {
       "id": "backup-zootopia2",
@@ -81,6 +81,109 @@
       "market": "US/UK",
       "fallback_release": "sources",
       "fallback_asset": "superman_trailer_h264.mp4"
+    },
+    {
+      "id": "backup-conjuringlastrites",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=168U5JgEeu8",
+      "template": "whitebar",
+      "hook": "There's something in the attic",
+      "words": "THE CONJURING LAST RITES",
+      "title": "There's something in the attic | Ed and Lorraine's last case | #edit",
+      "description": "There's something in the attic. Ed and Lorraine's last case from the official The Conjuring: Last Rites trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=168U5JgEeu8). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #theconjuring #lastrites",
+      "tags": [
+        "theconjuring",
+        "lastrites",
+        "edwarren",
+        "lorrainewarren",
+        "horror",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 32,
+      "market": "US/UK"
+    },
+    {
+      "id": "backup-fnaf2",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=dSDpoobO6yM",
+      "template": "whitebar",
+      "hook": "The animatronics came back",
+      "words": "FIVE NIGHTS AT FREDDY'S 2",
+      "title": "The animatronics came back | Freddy's opens its doors again | #edit",
+      "description": "The animatronics came back. Freddy's opens its doors again from the official Five Nights at Freddy's 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=dSDpoobO6yM). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #fnaf2 #fivenightsatfreddys",
+      "tags": [
+        "fnaf2",
+        "fivenightsatfreddys",
+        "freddyfazbear",
+        "horror",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 32,
+      "market": "US/UK"
+    },
+    {
+      "id": "backup-jurassicworldrebirth",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=jan5CFWs9ic",
+      "template": "whitebar",
+      "hook": "The island is still hunting us",
+      "words": "JURASSIC WORLD REBIRTH",
+      "title": "The island is still hunting us | a new team enters the park | #edit",
+      "description": "The island is still hunting us. A new team enters the park from the official Jurassic World Rebirth trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=jan5CFWs9ic). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #jurassicworld #jurassicworldrebirth",
+      "tags": [
+        "jurassicworld",
+        "jurassicworldrebirth",
+        "dinosaurs",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 32,
+      "market": "US/UK"
+    },
+    {
+      "id": "backup-f1themovie",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=CT2_P2DZBR0",
+      "template": "whitebar",
+      "hook": "He came back to race again",
+      "words": "F1 THE MOVIE",
+      "title": "He came back to race again | Brad Pitt returns to the grid | #edit",
+      "description": "He came back to race again. Brad Pitt returns to the grid from the official F1 The Movie trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=CT2_P2DZBR0). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #f1themovie #bradpitt",
+      "tags": [
+        "f1themovie",
+        "bradpitt",
+        "formula1",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 32,
+      "market": "US/UK"
+    },
+    {
+      "id": "backup-nobody2",
+      "pillar": "movie",
+      "source_url": "https://www.youtube.com/watch?v=-5X2pt95cIo",
+      "template": "whitebar",
+      "hook": "Hutch is done staying quiet",
+      "words": "NOBODY 2",
+      "title": "Hutch is done staying quiet | Bob Odenkirk fights back again | #edit",
+      "description": "Hutch is done staying quiet. Bob Odenkirk fights back again from the official Nobody 2 trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=-5X2pt95cIo). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #nobody2 #bobodenkirk",
+      "tags": [
+        "nobody2",
+        "bobodenkirk",
+        "action",
+        "edit",
+        "shorts",
+        "trending"
+      ],
+      "target_dur": 32,
+      "market": "US/UK"
     }
   ]
 }
