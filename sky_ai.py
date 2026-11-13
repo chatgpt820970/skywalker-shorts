@@ -487,7 +487,7 @@ def qc_judge(video: Path, work: Path, hook: str, title: str, description: str) -
 You get the finished video itself (watch it AND listen to it) plus an image of 8 frames sampled across it.
 Expected: a tight WHITE bar with black italic English hook text directly on top of the full, uncropped landscape
 movie frame, centered on black; only lower-third dialogue subtitles under the picture; nothing else on the footage.
-Audio structure: ACT 1 (opening ~40-55%) = only the characters talking, crystal clear, NO song; ACT 2 = the hype song
+Audio structure: ACT 1 (opening, ideally 40-55%; shorter is fine if the trailer has little clean dialogue) = only the characters talking, crystal clear, NO song; ACT 2 = the hype song
 at full level over beat-cut action, no dialogue. The song must start once and never pop in and out between lines.
 Hook in the white bar: "{hook}"
 Title: "{title}"

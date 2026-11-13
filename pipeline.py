@@ -78,7 +78,7 @@ BAR_H = 196
 ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
 MUSIC_DROP_HINT = None     # library drop timestamp (seconds into the song)
 TWO_ACT = os.environ.get("SKY_TWO_ACT", "1") == "1"   # act 1 dialogue only, act 2 song only
-ACT1_FRAC, ACT1_MAX_FRAC, ACT1_MIN_S = 0.47, 0.55, 5.0
+ACT1_FRAC, ACT1_MAX_FRAC, ACT1_MIN_S = 0.47, 0.55, 3.0
 TWO_ACT_A = None           # planned act-1 length (s), set before music analysis
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}
@@ -1046,37 +1046,68 @@ def _ascii_ratio(t: str) -> float:
     return sum(1 for c in t if ord(c) < 128) / max(1, len(t))
 
 
-def act1_candidates(scenes: list[dict], transcript: dict | None) -> list[dict]:
-    """Spoken lines that can be shown as clean shots: inside a usable scene (small spill allowed)."""
-    segs = list((transcript or {}).get("segments") or [])
-    usable = [s for s in scenes if not s.get("skip") and float(s["end"]) - float(s["start"]) >= 0.6]
+def _spoken_lines(transcript: dict | None) -> list[dict]:
+    """Sentence-level lines from whisper words (split on . ! ? or a pause > 0.55 s); segments if no words."""
+    words = [w for w in ((transcript or {}).get("words") or []) if str(w.get("word") or "").strip()]
+    if not words:
+        return [{"start": float(g.get("start") or 0), "end": float(g.get("end") or 0),
+                 "text": " ".join(str(g.get("text") or "").split())} for g in ((transcript or {}).get("segments") or [])]
+    words = sorted(words, key=lambda w: float(w.get("start") or 0))
+    lines, cur = [], []
+    for w in words:
+        if cur and float(w["start"]) - float(cur[-1]["end"]) > 0.55:
+            lines.append(cur); cur = []
+        cur.append(w)
+        if str(w.get("word") or "").strip().endswith((".", "!", "?")) and float(cur[-1]["end"]) - float(cur[0]["start"]) > 0.4:
+            lines.append(cur); cur = []
+    if cur:
+        lines.append(cur)
     out = []
-    for g in segs:
-        a, b = float(g.get("start") or 0), float(g.get("end") or 0)
-        text = " ".join(str(g.get("text") or "").split())
-        if not (0.5 <= b - a <= 6.5) or len(text.split()) < 2:
+    for ln in lines:
+        out.append({"start": float(ln[0]["start"]), "end": float(ln[-1]["end"]),
+                    "text": " ".join(str(w.get("word") or "").strip() for w in ln),
+                    "prob": min(float(w.get("prob", w.get("probability", 1.0)) or 1.0) for w in ln)})
+    # merge very short neighbours (< 0.9 s) into one line when they follow within 0.35 s
+    merged = []
+    for l in out:
+        if merged and l["start"] - merged[-1]["end"] < 0.35 and (merged[-1]["end"] - merged[-1]["start"] < 0.9):
+            merged[-1] = {"start": merged[-1]["start"], "end": l["end"], "text": merged[-1]["text"] + " " + l["text"],
+                          "prob": min(merged[-1].get("prob", 1), l.get("prob", 1))}
+        else:
+            merged.append(l)
+    return merged
+
+
+def act1_candidates(scenes: list[dict], transcript: dict | None) -> list[dict]:
+    """Spoken lines that can be shown as clean footage. A line may run across trailer cuts as long as every
+    scene it touches is clean (no card/logo/black), because act 1 plays the original continuous footage."""
+    ordered = sorted(scenes, key=lambda x: float(x["start"]))
+    out = []
+    for g in _spoken_lines(transcript):
+        a, b, text = g["start"], g["end"], " ".join(g["text"].split())
+        if not (0.45 <= b - a <= 6.5) or len(text.split()) < 2 or g.get("prob", 1.0) < 0.35:
             continue
-        if not text.isascii() and _ascii_ratio(text) < 0.9:
+        if _ascii_ratio(text) < 0.9:
             continue
-        sc = next((s for s in usable if float(s["start"]) - 0.08 <= a < float(s["end"])), None)
-        if sc is None:
+        s0, e0 = a - 0.18, b + 0.28
+        touch = [x for x in ordered if float(x["end"]) > s0 + 0.02 and float(x["start"]) < e0 - 0.02]
+        if not touch:
             continue
-        hard = float(sc["end"])
-        nxt = sorted([x for x in scenes if float(x["start"]) >= float(sc["end"]) - 0.05], key=lambda x: float(x["start"]))
-        if nxt and not nxt[0].get("skip"):
-            hard = min(float(sc["end"]) + 1.2, float(nxt[0]["end"]))
-        if b > hard + 0.02:
-            continue
-        s0 = max(float(sc["start"]), a - 0.18)
-        e0 = min(hard, b + 0.28)
+        if any(x.get("skip") for x in touch):
+            # trim the padding off a dirty neighbour; give up if the words themselves sit on a card
+            clean = [x for x in touch if not x.get("skip")]
+            inner = [x for x in touch if float(x["end"]) > a and float(x["start"]) < b]
+            if any(x.get("skip") for x in inner) or not clean:
+                continue
+            s0 = max(s0, min(float(x["start"]) for x in inner))
+            e0 = min(e0, max(float(x["end"]) for x in inner))
         if e0 - s0 < 1.1:
-            e0 = min(hard, s0 + 1.1)
-            if e0 - s0 < 1.1:
-                s0 = max(float(sc["start"]), e0 - 1.1)
-        if e0 - s0 < 0.8:
+            e0 = s0 + 1.1
+        if e0 - s0 < 0.8 or e0 - s0 > 7.0:
             continue
+        sc = next((x for x in touch if float(x["start"]) - 0.02 <= max(s0, a) < float(x["end"])), touch[0])
         out.append({"id": len(out), "start": round(a, 2), "end": round(b, 2), "text": text,
-                    "scene": sc["id"], "a": round(s0, 3), "vis": round(e0 - s0, 3),
+                    "scene": sc["id"], "a": round(max(0.0, s0), 3), "vis": round(e0 - max(0.0, s0), 3),
                     "complete": text.rstrip().endswith((".", "!", "?")), "words": len(text.split())})
     return out
 
