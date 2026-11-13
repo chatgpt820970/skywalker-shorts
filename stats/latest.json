@@ -1,6 +1,6 @@
 {
- "date": "2026-11-12",
- "at": "2026-11-12 20:54 IST",
+ "date": "2026-11-13",
+ "at": "2026-11-13 16:23 IST",
  "channel_id": "UCZQHU7LI-1EyLqU7fJz_q-g",
  "sources": [
   "youtube_api",
@@ -8,22 +8,27 @@
  ],
  "errors": {},
  "channel": {
-  "subscribers": 3,
-  "channel_views": 11299
+  "subscribers": 6,
+  "channel_views": 24029
  },
  "totals": {
-  "videos": 12,
-  "views": 20918,
-  "likes": 335,
-  "comments": 4
+  "videos": 17,
+  "views": 31471,
+  "likes": 505,
+  "comments": 5
  },
- "crossed_1000": [],
+ "crossed_1000": [
+  "S8KPiIoYKRM",
+  "ULaEabA-XPo",
+  "g65ITxlKvpw",
+  "AmFgdmFJ1KA"
+ ],
  "videos": {
   "vfi6eCOvnwE": {
    "title": "The reason why Haymitch was never the same after this 💀 | Haymitch enters the Quarter Quell | #edit",
    "published": "2026-11-11T09:09:46Z",
-   "views": 10956,
-   "likes": 176,
+   "views": 11102,
+   "likes": 185,
    "comments": 0,
    "duration": "PT29S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf303"
@@ -31,17 +36,30 @@
   "85HXba5OULw": {
    "title": "The reason why Doctor Doom terrifies every Avenger 💀 | Doctor Doom arrives | #edit",
    "published": "2026-11-12T01:43:34Z",
-   "views": 2660,
-   "likes": 50,
+   "views": 6000,
+   "likes": 92,
    "comments": 0,
    "duration": "PT24S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf2f9"
   },
+  "ULaEabA-XPo": {
+   "title": "The reason why SRK's Jawan still hits different 💀 | Shah Rukh Khan takes on the system | #edit",
+   "published": "2026-11-12T17:01:40Z",
+   "views": 2771,
+   "likes": 43,
+   "comments": 0,
+   "duration": "PT26S",
+   "buffer_post_id": "6af5b9396f4d84d775f817eb",
+   "queue_id": "20261112-2230-shahrukhkhan",
+   "slot": "2026-11-12T22:30:00+05:30",
+   "music": "ncs_montagemindia.mp3",
+   "hook": null
+  },
   "C4L6mVRSSCY": {
    "title": "Godzilla Minus Zero broke the box office 💀 | Godzilla scene | #edit",
    "published": "2026-11-10T06:47:11Z",
-   "views": 1229,
-   "likes": 20,
+   "views": 1360,
+   "likes": 25,
    "comments": 0,
    "duration": "PT33S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf309"
@@ -49,62 +67,123 @@
   "WtrpBcJKayI": {
    "title": "The reason why Peddi playground ka hero ban gaya 💀 | Ram Charan as the crossover athlete | #edit",
    "published": "2026-11-11T07:46:47Z",
-   "views": 1149,
+   "views": 1151,
    "likes": 12,
    "comments": 0,
    "duration": "PT36S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf2f7"
   },
+  "g65ITxlKvpw": {
+   "title": "The reason why Paul Atreides became the villain 💀 | Emperor Paul's final war | #edit",
+   "published": "2026-11-12T12:31:33Z",
+   "views": 1134,
+   "likes": 17,
+   "comments": 0,
+   "duration": "PT29S",
+   "buffer_post_id": "6af5b1e8718a1b8a6f47d504"
+  },
   "6DjQ5Q4g-fA": {
    "title": "The reason why Greg Focker can never relax 💀 | Greg meets the new in-laws | #edit",
    "published": "2026-11-11T12:32:52Z",
-   "views": 1123,
+   "views": 1127,
    "likes": 18,
    "comments": 0,
    "duration": "PT29S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf301"
   },
-  "Sdwc3bUnqpU": {
-   "title": "The reason why he chose to become a plant 💀 | Fool Night | #edit",
-   "published": "2026-11-10T07:25:41Z",
-   "views": 1094,
-   "likes": 10,
-   "comments": 3,
-   "duration": "PT27S",
-   "buffer_post_id": "6af580b52ca9eef7ed4cf307"
-  },
   "Z7x3LuGWSgY": {
    "title": "A Japanese Movie Just Broke a 22-Year US Box Office Record",
    "published": "2026-11-10T05:01:50Z",
-   "views": 1087,
+   "views": 1108,
    "likes": 21,
    "comments": 0,
    "duration": "PT33S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf2f5"
   },
+  "AmFgdmFJ1KA": {
+   "title": "The reason why Salman ki Maatrubhumi sabko hit karti hai 💀 | The soldier who never backs down |#edit",
+   "published": "2026-11-11T17:37:23Z",
+   "views": 1106,
+   "likes": 20,
+   "comments": 1,
+   "duration": "PT31S",
+   "buffer_post_id": "6af580b52ca9eef7ed4cf2fb"
+  },
+  "Sdwc3bUnqpU": {
+   "title": "The reason why he chose to become a plant 💀 | Fool Night | #edit",
+   "published": "2026-11-10T07:25:41Z",
+   "views": 1105,
+   "likes": 10,
+   "comments": 3,
+   "duration": "PT27S",
+   "buffer_post_id": "6af580b52ca9eef7ed4cf307"
+  },
+  "S8KPiIoYKRM": {
+   "title": "The reason why Cliff Booth never walks away 💀 | Cliff Booth is back in 1977 | #edit",
+   "published": "2026-11-13T01:01:19Z",
+   "views": 1004,
+   "likes": 10,
+   "comments": 0,
+   "duration": "PT27S",
+   "buffer_post_id": "6af5b93a37794f4dae3cfd09",
+   "queue_id": "20261113-0630-cliffbooth",
+   "slot": "2026-11-13T06:30:00+05:30",
+   "music": "ncs_godless.mp3",
+   "hook": null
+  },
   "yiIO8GQept4": {
    "title": "The reason why Raja Saab sabko hypnotise kar deta hai 💀 | Prabhas as the exorcist | #edit",
    "published": "2026-11-12T07:39:25Z",
-   "views": 958,
-   "likes": 12,
+   "views": 962,
+   "likes": 13,
    "comments": 0,
    "duration": "PT32S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf2ff"
   },
-  "g65ITxlKvpw": {
-   "title": "The reason why Paul Atreides became the villain 💀 | Emperor Paul's final war | #edit",
-   "published": "2026-11-12T12:31:33Z",
-   "views": 611,
-   "likes": 14,
+  "j2ojd6TzXSY": {
+   "title": "Judy and Nick's dangerous new case #zootopia2 #judyhopps #animation",
+   "published": "2026-11-13T08:37:06Z",
+   "views": 747,
+   "likes": 22,
+   "comments": 0,
+   "duration": "PT25S",
+   "buffer_post_id": "6af6cc0ccf5e784350807587",
+   "queue_id": "20261113-1330-zootopia2",
+   "slot": "2026-11-13T13:30:00+05:30",
+   "music": "sw_interworldrapturephonk.mp3",
+   "hook": "Judy Hopps is going undercover"
+  },
+  "juY7iO94aGQ": {
+   "title": "Watch the last two seconds | War 2 #war2 #hrithikroshan #movieedit",
+   "published": "2026-11-13T07:00:46Z",
+   "views": 664,
+   "likes": 15,
+   "comments": 0,
+   "duration": "PT24S",
+   "buffer_post_id": "6af5f6903d86e25353f2e05d",
+   "queue_id": "20261113-1230-war2",
+   "slot": "2026-11-13T12:30:00+05:30",
+   "music": "sw_hukum.mp3",
+   "hook": "Watch the last two seconds"
+  },
+  "NRu--jtUgiA": {
+   "title": "Nobody suspected Judy was this dangerous #zootopia2 #judyhopps #animation",
+   "published": "2026-11-13T10:30:50Z",
+   "views": 71,
+   "likes": 0,
    "comments": 0,
    "duration": "PT29S",
-   "buffer_post_id": "6af5b1e8718a1b8a6f47d504"
+   "buffer_post_id": "6af6cc0fac315c828ef637bf",
+   "queue_id": "20261113-1600-zootopia2",
+   "slot": "2026-11-13T16:00:00+05:30",
+   "music": "sw_closeeyes.mp3",
+   "hook": "Judy Hopps goes undercover"
   },
   "bCAwRahh2_Q": {
    "title": "Godzilla Minus Zero broke the box office 💀 | Godzilla scene | #edit",
    "published": "2026-11-10T07:27:58Z",
-   "views": 43,
-   "likes": 0,
+   "views": 54,
+   "likes": 1,
    "comments": 0,
    "duration": "PT33S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf305"
@@ -117,15 +196,6 @@
    "comments": 1,
    "duration": "PT33S",
    "buffer_post_id": "6af580b52ca9eef7ed4cf2fd"
-  },
-  "AmFgdmFJ1KA": {
-   "title": "The reason why Salman ki Maatrubhumi sabko hit karti hai 💀 | The soldier who never backs down |#edit",
-   "published": "2026-11-11T17:37:23Z",
-   "views": 3,
-   "likes": 1,
-   "comments": 0,
-   "duration": "PT31S",
-   "buffer_post_id": "6af580b52ca9eef7ed4cf2fb"
   }
  }
 }
