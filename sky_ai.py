@@ -412,7 +412,7 @@ pick the spoken lines that tell a mini-story and make people curious (setup, ten
 into the hype). ACT 2: the hype song at full volume over the best action/visual shots cut on the beat, no dialogue.
 Candidate spoken lines (id: source time, text):
 {ls}
-act1 = 2-6 line ids in the order they should play (total about {act1_target:.0f}s of speech, story order usually best).
+act1 = 1-4 line ids in the order they should play (total about {act1_target:.0f}s of speech, story order usually best).
 act2 = 8-14 shot indexes from the contact sheet with the strongest action/visuals/reveals (no talking heads), best first."""
 
 

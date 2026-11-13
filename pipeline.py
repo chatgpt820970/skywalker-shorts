@@ -78,7 +78,7 @@ BAR_H = 196
 ENERGY = False             # anime/movie: beat cuts, ramp into drop, flash + punch-in
 MUSIC_DROP_HINT = None     # library drop timestamp (seconds into the song)
 TWO_ACT = os.environ.get("SKY_TWO_ACT", "1") == "1"   # act 1 dialogue only, act 2 song only
-ACT1_FRAC, ACT1_MAX_FRAC, ACT1_MIN_S = 0.47, 0.55, 3.0
+ACT1_FRAC, ACT1_MAX_FRAC, ACT1_MIN_S = 0.30, 0.38, 3.0  # owner: short dialogue, long action
 TWO_ACT_A = None           # planned act-1 length (s), set before music analysis
 DROP_T = None              # output time of the music drop / reveal (set by apply_energy)
 PILLAR_MOOD = {"anime": "anime", "movie": "movie", "celeb": "anime", "romance": "romance", "funny": "funny"}

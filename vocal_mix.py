@@ -237,8 +237,8 @@ def check_errors(res: dict | None, speech_expected: bool) -> list[str]:
             errs.append(f"act-1 dialogue too quiet ({res.get('act1_voice_dbfs')} dBFS)")
         if res.get("act2_song_dbfs", -99) < -30:
             errs.append(f"act-2 song too quiet ({res.get('act2_song_dbfs')} dBFS)")
-        if not (0.10 <= float(res.get("act1_frac") or 0) <= 0.62):
-            errs.append(f"act split {res.get('act1_frac')} outside 10-62% of the video")
+        if not (0.10 <= float(res.get("act1_frac") or 0) <= 0.45):
+            errs.append(f"act split {res.get('act1_frac')} outside 10-45% of the video")
         return errs
     if not res:
         return ["audio check missing"] if speech_expected else []
