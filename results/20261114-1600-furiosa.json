@@ -1,0 +1,174 @@
+{
+  "id": "20261114-1600-furiosa",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1146x480 source -> 2160x3840), QA ok (assigned from stock-furiosa-01)",
+  "at": "2026-11-14 13:49 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43568656998",
+  "slot": "2026-11-14T16:00:00+05:30",
+  "title": "Furiosa is not asking for permission #furiosa #madmax #action",
+  "hook": "She was born for this war",
+  "description": "She was born for this war. Furiosa makes a cold, desperate demand as she prepares for a brutal confrontation in the wasteland. From the official Furiosa trailer. Edit by Skywalker.\nSource: official trailer.\n#furiosa #madmax #action #shorts #edit",
+  "tags": [
+    "furiosa",
+    "madmax",
+    "action",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "She took the wasteland back",
+    "title": "She took the wasteland back | Furiosa | #edit",
+    "description": "She took the wasteland back. From the official Furiosa trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #furiosa",
+    "tags": [
+      "furiosa",
+      "madmax",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "Character-focused bold claim",
+  "title_candidates": [
+    {
+      "title": "Furiosa is not asking for permission",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment Furiosa chose revenge",
+      "click_score": 88.0
+    },
+    {
+      "title": "Furiosa has zero mercy left",
+      "click_score": 85.0
+    },
+    {
+      "title": "POV: you realize Furiosa is coming for you",
+      "click_score": 82.0
+    },
+    {
+      "title": "Furiosa did not come to play",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.6,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 4.8,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 4.9,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-furiosa",
+  "stock": true,
+  "stock_topic": "backup-furiosa",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/furiosa_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-furiosa-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 3.413,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/furiosa_trailer_h264.mp4",
+  "music": "sw_metamorphosis.mp3",
+  "music_credit": "Song: INTERWORLD - METAMORPHOSIS",
+  "description_final": "She was born for this war. Furiosa makes a cold, desperate demand as she prepares for a brutal confrontation in the wasteland. From the official Furiosa trailer. Edit by Skywalker.\nSource: official trailer.\n#furiosa #madmax #action #shorts #edit\n\nMusic:\nSong: INTERWORLD - METAMORPHOSIS",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 25.933333,
+      "audio": true
+    },
+    "lufs": -15.6,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.8,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video is perfectly edited for a song-only format.",
+        "The hook is compelling and well-placed.",
+        "The footage is clean, uncropped, and high-quality.",
+        "The layout adheres strictly to the requested specifications."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  },
+  "stock_id": "stock-furiosa-01",
+  "assigned_from_stock": true
+}
