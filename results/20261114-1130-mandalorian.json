@@ -1,13 +1,13 @@
 {
   "id": "20261114-1130-mandalorian",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): only 13.9s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
-  "at": "2026-11-14 08:35 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43543079635",
+  "status": "failed",
+  "detail": "gemini QC rejected 2 re-renders; backup item takes the slot: gemini QC reject: The footage contains a persistent '7' age rating watermark in the top right corner throughout the entire video.; The footage contains a persistent 'PELÍCULA PENDIENTE DE CALIFICACIÓN' text overlay at the bottom of the frame throughout the video.; The presence of these permanent on-screen elements makes the edit not post-worthy.",
+  "at": "2026-11-14 09:10 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43549873562",
   "slot": "2026-11-14T11:30:00+05:30",
-  "title": "He won't always protect Grogu | He won't always protect Grogu | #edit",
-  "hook": "He won't always protect Grogu",
-  "description": "He won't always protect Grogu. He won't always protect Grogu from the official The Mandalorian and Grogu trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=IHWlvwu8t1w). All rights to the film/series belong to their owners; short commentary edit.\n#themandalorian #grogu #starwars #disney #edit",
+  "title": "The Mandalorian's aura in this trailer is insane #themandalorian #grogu #starwars",
+  "hook": "He will cross the galaxy for Grogu",
+  "description": "He will cross the galaxy for Grogu. Din Djarin and Grogu embark on an action-packed cinematic adventure across snowy peaks and distant worlds. From the official The Mandalorian and Grogu trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=IHWlvwu8t1w). All rights to the film/series belong to their owners; short commentary edit.\n#themandalorian #grogu #starwars #shorts #edit",
   "tags": [
     "themandalorian",
     "grogu",
@@ -17,97 +17,112 @@
     "shorts",
     "trending"
   ],
-  "queue_meta": null,
-  "gemini_meta": false,
-  "hook_source": null,
-  "hook_style": null,
-  "title_candidates": null,
+  "queue_meta": {
+    "hook": "He won't always protect Grogu",
+    "title": "He won't always protect Grogu | He won't always protect Grogu | #edit",
+    "description": "He won't always protect Grogu. He won't always protect Grogu from the official The Mandalorian and Grogu trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=IHWlvwu8t1w). All rights to the film/series belong to their owners; short commentary edit.\n#themandalorian #grogu #starwars #disney #edit",
+    "tags": [
+      "themandalorian",
+      "grogu",
+      "starwars",
+      "disney",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "The Mandalorian's aura in this trailer is insane",
+      "click_score": 92.0
+    },
+    {
+      "title": "Nobody messes with Grogu when Mando is around",
+      "click_score": 90.0
+    },
+    {
+      "title": "POV: You're trying to separate Mando and Grogu",
+      "click_score": 88.0
+    },
+    {
+      "title": "The Mandalorian didn't come to play this time",
+      "click_score": 85.0
+    },
+    {
+      "title": "The moment Din Djarin takes on the entire galaxy",
+      "click_score": 84.0
+    }
+  ],
   "gemini_calls": [
     {
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
+      "s": 10.2,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 5.3,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 9.9,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
       "err": "HTTP 429"
     },
     {
-      "purpose": "scenes",
-      "model": "gemini-3.8-flash",
-      "key": "key1",
-      "err": "TimeoutError"
-    },
-    {
-      "purpose": "scenes",
+      "purpose": "qc",
       "model": "gemini-3.8-flash",
       "key": "key1",
       "err": "HTTP 503"
     },
     {
-      "purpose": "scenes",
+      "purpose": "qc",
       "model": "gemini-flash-latest",
       "key": "key1",
       "err": "HTTP 429"
     },
     {
-      "purpose": "scenes",
+      "purpose": "qc",
       "model": "gemini-3.1-flash-lite",
       "key": "key1",
-      "s": 2.7,
-      "ok": true
-    },
-    {
-      "purpose": "hook",
-      "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 30.2,
-      "ok": true
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 4.1,
-      "ok": true
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 17.0,
-      "ok": true
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 4.6,
+      "s": 1.4,
       "ok": true
     }
   ],
   "backup_item": null,
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
       "attempt": 1,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 17.5s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_alt_trailer_h264.mp4",
-      "music": "sw_metamorphosis.mp3"
+      "error": "gemini QC reject: TV channel watermark logo visible in the top-right corner of the video frame.; Spanish rating text ('PELÍCULA PENDIENTE DE CALIFICACIÓN') is burned into the bottom-right of the footage.; Canvas background uses blurred video mirror fill instead of solid black background.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_trailer_h264.mp4",
+      "music": "sw_worthnothingfeatolivertr.mp3"
     },
     {
       "attempt": 2,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 15.5s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_alt_trailer_h264.mp4",
-      "music": "sw_goofyahhphonkfullversion.mp3"
-    },
-    {
-      "attempt": 3,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 13.9s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_alt_trailer_h264.mp4",
-      "music": "sw_phonk.mp3"
+      "error": "gemini QC reject: The footage contains a persistent '7' age rating watermark in the top right corner throughout the entire video.; The footage contains a persistent 'PELÍCULA PENDIENTE DE CALIFICACIÓN' text overlay at the bottom of the frame throughout the video.; The presence of these permanent on-screen elements makes the edit not post-worthy.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mandalorian_trailer_h264.mp4",
+      "music": "sw_worthnothingfeatolivertr.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): only 13.9s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut"
+  "last_error": "gemini QC reject: The footage contains a persistent '7' age rating watermark in the top right corner throughout the entire video.; The footage contains a persistent 'PELÍCULA PENDIENTE DE CALIFICACIÓN' text overlay at the bottom of the frame throughout the video.; The presence of these permanent on-screen elements makes the edit not post-worthy.",
+  "qc_rejected": true
 }
