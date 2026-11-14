@@ -1,0 +1,175 @@
+{
+  "id": "stock-kalki2898ad-01",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-14 13:03 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43569924662",
+  "slot": null,
+  "title": "When Ashwatthama finally reveals his power #kalki2898ad #ashwatthama #scifi",
+  "hook": "Ashwatthama confronts the city of Kashi",
+  "description": "Ashwatthama confronts the city of Kashi. The legendary warrior Ashwatthama descends upon the final city of Kashi to confront the forces of Supreme Yaskin. From the official Kalki 2898 AD trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=kQDd1AhGIHk). All rights to the film/series belong to their owners; short commentary edit.\n#kalki2898ad #ashwatthama #scifi #shorts #edit",
+  "tags": [
+    "kalki2898ad",
+    "ashwatthama",
+    "scifi",
+    "prabhas",
+    "amitabhbachchan",
+    "deepikapadukone",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Kalki's world is ending",
+    "title": "Kalki's world is ending | Prabhas faces Ashwatthama | #edit",
+    "description": "Kalki's world is ending. Prabhas faces Ashwatthama from the official Kalki 2898 AD trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=kQDd1AhGIHk). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #kalki2898ad #prabhas",
+    "tags": [
+      "kalki2898ad",
+      "prabhas",
+      "amitabhbachchan",
+      "deepikapadukone",
+      "scifi",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "When Ashwatthama finally reveals his power",
+      "click_score": 92.0
+    },
+    {
+      "title": "Prabhas vs Ashwatthama face off",
+      "click_score": 88.0
+    },
+    {
+      "title": "The moment Ashwatthama enters Kashi",
+      "click_score": 85.0
+    },
+    {
+      "title": "Ashwatthama's aura in this scene is unreal",
+      "click_score": 82.0
+    },
+    {
+      "title": "Nobody noticed this detail in the final stand",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.9,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.9,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 21.1,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-kalki2898ad",
+  "stock": true,
+  "stock_topic": "backup-kalki2898ad",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/kalki2898ad_trailer_h264.mp4",
+      "music": "sw_pkonkbetapkonkphenomenon.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-kalki2898ad-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.492,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/kalki2898ad_trailer_h264.mp4",
+  "music": "sw_pkonkbetapkonkphenomenon.mp3",
+  "music_credit": "Song: 187_NOTOR1OUS_ENEMY - PKONK BETA - PKONKPHENOMENON (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Ashwatthama confronts the city of Kashi. The legendary warrior Ashwatthama descends upon the final city of Kashi to confront the forces of Supreme Yaskin. From the official Kalki 2898 AD trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=kQDd1AhGIHk). All rights to the film/series belong to their owners; short commentary edit.\n#kalki2898ad #ashwatthama #scifi #shorts #edit\n\nMusic:\nSong: 187_NOTOR1OUS_ENEMY - PKONK BETA - PKONKPHENOMENON (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 29.0,
+      "audio": true
+    },
+    "lufs": -14.7,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -19.6,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all criteria: it is a song-only edit with a clean, centered white hook bar, no dialogue, no cropping, and high-quality, relevant footage."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
