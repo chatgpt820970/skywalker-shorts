@@ -1,0 +1,215 @@
+{
+  "id": "stock-despicableme4-04",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 720x480 source -> 2160x3840), QA ok",
+  "at": "2026-11-14 22:20 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43616054469",
+  "slot": null,
+  "title": "Gru's plan to steal the monument #despicableme #gru #animation",
+  "hook": "Gru replaces the Great Wall",
+  "description": "Gru replaces the Great Wall. Gru executes a master plan to steal a world landmark by swapping it with an inflatable replica. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#despicableme #gru #animation #shorts #edit",
+  "tags": [
+    "despicableme",
+    "gru",
+    "animation",
+    "minions",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "The Minions broke everything again",
+    "title": "The Minions broke everything again | Despicable Me | #edit",
+    "description": "The Minions broke everything again. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #despicableme",
+    "tags": [
+      "despicableme",
+      "minions",
+      "animation",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "Gru's plan to steal the monument",
+      "click_score": 88.0
+    },
+    {
+      "title": "When Gru decides to go big",
+      "click_score": 85.0
+    },
+    {
+      "title": "Gru really just replaced the wall",
+      "click_score": 82.0
+    },
+    {
+      "title": "The moment Gru outsmarted everyone",
+      "click_score": 79.0
+    },
+    {
+      "title": "Gru is a different kind of villain",
+      "click_score": 75.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.8,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 2.0,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 46.7,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-despicableme4",
+  "stock": true,
+  "stock_topic": "backup-despicableme4",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+      "music": "sw_elapeidafunk.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-despicableme4-04.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+  "music": "sw_elapeidafunk.mp3",
+  "music_credit": "Song: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK",
+  "description_final": "Gru replaces the Great Wall. Gru executes a master plan to steal a world landmark by swapping it with an inflatable replica. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#despicableme #gru #animation #shorts #edit\n\nMusic:\nSong: Dj v2be, DJ SMG, XSKAY11, DJ llz - ELA PEIDA FUNK",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.4,
+      "audio": true
+    },
+    "lufs": -14.0,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -16.2,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 9.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 8.0,
+        "captions": 10.0,
+        "post_worthy": 9.0
+      },
+      "reasons": [
+        "The video is well-edited and follows all formatting instructions.",
+        "The 'LIVE' watermark present in some frames is a minor distraction but does not warrant a rejection as it is part of the original source footage.",
+        "The hook is clear, readable, and effectively placed."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
