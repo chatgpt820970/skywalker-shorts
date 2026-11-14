@@ -132,6 +132,20 @@
       "slug": "missionimpossible",
       "status": "pending",
       "queued_at": "2026-11-14 12:42 IST"
+    },
+    {
+      "id": "stock-mortalkombat2-01",
+      "topic_id": "backup-mortalkombat2",
+      "slug": "mortalkombat2",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:43 IST"
+    },
+    {
+      "id": "stock-nobody2-01",
+      "topic_id": "backup-nobody2",
+      "slug": "nobody2",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:43 IST"
     }
   ]
 }
