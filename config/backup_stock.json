@@ -46,6 +46,13 @@
       "used_at": "2026-11-14 12:40 IST"
     },
     {
+      "id": "stock-deadpool3-02",
+      "topic_id": "backup-deadpool3",
+      "slug": "deadpool3",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:40 IST"
+    },
+    {
       "id": "stock-despicableme4-01",
       "topic_id": "backup-despicableme4",
       "slug": "despicableme4",
@@ -56,6 +63,13 @@
       "assigned_slot": "2026-11-14T11:30:00+05:30",
       "assigned_result": "20261114-1130-despicableme4",
       "used_at": "2026-11-14 12:40 IST"
+    },
+    {
+      "id": "stock-despicableme4-02",
+      "topic_id": "backup-despicableme4",
+      "slug": "despicableme4",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:40 IST"
     },
     {
       "id": "stock-dune2-01",
