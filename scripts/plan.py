@@ -9,6 +9,9 @@ re-rendered. Items in retry_queued are left to the auto-retry workflow unless st
 """
 import glob, json, os, sys
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+import backup_stock
 
 IST = timezone(timedelta(hours=5, minutes=30))
 now = datetime.now(IST)
@@ -33,6 +36,9 @@ def select_slot_backups(items, result_fn, pool, used, now, ahead, busy, past_h=6
         except Exception:
             continue
         if not (slot - now <= timedelta(hours=ahead) and now - slot <= timedelta(hours=past_h)):
+            continue
+        root = Path(os.environ.get("SKY_ROOT") or ".")
+        if backup_stock.slot_is_covered(root, slot_s):
             continue
         st = [(result_fn(i) or {}).get("status") for i in ids]
         live = [i for i in ids if items[i].get("status", "queued") == "queued"]

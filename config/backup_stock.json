@@ -1,0 +1,23 @@
+{
+  "target": 30,
+  "refill_at": 5,
+  "max_refill_per_run": 2,
+  "release": "backup-stock",
+  "note": "Pre-rendered, Gemini-QC-passed backup Shorts on the backup-stock release. No slot until assigned. When ready drops to 5 or fewer, health fills back to 30 a few per run. Used entries are never posted twice.",
+  "items": [
+    {
+      "id": "stock-alienromulus-01",
+      "topic_id": "backup-alienromulus",
+      "slug": "alienromulus",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:12 IST"
+    },
+    {
+      "id": "stock-avatarfireandash-01",
+      "topic_id": "backup-avatarfireandash",
+      "slug": "avatarfireandash",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:12 IST"
+    }
+  ]
+}

@@ -67,6 +67,15 @@ jobs:
           subprocess.check_call(cmd)
           PY
 
+      - name: Wake health to assign ready stock (or refill)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git pull --ff-only -q || true
+          # If pre-rendered stock can cover a failed/imminent slot, let health
+          # assign it and publish. Otherwise fall through to an on-demand backup render.
+          gh workflow run health.yml || true
       - name: Dispatch backup topic for failed slots
         if: always()
         env:
@@ -77,6 +86,12 @@ jobs:
           set -euo pipefail
           # results are committed after the render job; pull until they appear
           for i in 1 2 3 4; do git pull --ff-only -q || true; sleep 3; done
+          # Skip on-demand backup renders when ready stock can take the slot.
+          ready=$(python3 scripts/backup_stock.py status | python3 -c "import sys,json; print(int(json.load(sys.stdin).get('ready') or 0))")
+          if [ "$ready" -gt 0 ]; then
+            echo "ready stock=$ready; health will assign, skipping backup render dispatch"
+            exit 0
+          fi
           ids=$(python3 scripts/plan.py | awk -F= '/^ids_csv=/{print $2}')
           if [ -z "$ids" ]; then
             echo "no failed-slot backups to dispatch"

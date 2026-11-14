@@ -20,6 +20,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(REPO / "scripts"))
+import backup_stock  # noqa: E402
 import slot_times  # noqa: E402
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -111,6 +113,9 @@ def main() -> int:
                 break
         if done:
             continue
+        if backup_stock.slot_is_covered(REPO, slot_s):
+            ready.append({"slot": slot_s, "id": "stock", "how": "backup_stock"})
+            continue
         # renderable primary?
         if any(has_preuploaded(it) and it.get("status", "queued") == "queued" for it in group):
             ready.append({"slot": slot_s, "id": group[0]["id"], "how": "queued+fallback"})
@@ -135,6 +140,14 @@ def main() -> int:
             spare_done.append(r["id"])
 
     preuploaded_pool = [b for b in pool if has_preuploaded(b)]
+    assigned = backup_stock.assign_needed(REPO, now)
+    stock = backup_stock.status_summary(REPO, now)
+    # Re-check shorts after assignment
+    if assigned:
+        covered = {g["slot"] for g in assigned}
+        short = [s for s in short if s not in covered]
+        for g in assigned:
+            ready.append({"slot": g["slot"], "id": g["id"], "how": "backup_stock"})
     status = {
         "at": now.strftime("%Y-%m-%d %H:%M IST"),
         "slots_checked": len(slots),
@@ -144,11 +157,18 @@ def main() -> int:
         "backup_pool_preuploaded": len(preuploaded_pool),
         "spare_done": spare_done,
         "extra_ready_target": extra_needed,
+        "stock_ready": stock["ready"],
+        "stock_pending": stock["pending"],
+        "stock_used": stock["used"],
+        "stock_target": stock["target"],
+        "stock_need_refill": stock["need_refill"],
+        "stock_assigned": [g["id"] for g in assigned],
         "ok": not short and len(preuploaded_pool) >= 20,
     }
     out = REPO / "config" / "health_status.json"
     out.write_text(json.dumps(status, indent=2, ensure_ascii=False) + "\n")
-    print(json.dumps({k: status[k] for k in ("slots_checked", "short", "backup_pool_preuploaded", "ok")}, indent=2))
+    print(json.dumps({k: status[k] for k in ("slots_checked", "short", "backup_pool_preuploaded",
+                                             "stock_ready", "stock_need_refill", "ok")}, indent=2))
     # Non-zero only when a live slot in the next 24h cannot be covered
     return 1 if short else 0
 

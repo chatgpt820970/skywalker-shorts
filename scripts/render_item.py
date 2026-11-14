@@ -21,7 +21,26 @@ IST = timezone(timedelta(hours=5, minutes=30))
 REPO = Path(__file__).resolve().parent.parent
 iid = sys.argv[1]
 BACKUP = None
-if "@" in iid:
+STOCK = None
+if iid.startswith("stock-"):
+    # stock-<slug>-<nn> -> render a pool topic with no slot, upload to backup-stock.
+    import re as _re
+    _m = _re.match(r"^stock-(.+)-(\d{2})$", iid)
+    if not _m:
+        sys.exit(f"bad stock id {iid}")
+    _slug = _m.group(1)
+    _pool = json.load(open(REPO / "config" / "backup_pool.json")).get("items") or []
+    STOCK = next((dict(b) for b in _pool if b.get("id") == f"backup-{_slug}"), None)
+    if STOCK is None:
+        sys.exit(f"stock topic backup-{_slug} not found")
+    STOCK.pop("slot", None)
+    STOCK["id"] = iid
+    STOCK["stock"] = True
+    STOCK["stock_topic"] = f"backup-{_slug}"
+    STOCK["backup_item"] = f"backup-{_slug}"
+    STOCK["no_publish"] = False
+    STOCK["spare"] = True
+elif "@" in iid:
     # backup-<slug>@YYYYMMDD-HHMM -> render pool item for that slot as YYYYMMDD-HHMM-<slug>
     _bid, _code = iid.split("@", 1)
     _pool = json.load(open(REPO / "config" / "backup_pool.json")).get("items") or []
@@ -38,8 +57,8 @@ RES = REPO / "results"; RES.mkdir(exist_ok=True)
 run_url = f"{os.environ.get('GITHUB_SERVER_URL','https://github.com')}/{os.environ.get('GITHUB_REPOSITORY','')}/actions/runs/{os.environ.get('GITHUB_RUN_ID','')}"
 MAX_AUTO_RETRIES = 1  # outer workflow_run re-dispatch budget
 
-item = BACKUP
-for f in ([] if BACKUP else sorted(glob.glob(str(REPO / "queue" / "*.json")))):
+item = STOCK or BACKUP
+for f in ([] if (STOCK or BACKUP) else sorted(glob.glob(str(REPO / "queue" / "*.json")))):
     for it in json.load(open(f)):
         if it["id"] == iid:
             item = it
@@ -127,7 +146,8 @@ def write(status, detail, **extra):
          "description": item.get("description"), "tags": item.get("tags"),
          "queue_meta": QUEUE_META if GEMINI_META else None, "gemini_meta": bool(GEMINI_META),
          "hook_source": (GEMINI_META or {}).get("source"), "hook_style": (GEMINI_META or {}).get("style"), "title_candidates": (GEMINI_META or {}).get("title_candidates"),
-         "gemini_calls": gemini._budget().get("log", []), "backup_item": item.get("backup_item"), **extra}
+         "gemini_calls": gemini._budget().get("log", []), "backup_item": item.get("backup_item"),
+         "stock": item.get("stock"), "stock_topic": item.get("stock_topic"), "spare": item.get("spare"), **extra}
     prev = read_prev()
     for k in ("buffer_post_id", "buffer_status", "buffer_due_at", "buffer_posted_at", "youtube_url"):
         if prev.get(k) and k not in r:
@@ -346,20 +366,37 @@ def publish(final, fw, fh, up, used, qa, credit, qa_obj):
         or bool(item.get("no_publish"))
     )
     # Test / demo renders go to the test-renders release (never Buffer/YouTube).
-    tag = "test-renders" if no_publish else f"render-{iid}"
-    asset_name = final.name
+    # Pre-rendered stock (no slot yet) goes to the shared backup-stock release.
+    is_stock = bool(item.get("stock")) and not no_publish
     if no_publish:
-        # Keep a stable downloadable name on the shared test-renders tag.
-        asset_name = final.name if final.name.startswith("test-") else f"test-{iid}.mp4"
+        tag = "test-renders"
+    elif is_stock:
+        tag = "backup-stock"
+    else:
+        tag = f"render-{iid}"
+    asset_name = final.name
+    if no_publish or is_stock:
+        if no_publish:
+            asset_name = final.name if final.name.startswith("test-") else f"test-{iid}.mp4"
+        else:
+            asset_name = f"{iid}.mp4"
         if asset_name != final.name:
             tagged = final.parent / asset_name
             if tagged.resolve() != final.resolve():
                 tagged.write_bytes(final.read_bytes())
             final = tagged
-        notes = "[NO PUBLISH / DRY-RUN]\n" + notes
+        if no_publish:
+            notes = "[NO PUBLISH / DRY-RUN]\n" + notes
+        else:
+            notes = "[BACKUP STOCK / no slot until assigned]\n" + notes
     r = subprocess.run(["gh", "release", "view", tag], capture_output=True)
     if r.returncode != 0:
-        title = f"test renders" if no_publish else f"render {iid}"
+        if no_publish:
+            title = "test renders"
+        elif is_stock:
+            title = "backup stock"
+        else:
+            title = f"render {iid}"
         subprocess.check_call(["gh", "release", "create", tag, str(final), "--title", title, "--notes", notes])
     else:
         subprocess.check_call(["gh", "release", "upload", tag, str(final), "--clobber"])

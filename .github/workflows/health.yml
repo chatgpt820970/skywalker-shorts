@@ -1,6 +1,7 @@
 name: health
 
-# Verify next 24h slots are covered; keep backup pool healthy; auto-fill queue.
+# Verify next 24h slots are covered; assign ready stock to failed/imminent slots;
+# keep backup pool healthy; refill pre-rendered stock when it drops to 5; auto-fill queue.
 on:
   schedule:
     - cron: "5,35 * * * *"
@@ -32,11 +33,15 @@ jobs:
           set -e
           short=$(python3 -c "import json; print(','.join(json.load(open('config/health_status.json')).get('short') or []))")
           pre=$(python3 -c "import json; print(int(json.load(open('config/health_status.json')).get('backup_pool_preuploaded') or 0))")
+          need_stock=$(python3 -c "import json; print('1' if json.load(open('config/health_status.json')).get('stock_need_refill') else '0')")
+          assigned=$(python3 -c "import json; print(','.join(json.load(open('config/health_status.json')).get('stock_assigned') or []))")
           echo "short=$short" >> "$GITHUB_OUTPUT"
+          echo "need_stock=$need_stock" >> "$GITHUB_OUTPUT"
+          echo "assigned=$assigned" >> "$GITHUB_OUTPUT"
           if [ -n "$short" ] || [ "$pre" -lt 20 ]; then echo "need_backup=1" >> "$GITHUB_OUTPUT"; else echo "need_backup=0" >> "$GITHUB_OUTPUT"; fi
           git config user.name "skywalker-health"
           git config user.email "actions@users.noreply.github.com"
-          git add config/health_status.json queue/ || true
+          git add config/health_status.json config/backup_stock.json queue/ results/*.json || true
           git diff --cached --quiet || {
             git commit -m "health: $(date -u +%F-%H%M)"
             for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
@@ -47,3 +52,29 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run render.yml -f max=2 -f retry_failed=false || true
+      - name: Dispatch stock refill (few per run, does not block slot renders)
+        if: steps.h.outputs.need_stock == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ids=$(python3 scripts/backup_stock.py refill-ids 2 | awk -F= '/^ids_csv=/{print $2}')
+          if [ -z "$ids" ]; then
+            echo "no stock ids to refill"
+            exit 0
+          fi
+          git add config/backup_stock.json || true
+          git config user.name "skywalker-health"
+          git config user.email "actions@users.noreply.github.com"
+          git diff --cached --quiet || {
+            git commit -m "stock: queue refill $ids"
+            for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
+          }
+          n=$(python3 -c "print(len('$ids'.split(',')))")
+          echo "dispatching stock refill: $ids"
+          gh workflow run render.yml -f "ids=$ids" -f "max=$n"
+      - name: Publish assigned stock immediately
+        if: steps.h.outputs.assigned != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run publish.yml || true

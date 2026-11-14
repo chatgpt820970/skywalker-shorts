@@ -45,7 +45,7 @@ Usage: `python pipeline.py --template whitebar|depthtext|postcard --out out.mp4 
 `sourcing.py` + `scripts/render_item.py` try official hosts in order: GitHub `sources` release → studio/press kits → IMDb / Movieclips / Apple Trailers → DailyMotion / Vimeo / Internet Archive / Bilibili / Facebook / Instagram / X / Reddit / TikTok → Indian free clip sites → YouTube last (optional download-only cookies via `YTDLP_COOKIES` secret — never the Skywalker account). Content is not trailer-only: best/fight/romance/emotional scenes from official clip channels are first-class. No DRM / paid OTT rips.
 
 ## Queue + backups
-Eight IST slots/day (`config/slots.json`). `scripts/fill_queue.py` (from `trends.yml` / `health.yml`) auto-fills missing slots from `config/topic_catalog.json`. `config/backup_pool.json` holds ≥20 pre-uploaded backup topics; a failed render swaps to the next unused backup so a slot is never empty. `scripts/health_check.py` verifies the next 24h.
+Eight IST slots/day (`config/slots.json`). `scripts/fill_queue.py` (from `trends.yml` / `health.yml`) auto-fills missing slots from `config/topic_catalog.json`. `config/backup_pool.json` holds ≥20 pre-uploaded backup topics. `config/backup_stock.json` tracks a target of 30 pre-rendered, QC-passed Shorts on the `backup-stock` release; health assigns the next unused one when a slot fails or is still empty ~60 minutes out, and refills (a few per run) when ready stock drops to 5 or fewer. A failed render still swaps to an on-demand backup-pool render if stock is empty. `scripts/health_check.py` verifies the next 24h.
 
 ## Dry-run / test render
 `workflow_dispatch` on `render.yml` with `no_publish=true` renders to the `test-renders` GitHub release and is skipped by Buffer publish.

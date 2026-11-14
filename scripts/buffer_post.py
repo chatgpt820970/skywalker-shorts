@@ -14,6 +14,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(REPO / "scripts"))
+import backup_stock  # noqa: E402
 import hook_text  # noqa: E402
 import sky_ai  # noqa: E402
 
@@ -108,17 +110,29 @@ def main():
     late_h = float(CFG.get("late_post_hours") or 6)
     posts = None
     failed, changed = [], []
+    rows = []
     for p in sorted(glob.glob(str(REPO / "results" / "*.json"))):
-        r = json.loads(Path(p).read_text())
+        try:
+            rows.append((p, json.loads(Path(p).read_text())))
+        except Exception:
+            continue
+    all_r = [r for _, r in rows]
+    for p, r in rows:
         iid = r.get("id")
         if ONLY and iid not in ONLY:
             continue
         if r.get("status") != "done" or not r.get("asset_url") or not r.get("slot"):
             continue
         # Never post demo / dry-run / no_publish renders (test-renders release).
+        # Unassigned stock has no slot and is skipped by the check above.
         if r.get("no_publish") or r.get("demo") or (r.get("asset_url") or "").find("/test-renders/") >= 0:
             continue
         if (r.get("id") or "").startswith("demo-") or (r.get("id") or "").startswith("test-"):
+            continue
+        if (r.get("id") or "").startswith("stock-") and not r.get("assigned_from_stock"):
+            continue
+        if backup_stock.slot_post_conflicts(r, all_r):
+            print(f"{iid}: slot already covered by another result; not posting")
             continue
         slot = datetime.fromisoformat(r["slot"])
         if slot < start:

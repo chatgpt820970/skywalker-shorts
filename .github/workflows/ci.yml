@@ -19,7 +19,7 @@ jobs:
       - name: Compile all python
         run: python3 -m py_compile *.py scripts/*.py
       - name: Unit tests (light)
-        run: python3 -m pytest -q tests/test_hook_text.py tests/test_publish.py tests/test_backup_slots.py tests/test_slots.py tests/test_sourcing.py tests/test_perf_captions.py
+        run: python3 -m pytest -q tests/test_hook_text.py tests/test_publish.py tests/test_backup_slots.py tests/test_backup_stock.py tests/test_slots.py tests/test_sourcing.py tests/test_perf_captions.py
       - name: Queue hooks are English and ids unique
         run: |
           python3 - <<'PY'
