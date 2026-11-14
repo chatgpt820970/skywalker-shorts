@@ -1,12 +1,7 @@
 {
-  "at": "2026-11-14 22:01 IST",
+  "at": "2026-11-14 22:32 IST",
   "slots_checked": 11,
   "ready": [
-    {
-      "slot": "2026-11-14T20:30:00+05:30",
-      "id": "stock",
-      "how": "backup_stock"
-    },
     {
       "slot": "2026-11-14T22:30:00+05:30",
       "id": "20261114-2230-rajinikanth",
@@ -56,6 +51,11 @@
       "slot": "2026-11-15T20:30:00+05:30",
       "id": "20261115-2030-toystory5",
       "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-15T22:30:00+05:30",
+      "id": "20261115-2230-dragonballsuper",
+      "how": "queued+fallback"
     }
   ],
   "short": [],
@@ -86,7 +86,7 @@
   ],
   "extra_ready_target": 2,
   "stock_ready": 5,
-  "stock_pending": 3,
+  "stock_pending": 5,
   "stock_used": 8,
   "stock_target": 30,
   "stock_need_refill": true,
