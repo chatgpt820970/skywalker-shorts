@@ -164,10 +164,13 @@
       "id": "stock-missionimpossible-01",
       "topic_id": "backup-missionimpossible",
       "slug": "missionimpossible",
-      "status": "ready",
+      "status": "used",
       "queued_at": "2026-11-14 12:42 IST",
       "result_id": "stock-missionimpossible-01",
-      "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-missionimpossible-01.mp4"
+      "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-missionimpossible-01.mp4",
+      "assigned_slot": "2026-11-14T20:30:00+05:30",
+      "assigned_result": "20261114-2030-missionimpossible",
+      "used_at": "2026-11-14 16:25 IST"
     },
     {
       "id": "stock-mortalkombat2-01",

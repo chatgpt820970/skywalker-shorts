@@ -1,6 +1,6 @@
 {
-  "at": "2026-11-14 15:32 IST",
-  "slots_checked": 10,
+  "at": "2026-11-14 16:25 IST",
+  "slots_checked": 11,
   "ready": [
     {
       "slot": "2026-11-14T16:00:00+05:30",
@@ -51,6 +51,16 @@
       "slot": "2026-11-15T13:30:00+05:30",
       "id": "backup-toystory5",
       "how": "backup_pool"
+    },
+    {
+      "slot": "2026-11-15T16:00:00+05:30",
+      "id": "20261115-1600-hoppers",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T20:30:00+05:30",
+      "id": "20261114-2030-missionimpossible",
+      "how": "backup_stock"
     }
   ],
   "short": [],
@@ -78,11 +88,13 @@
     "20261114-1330-dune2"
   ],
   "extra_ready_target": 2,
-  "stock_ready": 7,
+  "stock_ready": 6,
   "stock_pending": 0,
-  "stock_used": 6,
+  "stock_used": 7,
   "stock_target": 30,
   "stock_need_refill": false,
-  "stock_assigned": [],
+  "stock_assigned": [
+    "20261114-2030-missionimpossible"
+  ],
   "ok": true
 }
