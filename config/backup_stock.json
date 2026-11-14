@@ -122,6 +122,13 @@
       "result_id": "stock-despicableme4-03"
     },
     {
+      "id": "stock-despicableme4-04",
+      "topic_id": "backup-despicableme4",
+      "slug": "despicableme4",
+      "status": "pending",
+      "queued_at": "2026-11-14 22:01 IST"
+    },
+    {
       "id": "stock-dune2-01",
       "topic_id": "backup-dune2",
       "slug": "dune2",
@@ -149,6 +156,13 @@
       "status": "failed",
       "queued_at": "2026-11-14 12:24 IST",
       "result_id": "stock-fnaf2-01"
+    },
+    {
+      "id": "stock-fnaf2-02",
+      "topic_id": "backup-fnaf2",
+      "slug": "fnaf2",
+      "status": "pending",
+      "queued_at": "2026-11-14 22:01 IST"
     },
     {
       "id": "stock-furiosa-01",
