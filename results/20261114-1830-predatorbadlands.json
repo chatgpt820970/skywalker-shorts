@@ -172,5 +172,9 @@
     }
   },
   "stock_id": "stock-predatorbadlands-01",
-  "assigned_from_stock": true
+  "assigned_from_stock": true,
+  "buffer_post_id": "6af88401918fe79d2e8afb9a",
+  "buffer_status": "sent",
+  "buffer_due_at": "2026-11-14T15:53:37.759Z",
+  "buffer_created_at": "2026-11-14 21:23 IST"
 }
