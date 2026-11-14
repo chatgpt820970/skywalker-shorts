@@ -1,9 +1,9 @@
 {
   "id": "20261114-0630-howtorobabank",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 30.44, 'stabilized': True, 'shots': 5, 'limit_px': 6.0}; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors",
-  "at": "2026-11-14 04:12 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43510893671",
+  "status": "failed",
+  "detail": "pipeline/QA failed (exit 1): auto_qc: 11 frame(s) failed empty-dark/logo/text detectors",
+  "at": "2026-11-14 05:42 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43521530257",
   "slot": "2026-11-14T06:30:00+05:30",
   "title": "This heist went completely wrong | The heist goes wrong | #edit",
   "hook": "This heist went completely wrong",
@@ -28,44 +28,43 @@
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 28.1,
+      "s": 39.1,
       "ok": true
     },
     {
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "err": "HTTP 429"
+      "err": "HTTP 503"
     },
     {
       "purpose": "scenes",
       "model": "gemini-3.8-flash",
       "key": "key1",
-      "err": "HTTP 503"
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
     },
     {
       "purpose": "scenes",
       "model": "gemini-flash-latest",
       "key": "key1",
-      "err": "HTTP 429"
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 11.2,
-      "ok": true
+      "err": "TimeoutError"
     },
     {
       "purpose": "hook",
-      "model": "gemini-3.1-flash-lite",
+      "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 2.0,
+      "s": 12.3,
       "ok": true
     }
   ],
   "backup_item": null,
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
@@ -85,10 +84,10 @@
     {
       "attempt": 3,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 30.44, 'stabilized': True, 'shots': 5, 'limit_px': 6.0}; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors",
+      "error": "pipeline/QA failed (exit 1): auto_qc: 11 frame(s) failed empty-dark/logo/text detectors",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/howtorobabank_trailer_h264.mp4",
-      "music": "sw_pkonkbetapkonkphenomenon.mp3"
+      "music": "sw_goofyahhphonkfullversion.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): QA no_shake failed: {'ok': False, 'jitter_px_median': 30.44, 'stabilized': True, 'shots': 5, 'limit_px': 6.0}; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors"
+  "last_error": "pipeline/QA failed (exit 1): auto_qc: 11 frame(s) failed empty-dark/logo/text detectors"
 }
