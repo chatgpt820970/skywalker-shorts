@@ -171,6 +171,20 @@
       "slug": "onepiece",
       "status": "pending",
       "queued_at": "2026-11-14 12:51 IST"
+    },
+    {
+      "id": "stock-predatorbadlands-01",
+      "topic_id": "backup-predatorbadlands",
+      "slug": "predatorbadlands",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:52 IST"
+    },
+    {
+      "id": "stock-runningman-01",
+      "topic_id": "backup-runningman",
+      "slug": "runningman",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:52 IST"
     }
   ]
 }
