@@ -1,5 +1,5 @@
 {
   "ids": [],
-  "no_publish": true,
-  "note": "Cleared after successful test-improvements-v2-dryrun. Set ids to force another dry-run."
+  "no_publish": false,
+  "note": "no_publish only applies when ids is non-empty. Keep false."
 }

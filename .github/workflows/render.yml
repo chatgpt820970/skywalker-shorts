@@ -73,7 +73,8 @@ jobs:
           NP="${{ github.event.inputs.no_publish == 'true' && '1' || '0' }}"
           if [ "${FORCE_NO_PUBLISH:-0}" = "1" ]; then NP=1; fi
           if [ -f config/force_render.json ]; then
-            NP=$(python3 -c "import json; d=json.load(open('config/force_render.json')); print('1' if d.get('no_publish') else '0')")
+            NP_F=$(python3 -c "import json; d=json.load(open('config/force_render.json')); print('1' if (d.get('no_publish') and d.get('ids')) else '0')")
+            if [ "$NP_F" = "1" ]; then NP=1; fi
           fi
           echo "no_publish=$NP" >> "$GITHUB_OUTPUT"
 
