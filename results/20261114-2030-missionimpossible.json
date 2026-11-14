@@ -172,7 +172,9 @@
   "stock_id": "stock-missionimpossible-01",
   "assigned_from_stock": true,
   "buffer_post_id": "6af83e3cd8bd2962e4239e02",
-  "buffer_status": "scheduled",
+  "buffer_status": "sent",
   "buffer_due_at": "2026-11-14T15:00:00.000Z",
-  "buffer_created_at": "2026-11-14 16:25 IST"
+  "buffer_created_at": "2026-11-14 16:25 IST",
+  "youtube_url": "https://www.youtube.com/shorts/KnvhRe-t4Do",
+  "buffer_posted_at": "2026-11-14T15:00:38.977Z"
 }
