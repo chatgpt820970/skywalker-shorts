@@ -1,9 +1,9 @@
 {
   "id": "20261114-1600-fantasticfour",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): only 14.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
-  "at": "2026-11-14 11:48 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43562980178",
+  "status": "failed",
+  "detail": "pipeline/QA failed (exit 1): only 14.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+  "at": "2026-11-14 12:59 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43568592829",
   "slot": "2026-11-14T16:00:00+05:30",
   "title": "Their planet is marked for death | Their planet is marked for death | #edit",
   "hook": "Their planet is marked for death",
@@ -27,20 +27,6 @@
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 53.1,
-      "ok": true
-    },
-    {
-      "purpose": "hook",
-      "model": "gemini-3.5-flash",
-      "key": "key1",
-      "s": 25.2,
-      "ok": true
-    },
-    {
-      "purpose": "scenes",
-      "model": "gemini-3.5-flash",
-      "key": "key1",
       "err": "HTTP 429"
     },
     {
@@ -53,55 +39,102 @@
       "purpose": "scenes",
       "model": "gemini-flash-latest",
       "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.8,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 4.9,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
       "err": "HTTP 503"
     },
     {
       "purpose": "scenes",
-      "model": "gemini-3.1-flash-lite",
+      "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 4.8,
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 8.6,
       "ok": true
     },
     {
       "purpose": "scenes",
       "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 40.4,
+      "key": "key2",
+      "s": 5.3,
       "ok": true
     },
     {
       "purpose": "scenes",
       "model": "gemini-3.1-flash-lite",
-      "key": "key1",
-      "s": 3.2,
+      "key": "key2",
+      "s": 4.0,
       "ok": true
     }
   ],
   "backup_item": null,
-  "auto_retries": 0,
+  "stock": null,
+  "stock_topic": null,
+  "spare": null,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
       "attempt": 1,
-      "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 17.2s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
-      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fantasticfour_alt_trailer_h264.mp4",
-      "music": "sw_metamorphosis.mp3"
-    },
-    {
-      "attempt": 2,
       "ok": false,
       "error": "pipeline/QA failed (exit 1): only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fantasticfour_alt_trailer_h264.mp4",
       "music": "sw_metamorphosis.mp3"
     },
     {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 17.2s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fantasticfour_alt_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    },
+    {
       "attempt": 3,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 14.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "error": "pipeline/QA failed (exit 1): only 14.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/fantasticfour_alt_trailer_h264.mp4",
-      "music": "sw_005alovelymangocrazygami.mp3"
+      "music": "sw_guacamolephonk6ix6.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): only 14.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut"
+  "last_error": "pipeline/QA failed (exit 1): only 14.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut"
 }
