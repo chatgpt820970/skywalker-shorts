@@ -14,11 +14,6 @@ from pathlib import Path
 import backup_stock
 
 IST = timezone(timedelta(hours=5, minutes=30))
-now = datetime.now(IST)
-ahead = float(os.environ.get("RENDER_AHEAD_HOURS", "8"))
-cap = int(os.environ.get("MAX_PER_RUN", "4") or 4)
-force_ids = [x.strip() for x in os.environ.get("IDS", "").split(",") if x.strip()]
-retry_failed = os.environ.get("RETRY_FAILED", "false") == "true"
 
 def select_slot_backups(items, result_fn, pool, used, now, ahead, busy, past_h=6):
     """If every live queue item for a due slot is 'failed' and nothing is done,
@@ -76,6 +71,11 @@ def select_slot_backups(items, result_fn, pool, used, now, ahead, busy, past_h=6
     return picks, used
 
 def main():
+    now = datetime.now(IST)
+    ahead = float(os.environ.get("RENDER_AHEAD_HOURS", "8"))
+    cap = int(os.environ.get("MAX_PER_RUN", "4") or 4)
+    force_ids = [x.strip() for x in os.environ.get("IDS", "").split(",") if x.strip()]
+    retry_failed = os.environ.get("RETRY_FAILED", "false") == "true"
     items = {}
     for f in sorted(glob.glob("queue/*.json")):
         try:
@@ -103,8 +103,9 @@ def main():
     pick = []
     backups_only = os.environ.get("BACKUPS_ONLY", "").lower() in ("1", "true", "yes")
     if force_ids:
-        # backup-<slug>@YYYYMMDD-HHMM is not a queue id; render_item expands it
-        pick = [i for i in force_ids if i in items or "@" in i]
+        # backup-<slug>@YYYYMMDD-HHMM and stock-<slug>-<nn> are not queue ids;
+        # render_item expands both.
+        pick = [i for i in force_ids if i in items or "@" in i or i.startswith("stock-")]
     elif backups_only:
         pass  # only the backup rule below should add ids
     else:

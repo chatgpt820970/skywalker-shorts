@@ -193,3 +193,22 @@ def test_plan_skips_backup_render_when_stock_covers(tmp_path, monkeypatch):
         items, lambda i: results.get(i), pool, set(), now, ahead=6, busy=set()
     )
     assert picks == []
+
+
+def test_plan_accepts_forced_stock_ids(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "queue").mkdir()
+    (tmp_path / "queue" / "day.json").write_text("[]\n")
+    (tmp_path / "config").mkdir()
+    (tmp_path / "results").mkdir()
+    (tmp_path / "config" / "backup_pool.json").write_text('{"items": []}\n')
+    monkeypatch.setenv("IDS", "stock-alienromulus-01,stock-avatarfireandash-01")
+    monkeypatch.setenv("MAX_PER_RUN", "2")
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.delenv("BACKUPS_ONLY", raising=False)
+    monkeypatch.delenv("RETRY_FAILED", raising=False)
+    plan.main()
+    out = capsys.readouterr()
+    text = out.out + out.err
+    assert "stock-alienromulus-01" in text
+    assert "stock-avatarfireandash-01" in text
