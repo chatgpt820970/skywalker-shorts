@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14 12:14 IST",
+  "at": "2026-11-14 12:24 IST",
   "slots_checked": 11,
   "ready": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "slot": "2026-11-14T13:30:00+05:30",
-      "id": "backup-fnaf2",
+      "id": "backup-nobody2",
       "how": "backup_pool"
     },
     {
@@ -29,7 +29,7 @@
     },
     {
       "slot": "2026-11-14T18:30:00+05:30",
-      "id": "backup-jurassicworldrebirth",
+      "id": "backup-missionimpossible",
       "how": "backup_pool"
     },
     {
@@ -54,7 +54,7 @@
     },
     {
       "slot": "2026-11-15T11:30:00+05:30",
-      "id": "backup-nobody2",
+      "id": "backup-gladiator2",
       "how": "backup_pool"
     }
   ],
@@ -64,7 +64,7 @@
   "spare_done": [],
   "extra_ready_target": 2,
   "stock_ready": 0,
-  "stock_pending": 4,
+  "stock_pending": 6,
   "stock_used": 0,
   "stock_target": 30,
   "stock_need_refill": true,
