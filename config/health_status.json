@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14 12:24 IST",
+  "at": "2026-11-14 12:25 IST",
   "slots_checked": 11,
   "ready": [
     {
@@ -64,7 +64,7 @@
   "spare_done": [],
   "extra_ready_target": 2,
   "stock_ready": 0,
-  "stock_pending": 6,
+  "stock_pending": 8,
   "stock_used": 0,
   "stock_target": 30,
   "stock_need_refill": true,
