@@ -1,0 +1,176 @@
+{
+  "id": "20261114-1830-predatorbadlands",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok (assigned from stock-predatorbadlands-01)",
+  "at": "2026-11-14 21:23 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43570845102",
+  "slot": "2026-11-14T18:30:00+05:30",
+  "title": "The Predator has found its new target #predator #ellefanning #scifi",
+  "hook": "The prey never sees it coming",
+  "description": "The prey never sees it coming. A survivor is thrust into a lethal game against a Predator in the untamed wilderness. From the official Predator: Badlands trailer. Edit by Skywalker.\nSource: official trailer.\n#predator #ellefanning #scifi #shorts #edit",
+  "tags": [
+    "predator",
+    "ellefanning",
+    "scifi",
+    "predatorbadlands",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "The hunter became prey",
+    "title": "The hunter became prey | A young Predator hunts alone | #edit",
+    "description": "The hunter became prey. From the official Predator: Badlands trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #predator",
+    "tags": [
+      "predator",
+      "predatorbadlands",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "The Predator has found its new target",
+      "click_score": 92.0
+    },
+    {
+      "title": "Elle Fanning faces the ultimate hunter",
+      "click_score": 88.0
+    },
+    {
+      "title": "This is your first hunt",
+      "click_score": 85.0
+    },
+    {
+      "title": "The Predator Badlands reveal is terrifying",
+      "click_score": 82.0
+    },
+    {
+      "title": "POV you are being hunted by a Predator",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 6.7,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.9,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.9,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-predatorbadlands",
+  "stock": true,
+  "stock_topic": "backup-predatorbadlands",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/predatorbadlands_trailer_h264.mp4",
+      "music": "sw_murderinmymind.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-predatorbadlands-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.636,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/predatorbadlands_trailer_h264.mp4",
+  "music": "sw_murderinmymind.mp3",
+  "music_credit": "Song: Kordhell - MURDER IN MY MIND",
+  "description_final": "The prey never sees it coming. A survivor is thrust into a lethal game against a Predator in the untamed wilderness. From the official Predator: Badlands trailer. Edit by Skywalker.\nSource: official trailer.\n#predator #ellefanning #scifi #shorts #edit\n\nMusic:\nSong: Kordhell - MURDER IN MY MIND",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 25.133333,
+      "audio": true
+    },
+    "lufs": -14.0,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.2,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video perfectly adheres to all technical and creative requirements.",
+        "The hook is engaging and well-placed.",
+        "The music-only edit is clean with no leftover trailer audio.",
+        "The layout is correct with the white bar and black canvas.",
+        "The footage is clean and free of watermarks or logos."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  },
+  "stock_id": "stock-predatorbadlands-01",
+  "assigned_from_stock": true
+}

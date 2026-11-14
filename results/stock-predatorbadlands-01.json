@@ -170,5 +170,9 @@
       "low": [],
       "watched_video": true
     }
-  }
+  },
+  "stock_used": true,
+  "assigned_slot": "2026-11-14T18:30:00+05:30",
+  "assigned_result": "20261114-1830-predatorbadlands",
+  "used_at": "2026-11-14 21:23 IST"
 }

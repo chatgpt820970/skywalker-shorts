@@ -201,10 +201,13 @@
       "id": "stock-predatorbadlands-01",
       "topic_id": "backup-predatorbadlands",
       "slug": "predatorbadlands",
-      "status": "ready",
+      "status": "used",
       "queued_at": "2026-11-14 12:52 IST",
       "result_id": "stock-predatorbadlands-01",
-      "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-predatorbadlands-01.mp4"
+      "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-predatorbadlands-01.mp4",
+      "assigned_slot": "2026-11-14T18:30:00+05:30",
+      "assigned_result": "20261114-1830-predatorbadlands",
+      "used_at": "2026-11-14 21:23 IST"
     },
     {
       "id": "stock-runningman-01",
