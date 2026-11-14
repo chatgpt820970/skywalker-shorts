@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14 13:49 IST",
+  "at": "2026-11-14 13:50 IST",
   "slots_checked": 12,
   "ready": [
     {
@@ -14,13 +14,13 @@
     },
     {
       "slot": "2026-11-14T16:00:00+05:30",
-      "id": "20261114-1600-fantasticfour",
-      "how": "queued+fallback"
+      "id": "stock",
+      "how": "backup_stock"
     },
     {
       "slot": "2026-11-14T17:30:00+05:30",
-      "id": "20261114-1730-fireflywedding",
-      "how": "queued+fallback"
+      "id": "stock",
+      "how": "backup_stock"
     },
     {
       "slot": "2026-11-14T18:30:00+05:30",
@@ -61,16 +61,6 @@
       "slot": "2026-11-15T13:30:00+05:30",
       "id": "backup-toystory5",
       "how": "backup_pool"
-    },
-    {
-      "slot": "2026-11-14T16:00:00+05:30",
-      "id": "20261114-1600-furiosa",
-      "how": "backup_stock"
-    },
-    {
-      "slot": "2026-11-14T17:30:00+05:30",
-      "id": "20261114-1730-kalki2898ad",
-      "how": "backup_stock"
     }
   ],
   "short": [],
@@ -85,6 +75,7 @@
     "stock-predatorbadlands-01",
     "stock-dune2-01",
     "20261114-1230-avatarfireandash",
+    "20261114-1600-furiosa",
     "stock-despicableme4-01",
     "stock-missionimpossible-01",
     "stock-runningman-01",
@@ -92,6 +83,7 @@
     "stock-dune2-02",
     "stock-mortalkombat2-01",
     "stock-deadpool3-01",
+    "20261114-1730-kalki2898ad",
     "stock-kalki2898ad-01",
     "20261114-1330-dune2"
   ],
@@ -101,9 +93,6 @@
   "stock_used": 6,
   "stock_target": 30,
   "stock_need_refill": false,
-  "stock_assigned": [
-    "20261114-1600-furiosa",
-    "20261114-1730-kalki2898ad"
-  ],
+  "stock_assigned": [],
   "ok": true
 }
