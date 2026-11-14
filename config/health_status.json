@@ -1,6 +1,6 @@
 {
-  "at": "2026-11-14 04:18 IST",
-  "slots_checked": 10,
+  "at": "2026-11-14 08:29 IST",
+  "slots_checked": 11,
   "ready": [
     {
       "slot": "2026-11-14T06:30:00+05:30",
@@ -50,6 +50,11 @@
     {
       "slot": "2026-11-14T22:30:00+05:30",
       "id": "20261114-2230-rajinikanth",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-15T06:30:00+05:30",
+      "id": "20261115-0630-werwulf",
       "how": "queued+fallback"
     }
   ],
