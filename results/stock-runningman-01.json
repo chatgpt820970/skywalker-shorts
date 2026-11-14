@@ -1,0 +1,172 @@
+{
+  "id": "stock-runningman-01",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1146x480 source -> 2160x3840), QA ok",
+  "at": "2026-11-14 13:10 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43570845102",
+  "slot": null,
+  "title": "Glen Powell is not holding back in this scene #therunningman #glenpowell #scifi",
+  "hook": "They turned survival into a game",
+  "description": "They turned survival into a game. A desperate man is forced into a televised death match controlled by a ruthless regime. From the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer.\n#therunningman #glenpowell #scifi #shorts #edit",
+  "tags": [
+    "therunningman",
+    "glenpowell",
+    "scifi",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "The whole nation is hunting him",
+    "title": "The whole nation is hunting him | The Running Man | #edit",
+    "description": "The whole nation is hunting him. From the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #therunningman",
+    "tags": [
+      "therunningman",
+      "glenpowell",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Glen Powell is not holding back in this scene",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment the games actually begin",
+      "click_score": 88.0
+    },
+    {
+      "title": "POV: you are trapped in the Running Man",
+      "click_score": 85.0
+    },
+    {
+      "title": "This version of the Running Man hits different",
+      "click_score": 82.0
+    },
+    {
+      "title": "The intensity of Ben Richards in this edit",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 29.2,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 34.1,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 39.5,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-runningman",
+  "stock": true,
+  "stock_topic": "backup-runningman",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/runningman_trailer_h264.mp4",
+      "music": "sw_murderinmymind.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-runningman-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.397,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/runningman_trailer_h264.mp4",
+  "music": "sw_murderinmymind.mp3",
+  "music_credit": "Song: Kordhell - MURDER IN MY MIND",
+  "description_final": "They turned survival into a game. A desperate man is forced into a televised death match controlled by a ruthless regime. From the official The Running Man trailer. Edit by Skywalker.\nSource: official trailer.\n#therunningman #glenpowell #scifi #shorts #edit\n\nMusic:\nSong: Kordhell - MURDER IN MY MIND",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 21.8,
+      "audio": true
+    },
+    "lufs": -14.0,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.2,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all quality standards for a song-only edit.",
+        "The hook is clear and engaging.",
+        "The layout is correct with the white bar and black canvas.",
+        "The footage is clean and uncropped."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
