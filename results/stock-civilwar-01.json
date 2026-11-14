@@ -1,9 +1,9 @@
 {
   "id": "stock-civilwar-01",
-  "status": "retry_queued",
-  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [854, 480], 'letterbox_free': [854, 462], 'plate': [1080, 584], 'letterbox_rows_black': False, 'frame_corr_median': 0.987, 'edge_corr_median': 0.992, 'shift_px_median': 0.04, 'pairs': 6}; only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors; auto_qc: only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut; only 17.972s of unique clean shots (need ≥18.0s, aim 20-28s); not repeating shots and not publishing a short cut",
-  "at": "2026-11-14 12:38 IST",
-  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43567942669",
+  "status": "failed",
+  "detail": "pipeline/QA failed (exit 1): only 16.6s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+  "at": "2026-11-14 13:16 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43570731230",
   "slot": null,
   "title": "America split in front of their lens | Civil War | #edit",
   "hook": "America split in front of their lens",
@@ -25,21 +25,63 @@
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 24.9,
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 5.1,
       "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 32.3,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "HTTP 503"
     },
     {
       "purpose": "scenes",
       "model": "gemini-3.5-flash",
       "key": "key1",
-      "s": 37.6,
-      "ok": true
+      "err": "HTTP 429"
     },
     {
-      "purpose": "hook",
-      "model": "gemini-3.5-flash",
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
       "key": "key1",
-      "s": 22.9,
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 3.5,
       "ok": true
     }
   ],
@@ -47,30 +89,30 @@
   "stock": true,
   "stock_topic": "backup-civilwar",
   "spare": true,
-  "auto_retries": 0,
+  "auto_retries": 1,
   "max_auto_retries": 1,
   "attempts": [
     {
       "attempt": 1,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 17.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [854, 480], 'letterbox_free': [854, 462], 'plate': [1080, 584], 'letterbox_rows_black': False, 'frame_corr_median': 0.992, 'edge_corr_median': 0.993, 'shift_px_median': 0.04, 'pairs': 6}",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/civilwar_trailer_h264.mp4",
-      "music": "sw_worthnothingfeatolivertr.mp3"
+      "music": "sw_murderinmymind.mp3"
     },
     {
       "attempt": 2,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): only 17.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [854, 480], 'letterbox_free': [854, 462], 'plate': [1080, 584], 'letterbox_rows_black': False, 'frame_corr_median': 0.992, 'edge_corr_median': 0.993, 'shift_px_median': 0.04, 'pairs': 6}",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/civilwar_trailer_h264.mp4",
-      "music": "sw_worthnothingfeatolivertr.mp3"
+      "music": "sw_murderinmymind.mp3"
     },
     {
       "attempt": 3,
       "ok": false,
-      "error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [854, 480], 'letterbox_free': [854, 462], 'plate': [1080, 584], 'letterbox_rows_black': False, 'frame_corr_median': 0.987, 'edge_corr_median': 0.992, 'shift_px_median': 0.04, 'pairs': 6}; only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors; auto_qc: only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut; only 17.972s of unique clean shots (need ≥18.0s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "error": "pipeline/QA failed (exit 1): only 16.6s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
       "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/civilwar_trailer_h264.mp4",
-      "music": "sw_pkonkbetapkonkphenomenon.mp3"
+      "music": "sw_phonkcoreizdead2.mp3"
     }
   ],
-  "last_error": "pipeline/QA failed (exit 1): QA no_crop failed: {'ok': False, 'source': [854, 480], 'letterbox_free': [854, 462], 'plate': [1080, 584], 'letterbox_rows_black': False, 'frame_corr_median': 0.987, 'edge_corr_median': 0.992, 'shift_px_median': 0.04, 'pairs': 6}; only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut; auto_qc: 6 frame(s) failed empty-dark/logo/text detectors; auto_qc: only 18.0s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut; only 17.972s of unique clean shots (need ≥18.0s, aim 20-28s); not repeating shots and not publishing a short cut"
+  "last_error": "pipeline/QA failed (exit 1): only 16.6s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut"
 }
