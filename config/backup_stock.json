@@ -65,6 +65,13 @@
       "result_id": "stock-civilwar-01"
     },
     {
+      "id": "stock-civilwar-02",
+      "topic_id": "backup-civilwar",
+      "slug": "civilwar",
+      "status": "pending",
+      "queued_at": "2026-11-14 21:23 IST"
+    },
+    {
       "id": "stock-deadpool3-01",
       "topic_id": "backup-deadpool3",
       "slug": "deadpool3",
@@ -104,6 +111,13 @@
       "status": "failed",
       "queued_at": "2026-11-14 12:40 IST",
       "result_id": "stock-despicableme4-02"
+    },
+    {
+      "id": "stock-despicableme4-03",
+      "topic_id": "backup-despicableme4",
+      "slug": "despicableme4",
+      "status": "pending",
+      "queued_at": "2026-11-14 21:23 IST"
     },
     {
       "id": "stock-dune2-01",
