@@ -1,0 +1,71 @@
+{
+  "id": "20261114-2030-mortalkombat2",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): only 12.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+  "at": "2026-11-14 15:28 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43578877970",
+  "slot": "2026-11-14T20:30:00+05:30",
+  "title": "Earth belongs to Shao Kahn | Earth belongs to Shao Kahn | #edit",
+  "hook": "Earth belongs to Shao Kahn",
+  "description": "Earth belongs to Shao Kahn. Earth belongs to Shao Kahn from the official Mortal Kombat II trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=b24oG7qCwp4). All rights to the film/series belong to their owners; short commentary edit.\n#mortalkombat #mortalkombat2 #actionmovie #warnerbros #edit",
+  "tags": [
+    "mortalkombat",
+    "mortalkombat2",
+    "actionmovie",
+    "warnerbros",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": null,
+  "gemini_meta": false,
+  "hook_source": null,
+  "hook_style": null,
+  "title_candidates": null,
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 15.0,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 13.2,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "stock": null,
+  "stock_topic": null,
+  "spare": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 16.1s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mortalkombat2_trailer_h264.mp4",
+      "music": "sw_mortalcombatfrostmaisrem.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 16.1s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mortalkombat2_trailer_h264.mp4",
+      "music": "sw_mortalcombatfrostmaisrem.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): only 12.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/mortalkombat2_trailer_h264.mp4",
+      "music": "sw_mortalcombatfrostmaisrem2.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): only 12.8s of unique clean shots (need ≥18s, aim 20-28s); not repeating shots and not publishing a short cut"
+}

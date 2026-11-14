@@ -1,0 +1,169 @@
+{
+  "id": "20261114-2230-rajinikanth",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok (retry: sources fallback)",
+  "at": "2026-11-14 15:23 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43578877970",
+  "slot": "2026-11-14T22:30:00+05:30",
+  "title": "Thalaivar Rajinikanth's aura in Coolie is unreal #coolie #rajinikanth #thalaivar",
+  "hook": "Hiding secrets that burn without a trace",
+  "description": "Hiding secrets that burn without a trace. Rajinikanth unleashes unmatched mass aura as a powerful force in the official Coolie trailer edit. From the official Coolie trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5-qi2TGQ4a4). All rights to the film/series belong to their owners; short commentary edit.\n#coolie #rajinikanth #thalaivar #shorts #edit",
+  "tags": [
+    "coolie",
+    "rajinikanth",
+    "thalaivar",
+    "kollywood",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Thalaivar's Coolie still rules the room",
+    "title": "Thalaivar's Coolie still rules the room | Rajinikanth is the one Coolie | #edit",
+    "description": "Thalaivar's Coolie still rules the room. Rajinikanth is the one Coolie from the official Coolie trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5-qi2TGQ4a4). All rights to the film/series belong to their owners; short commentary edit.\n#edit #shorts #coolie #rajinikanth #thalaivar",
+    "tags": [
+      "coolie",
+      "rajinikanth",
+      "thalaivar",
+      "kollywood",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold open statement",
+  "title_candidates": [
+    {
+      "title": "Thalaivar Rajinikanth's aura in Coolie is unreal",
+      "click_score": 94.0
+    },
+    {
+      "title": "POV: Rajinikanth just walked into the harbor",
+      "click_score": 91.0
+    },
+    {
+      "title": "Rajinikanth didn't come to play in Coolie",
+      "click_score": 89.0
+    },
+    {
+      "title": "This scene hits different when Rajinikanth enters",
+      "click_score": 88.0
+    },
+    {
+      "title": "Nobody noticed this dark detail in Coolie trailer",
+      "click_score": 85.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 21.2,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 8.9,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 8.3,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 7.8,
+      "ok": true
+    }
+  ],
+  "backup_item": null,
+  "stock": null,
+  "stock_topic": null,
+  "spare": null,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "gemini QC reject: Footage contains a visible logo/watermark icon in the top right corner of the movie frame.; The 9:16 background uses blurred video padding instead of a clean solid black canvas.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/rajinikanth_trailer_h264.mp4",
+      "music": "sw_interworldrapturephonk.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/rajinikanth_trailer_h264.mp4",
+      "music": "sw_interworldrapturephonk.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/render-20261114-2230-rajinikanth",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/render-20261114-2230-rajinikanth/render-20261114-2230-rajinikanth.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/rajinikanth_trailer_h264.mp4",
+  "music": "sw_interworldrapturephonk.mp3",
+  "music_credit": "Song: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Hiding secrets that burn without a trace. Rajinikanth unleashes unmatched mass aura as a powerful force in the official Coolie trailer edit. From the official Coolie trailer. Edit by Skywalker.\nSource: official trailer (https://www.youtube.com/watch?v=5-qi2TGQ4a4). All rights to the film/series belong to their owners; short commentary edit.\n#coolie #rajinikanth #thalaivar #shorts #edit\n\nMusic:\nSong: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 25.5,
+      "audio": true
+    },
+    "lufs": -14.4,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.3,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 9.0,
+        "title": 9.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 7.0,
+        "clean_footage": 9.0,
+        "captions": 10.0,
+        "post_worthy": 9.0
+      },
+      "reasons": [
+        "Background canvas uses a blurred video fill instead of solid black, but visual presentation and hook layout remain clean and readable.",
+        "First shot repeats briefly at the end, but pacing and beat cuts are high quality throughout."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
