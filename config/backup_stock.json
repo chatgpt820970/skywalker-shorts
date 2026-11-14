@@ -60,6 +60,20 @@
       "slug": "fnaf2",
       "status": "pending",
       "queued_at": "2026-11-14 12:24 IST"
+    },
+    {
+      "id": "stock-furiosa-01",
+      "topic_id": "backup-furiosa",
+      "slug": "furiosa",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:25 IST"
+    },
+    {
+      "id": "stock-gladiator2-01",
+      "topic_id": "backup-gladiator2",
+      "slug": "gladiator2",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:25 IST"
     }
   ]
 }
