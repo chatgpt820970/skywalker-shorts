@@ -1,0 +1,160 @@
+{
+  "id": "stock-despicableme4-03",
+  "status": "failed",
+  "detail": "gemini QC rejected 2 re-renders; backup item takes the slot: gemini QC reject: The footage is heavily cropped/zoomed, cutting off significant portions of the original landscape frame to fit the vertical format, which violates the requirement for a full, uncropped frame.; The 'LIVE' watermark from the source material is visible on the footage, which violates the requirement for clean footage.",
+  "at": "2026-11-14 21:51 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43612637456",
+  "slot": null,
+  "title": "Gru's absolute villain era is unmatched #despicableme #gru #animation",
+  "hook": "Gru terrorizes the entire globe",
+  "description": "Gru terrorizes the entire globe. Watch as Gru masterminds the ultimate heist by stealing a global landmark right under everyone's noses. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#despicableme #gru #animation #shorts #edit",
+  "tags": [
+    "despicableme",
+    "gru",
+    "animation",
+    "minions",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "The Minions broke everything again",
+    "title": "The Minions broke everything again | Despicable Me | #edit",
+    "description": "The Minions broke everything again. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #despicableme",
+    "tags": [
+      "despicableme",
+      "minions",
+      "animation",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "Gru's absolute villain era is unmatched",
+      "click_score": 92.0
+    },
+    {
+      "title": "Nobody saw Gru coming for this landmark",
+      "click_score": 88.0
+    },
+    {
+      "title": "The moment Gru proves he is the top villain",
+      "click_score": 85.0
+    },
+    {
+      "title": "Gru didn't come to play with the world",
+      "click_score": 82.0
+    },
+    {
+      "title": "POV: you realize Gru is stealing the pyramid",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 58.7,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 1.6,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "TimeoutError"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 2.6,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 7.5,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-despicableme4",
+  "stock": true,
+  "stock_topic": "backup-despicableme4",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "gemini QC reject: The footage is heavily cropped/zoomed to fit the vertical format, cutting off significant parts of the original landscape frame.; The 'LIVE' watermark from the source footage is visible, which violates the clean footage requirement.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+      "music": "sw_bateaublanc.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "gemini QC reject: The footage is heavily cropped/zoomed, cutting off significant portions of the original landscape frame to fit the vertical format, which violates the requirement for a full, uncropped frame.; The 'LIVE' watermark from the source material is visible on the footage, which violates the requirement for clean footage.",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+      "music": "sw_bateaublanc.mp3"
+    }
+  ],
+  "last_error": "gemini QC reject: The footage is heavily cropped/zoomed, cutting off significant portions of the original landscape frame to fit the vertical format, which violates the requirement for a full, uncropped frame.; The 'LIVE' watermark from the source material is visible on the footage, which violates the requirement for clean footage.",
+  "qc_rejected": true
+}
