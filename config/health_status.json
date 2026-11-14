@@ -56,11 +56,6 @@
       "slot": "2026-11-15T20:30:00+05:30",
       "id": "20261115-2030-toystory5",
       "how": "queued+fallback"
-    },
-    {
-      "slot": "2026-11-14T18:30:00+05:30",
-      "id": "20261114-1830-predatorbadlands",
-      "how": "backup_stock"
     }
   ],
   "short": [],
@@ -76,6 +71,7 @@
     "stock-dune2-01",
     "20261114-1230-avatarfireandash",
     "20261114-1600-furiosa",
+    "20261114-1830-predatorbadlands",
     "stock-despicableme4-01",
     "stock-missionimpossible-01",
     "20261114-2030-missionimpossible",
@@ -90,12 +86,10 @@
   ],
   "extra_ready_target": 2,
   "stock_ready": 5,
-  "stock_pending": 0,
+  "stock_pending": 2,
   "stock_used": 8,
   "stock_target": 30,
   "stock_need_refill": true,
-  "stock_assigned": [
-    "20261114-1830-predatorbadlands"
-  ],
+  "stock_assigned": [],
   "ok": true
 }
