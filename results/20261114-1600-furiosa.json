@@ -170,5 +170,9 @@
     }
   },
   "stock_id": "stock-furiosa-01",
-  "assigned_from_stock": true
+  "assigned_from_stock": true,
+  "buffer_post_id": "6af81993bb36d00909f8f477",
+  "buffer_status": "scheduled",
+  "buffer_due_at": "2026-11-14T10:30:00.000Z",
+  "buffer_created_at": "2026-11-14 13:49 IST"
 }
