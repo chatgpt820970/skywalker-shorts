@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14 16:25 IST",
+  "at": "2026-11-14 16:30 IST",
   "slots_checked": 11,
   "ready": [
     {
@@ -19,8 +19,8 @@
     },
     {
       "slot": "2026-11-14T20:30:00+05:30",
-      "id": "20261114-2030-mortalkombat2",
-      "how": "queued+fallback"
+      "id": "stock",
+      "how": "backup_stock"
     },
     {
       "slot": "2026-11-14T22:30:00+05:30",
@@ -56,11 +56,6 @@
       "slot": "2026-11-15T16:00:00+05:30",
       "id": "20261115-1600-hoppers",
       "how": "queued+fallback"
-    },
-    {
-      "slot": "2026-11-14T20:30:00+05:30",
-      "id": "20261114-2030-missionimpossible",
-      "how": "backup_stock"
     }
   ],
   "short": [],
@@ -78,6 +73,7 @@
     "20261114-1600-furiosa",
     "stock-despicableme4-01",
     "stock-missionimpossible-01",
+    "20261114-2030-missionimpossible",
     "stock-runningman-01",
     "stock-avatarfireandash-01",
     "stock-dune2-02",
@@ -93,8 +89,6 @@
   "stock_used": 7,
   "stock_target": 30,
   "stock_need_refill": false,
-  "stock_assigned": [
-    "20261114-2030-missionimpossible"
-  ],
+  "stock_assigned": [],
   "ok": true
 }
