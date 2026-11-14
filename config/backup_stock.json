@@ -18,6 +18,20 @@
       "slug": "avatarfireandash",
       "status": "pending",
       "queued_at": "2026-11-14 12:12 IST"
+    },
+    {
+      "id": "stock-chainsawman-01",
+      "topic_id": "backup-chainsawman",
+      "slug": "chainsawman",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:13 IST"
+    },
+    {
+      "id": "stock-civilwar-01",
+      "topic_id": "backup-civilwar",
+      "slug": "civilwar",
+      "status": "pending",
+      "queued_at": "2026-11-14 12:13 IST"
     }
   ]
 }
