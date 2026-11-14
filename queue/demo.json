@@ -267,42 +267,5 @@
   "content_kind": "trailer",
   "edit_mode": "music_only",
   "note": "v2 dry-run after seamless-loop audio fix. Never posted."
- },
- {
-  "id": "oneoff-matrix-20261114",
-  "pillar": "movie",
-  "source_url": "https://www.dailymotion.com/video/x88t251",
-  "fallback_mp4": [
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/matrix_combo.mp4",
-   "https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/matrix_trailer_h264.mp4"
-  ],
-  "template": "whitebar",
-  "hook": "His whole life was a lie",
-  "words": "THE MATRIX",
-  "title": "His whole life was a lie | Neo wakes up from the Matrix | #edit",
-  "description": "His whole life was a lie. Neo learns the truth about the Matrix in this edit from the official The Matrix (1999) trailer. Edit by Skywalker.\nSource: official trailer. All rights to the film belong to their owners; short commentary edit.\n#edit #shorts #thematrix #neo #morpheus",
-  "tags": [
-   "thematrix",
-   "matrix",
-   "neo",
-   "morpheus",
-   "keanureeves",
-   "redpill",
-   "scifi",
-   "movieedit",
-   "edit",
-   "shorts",
-   "trending"
-  ],
-  "target_dur": 30,
-  "status": "queued",
-  "market": "US/UK",
-  "demo": true,
-  "no_publish": true,
-  "fallback_release": "sources",
-  "fallback_asset": "matrix_combo.mp4",
-  "content_kind": "trailer",
-  "edit_mode": "two_act",
-  "note": "One-off Short requested by owner on 2026-11-14 (style of a Matrix-scene viral Short: dialogue + subtitles, then song). No slot and no_publish so Buffer never posts it; owner uploads manually after review. v2 source: official trailer + Neo vs Morpheus dojo scene (trailer alone had only ~17s clean shots)."
  }
 ]
