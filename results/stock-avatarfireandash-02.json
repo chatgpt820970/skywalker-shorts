@@ -1,0 +1,201 @@
+{
+  "id": "stock-avatarfireandash-02",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 1920x1080 source -> 2160x3840), QA ok",
+  "at": "2026-11-14 13:01 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43569995031",
+  "slot": null,
+  "title": "Varang's aura in this scene is terrifying #avatar #varang #scifi",
+  "hook": "They chose hate over peace",
+  "description": "They chose hate over peace. Varang issues a chilling ultimatum that signals a violent shift for the Ash People. From the official Avatar: Fire and Ash trailer. Edit by Skywalker.\nSource: official trailer.\n#avatar #varang #scifi #shorts #edit",
+  "tags": [
+    "avatar",
+    "varang",
+    "scifi",
+    "avatarfireandash",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Pandora is burning",
+    "title": "Pandora is burning | The Ash People attack | #edit",
+    "description": "Pandora is burning. From the official Avatar: Fire and Ash trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #avatar",
+    "tags": [
+      "avatar",
+      "avatarfireandash",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "Varang's aura in this scene is terrifying",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment Varang declared war on everyone",
+      "click_score": 88.0
+    },
+    {
+      "title": "Nobody noticed this dark turn in Avatar",
+      "click_score": 85.0
+    },
+    {
+      "title": "POV: you are witnessing the fall of Pandora",
+      "click_score": 82.0
+    },
+    {
+      "title": "Varang did not come to play",
+      "click_score": 78.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 32.9,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key2",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key2",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key2",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 3.0,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 23.6,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-avatarfireandash",
+  "stock": true,
+  "stock_topic": "backup-avatarfireandash",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/avatarfireandash_trailer_h264.mp4",
+      "music": "sw_interworldrapturephonk.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-avatarfireandash-02.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/avatarfireandash_trailer_h264.mp4",
+  "music": "sw_interworldrapturephonk.mp3",
+  "music_credit": "Song: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "They chose hate over peace. Varang issues a chilling ultimatum that signals a violent shift for the Ash People. From the official Avatar: Fire and Ash trailer. Edit by Skywalker.\nSource: official trailer.\n#avatar #varang #scifi #shorts #edit\n\nMusic:\nSong: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 21.9,
+      "audio": true
+    },
+    "lufs": -15.3,
+    "audio_check": {
+      "mode": "two_act",
+      "isolated": true,
+      "act1_end": 4.4,
+      "act1_frac": 0.201,
+      "song_in_act1_dbfs": -180.0,
+      "voice_in_act2_dbfs": -180.0,
+      "act1_voice_dbfs": -17.4,
+      "act2_song_dbfs": -17.4,
+      "song_switches": 1,
+      "speech_segments": 2
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video adheres perfectly to all technical and stylistic requirements.",
+        "The audio mix is clean with a clear separation between the dialogue and the music.",
+        "The visual layout is correct, with the hook in a white bar and the footage uncropped.",
+        "The pacing is excellent and the content is highly engaging."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}

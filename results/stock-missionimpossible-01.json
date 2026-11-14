@@ -1,0 +1,172 @@
+{
+  "id": "stock-missionimpossible-01",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 854x480 source -> 2160x3840), QA ok",
+  "at": "2026-11-14 12:53 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43569995031",
+  "slot": null,
+  "title": "Ethan Hunt's final mission goes wrong #missionimpossible #tomcruise #action",
+  "hook": "Ethan Hunt has reached his limit",
+  "description": "Ethan Hunt has reached his limit. Ethan Hunt confronts the high-stakes ultimatum that threatens to dismantle everything he has sacrificed for. From the official Mission: Impossible trailer. Edit by Skywalker.\nSource: official trailer.\n#missionimpossible #tomcruise #action #shorts #edit",
+  "tags": [
+    "missionimpossible",
+    "tomcruise",
+    "action",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Ethan Hunt has one last mission",
+    "title": "Ethan Hunt has one last mission | The Final Reckoning begins | #edit",
+    "description": "Ethan Hunt has one last mission. The Final Reckoning begins from the official Mission: Impossible trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #missionimpossible",
+    "tags": [
+      "missionimpossible",
+      "tomcruise",
+      "action",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Ethan Hunt's final mission goes wrong",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment Ethan Hunt accepts his fate",
+      "click_score": 88.0
+    },
+    {
+      "title": "Tom Cruise pushing every limit imaginable",
+      "click_score": 85.0
+    },
+    {
+      "title": "POV you are watching Ethan Hunt break",
+      "click_score": 82.0
+    },
+    {
+      "title": "This is how Mission Impossible ends",
+      "click_score": 80.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 4.0,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.0,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.2,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-missionimpossible",
+  "stock": true,
+  "stock_topic": "backup-missionimpossible",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/missionimpossible_trailer_h264.mp4",
+      "music": "sw_interworldrapturephonk.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-missionimpossible-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.802,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/missionimpossible_trailer_h264.mp4",
+  "music": "sw_interworldrapturephonk.mp3",
+  "music_credit": "Song: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Ethan Hunt has reached his limit. Ethan Hunt confronts the high-stakes ultimatum that threatens to dismantle everything he has sacrificed for. From the official Mission: Impossible trailer. Edit by Skywalker.\nSource: official trailer.\n#missionimpossible #tomcruise #action #shorts #edit\n\nMusic:\nSong: InterWorld - INTERWORLD RAPTURE (PHONK) (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 22.2,
+      "audio": true
+    },
+    "lufs": -14.2,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.0,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all quality standards: it is a clean, music-only edit with the correct layout, hook, and pacing.",
+        "The footage is high-quality, uncropped, and free of any unwanted watermarks or trailer text.",
+        "The audio is clean and the hook is perfectly positioned."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
