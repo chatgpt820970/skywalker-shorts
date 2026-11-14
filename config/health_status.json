@@ -1,6 +1,6 @@
 {
-  "at": "2026-11-14 12:25 IST",
-  "slots_checked": 11,
+  "at": "2026-11-14 12:40 IST",
+  "slots_checked": 12,
   "ready": [
     {
       "slot": "2026-11-14T11:30:00+05:30",
@@ -56,18 +56,39 @@
       "slot": "2026-11-15T11:30:00+05:30",
       "id": "backup-gladiator2",
       "how": "backup_pool"
+    },
+    {
+      "slot": "2026-11-15T12:30:00+05:30",
+      "id": "20261115-1230-mahavatarnarsimha",
+      "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T09:00:00+05:30",
+      "id": "20261114-0900-deadpool3",
+      "how": "backup_stock"
+    },
+    {
+      "slot": "2026-11-14T11:30:00+05:30",
+      "id": "20261114-1130-despicableme4",
+      "how": "backup_stock"
     }
   ],
   "short": [],
   "backup_pool_size": 28,
   "backup_pool_preuploaded": 26,
-  "spare_done": [],
+  "spare_done": [
+    "stock-despicableme4-01",
+    "stock-deadpool3-01"
+  ],
   "extra_ready_target": 2,
   "stock_ready": 0,
   "stock_pending": 8,
-  "stock_used": 0,
+  "stock_used": 2,
   "stock_target": 30,
   "stock_need_refill": true,
-  "stock_assigned": [],
+  "stock_assigned": [
+    "20261114-0900-deadpool3",
+    "20261114-1130-despicableme4"
+  ],
   "ok": true
 }

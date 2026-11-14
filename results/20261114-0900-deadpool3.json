@@ -1,0 +1,198 @@
+{
+  "id": "20261114-0900-deadpool3",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 854x480 source -> 2160x3840), QA ok (assigned from stock-deadpool3-01)",
+  "at": "2026-11-14 12:40 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43567947443",
+  "slot": "2026-11-14T09:00:00+05:30",
+  "title": "Wolverine did not expect this from Deadpool #deadpoolandwolverine #marvel #superhero",
+  "hook": "Logan finally met his match",
+  "description": "Logan finally met his match. Deadpool pushes a reluctant Wolverine to join forces as they face their shared past and an uncertain future. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#deadpoolandwolverine #marvel #superhero #shorts #edit",
+  "tags": [
+    "deadpoolandwolverine",
+    "marvel",
+    "superhero",
+    "deadpool",
+    "wolverine",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Deadpool dragged Wolverine into this",
+    "title": "Deadpool dragged Wolverine into this | the MCU's messiest team-up | #edit",
+    "description": "Deadpool dragged Wolverine into this. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #deadpool",
+    "tags": [
+      "deadpool",
+      "wolverine",
+      "marvel",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Wolverine did not expect this from Deadpool",
+      "click_score": 92.0
+    },
+    {
+      "title": "Wolverine is clearly done with Deadpool",
+      "click_score": 90.0
+    },
+    {
+      "title": "When Deadpool tells Wolverine to let go",
+      "click_score": 88.0
+    },
+    {
+      "title": "Deadpool and Wolverine team up in style",
+      "click_score": 85.0
+    },
+    {
+      "title": "POV you are watching the ultimate duo",
+      "click_score": 82.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 6.4,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "err": "HTTP 503"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 6.3,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key2",
+      "s": 2.5,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-deadpool3",
+  "stock": true,
+  "stock_topic": "backup-deadpool3",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4",
+      "music": "sw_goofyahhphonkfullversion.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-deadpool3-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4",
+  "music": "sw_goofyahhphonkfullversion.mp3",
+  "music_credit": "Song: Memnicus - Goofy Ahh Phonk [Full Version] (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Logan finally met his match. Deadpool pushes a reluctant Wolverine to join forces as they face their shared past and an uncertain future. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#deadpoolandwolverine #marvel #superhero #shorts #edit\n\nMusic:\nSong: Memnicus - Goofy Ahh Phonk [Full Version] (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.433333,
+      "audio": true
+    },
+    "lufs": -14.3,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -16.4,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all quality standards, including the correct layout, music-only audio, and clean, uncropped footage."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  },
+  "stock_id": "stock-deadpool3-01",
+  "assigned_from_stock": true
+}

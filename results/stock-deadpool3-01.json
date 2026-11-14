@@ -192,5 +192,9 @@
       "low": [],
       "watched_video": true
     }
-  }
+  },
+  "stock_used": true,
+  "assigned_slot": "2026-11-14T09:00:00+05:30",
+  "assigned_result": "20261114-0900-deadpool3",
+  "used_at": "2026-11-14 12:40 IST"
 }

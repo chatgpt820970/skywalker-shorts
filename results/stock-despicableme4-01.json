@@ -167,5 +167,9 @@
       "low": [],
       "watched_video": true
     }
-  }
+  },
+  "stock_used": true,
+  "assigned_slot": "2026-11-14T11:30:00+05:30",
+  "assigned_result": "20261114-1130-despicableme4",
+  "used_at": "2026-11-14 12:40 IST"
 }
