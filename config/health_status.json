@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14 12:51 IST",
+  "at": "2026-11-14 12:52 IST",
   "slots_checked": 12,
   "ready": [
     {
@@ -14,8 +14,8 @@
     },
     {
       "slot": "2026-11-14T13:30:00+05:30",
-      "id": "backup-nobody2",
-      "how": "backup_pool"
+      "id": "stock",
+      "how": "backup_stock"
     },
     {
       "slot": "2026-11-14T16:00:00+05:30",
@@ -29,7 +29,7 @@
     },
     {
       "slot": "2026-11-14T18:30:00+05:30",
-      "id": "backup-missionimpossible",
+      "id": "backup-nobody2",
       "how": "backup_pool"
     },
     {
@@ -54,18 +54,13 @@
     },
     {
       "slot": "2026-11-15T11:30:00+05:30",
-      "id": "backup-venom3",
+      "id": "backup-missionimpossible",
       "how": "backup_pool"
     },
     {
       "slot": "2026-11-15T12:30:00+05:30",
       "id": "20261115-1230-mahavatarnarsimha",
       "how": "queued+fallback"
-    },
-    {
-      "slot": "2026-11-14T13:30:00+05:30",
-      "id": "20261114-1330-dune2",
-      "how": "backup_stock"
     }
   ],
   "short": [],
@@ -79,16 +74,15 @@
     "20261114-1230-avatarfireandash",
     "stock-despicableme4-01",
     "stock-avatarfireandash-01",
-    "stock-deadpool3-01"
+    "stock-deadpool3-01",
+    "20261114-1330-dune2"
   ],
   "extra_ready_target": 2,
   "stock_ready": 1,
-  "stock_pending": 13,
+  "stock_pending": 15,
   "stock_used": 4,
   "stock_target": 30,
   "stock_need_refill": true,
-  "stock_assigned": [
-    "20261114-1330-dune2"
-  ],
+  "stock_assigned": [],
   "ok": true
 }
