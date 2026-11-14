@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14 12:41 IST",
+  "at": "2026-11-14 12:42 IST",
   "slots_checked": 12,
   "ready": [
     {
@@ -61,6 +61,11 @@
       "slot": "2026-11-15T12:30:00+05:30",
       "id": "20261115-1230-mahavatarnarsimha",
       "how": "queued+fallback"
+    },
+    {
+      "slot": "2026-11-14T12:30:00+05:30",
+      "id": "20261114-1230-avatarfireandash",
+      "how": "backup_stock"
     }
   ],
   "short": [],
@@ -70,14 +75,17 @@
     "20261114-0900-deadpool3",
     "20261114-1130-despicableme4",
     "stock-despicableme4-01",
+    "stock-avatarfireandash-01",
     "stock-deadpool3-01"
   ],
   "extra_ready_target": 2,
   "stock_ready": 0,
-  "stock_pending": 10,
-  "stock_used": 2,
+  "stock_pending": 11,
+  "stock_used": 3,
   "stock_target": 30,
   "stock_need_refill": true,
-  "stock_assigned": [],
+  "stock_assigned": [
+    "20261114-1230-avatarfireandash"
+  ],
   "ok": true
 }

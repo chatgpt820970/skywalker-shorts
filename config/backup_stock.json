@@ -10,14 +10,20 @@
       "topic_id": "backup-alienromulus",
       "slug": "alienromulus",
       "status": "pending",
-      "queued_at": "2026-11-14 12:12 IST"
+      "queued_at": "2026-11-14 12:12 IST",
+      "result_id": "stock-alienromulus-01"
     },
     {
       "id": "stock-avatarfireandash-01",
       "topic_id": "backup-avatarfireandash",
       "slug": "avatarfireandash",
-      "status": "pending",
-      "queued_at": "2026-11-14 12:12 IST"
+      "status": "used",
+      "queued_at": "2026-11-14 12:12 IST",
+      "result_id": "stock-avatarfireandash-01",
+      "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-avatarfireandash-01.mp4",
+      "assigned_slot": "2026-11-14T12:30:00+05:30",
+      "assigned_result": "20261114-1230-avatarfireandash",
+      "used_at": "2026-11-14 12:42 IST"
     },
     {
       "id": "stock-chainsawman-01",

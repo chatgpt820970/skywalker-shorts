@@ -190,5 +190,9 @@
       "low": [],
       "watched_video": true
     }
-  }
+  },
+  "stock_used": true,
+  "assigned_slot": "2026-11-14T12:30:00+05:30",
+  "assigned_result": "20261114-1230-avatarfireandash",
+  "used_at": "2026-11-14 12:42 IST"
 }
