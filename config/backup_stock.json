@@ -87,7 +87,7 @@
       "id": "stock-despicableme4-02",
       "topic_id": "backup-despicableme4",
       "slug": "despicableme4",
-      "status": "pending",
+      "status": "failed",
       "queued_at": "2026-11-14 12:40 IST",
       "result_id": "stock-despicableme4-02"
     },
@@ -144,7 +144,7 @@
       "id": "stock-jurassicworldrebirth-01",
       "topic_id": "backup-jurassicworldrebirth",
       "slug": "jurassicworldrebirth",
-      "status": "pending",
+      "status": "failed",
       "queued_at": "2026-11-14 12:41 IST",
       "result_id": "stock-jurassicworldrebirth-01"
     },
@@ -182,7 +182,7 @@
       "id": "stock-nobody2-01",
       "topic_id": "backup-nobody2",
       "slug": "nobody2",
-      "status": "pending",
+      "status": "failed",
       "queued_at": "2026-11-14 12:43 IST",
       "result_id": "stock-nobody2-01"
     },
@@ -190,7 +190,7 @@
       "id": "stock-onepiece-01",
       "topic_id": "backup-onepiece",
       "slug": "onepiece",
-      "status": "pending",
+      "status": "failed",
       "queued_at": "2026-11-14 12:51 IST",
       "result_id": "stock-onepiece-01"
     },
