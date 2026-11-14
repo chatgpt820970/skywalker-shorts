@@ -1,0 +1,95 @@
+{
+  "id": "stock-despicableme4-02",
+  "status": "retry_queued",
+  "detail": "all 3 in-job attempt(s) failed; auto-retry 1/1 will be dispatched: pipeline/QA failed (exit 1): auto_qc: 1 frame(s) failed empty-dark/logo/text detectors",
+  "at": "2026-11-14 13:47 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43569864896",
+  "slot": null,
+  "title": "The Minions broke everything again | Despicable Me | #edit",
+  "hook": "The Minions broke everything again",
+  "description": "The Minions broke everything again. From the official Despicable Me trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #despicableme",
+  "tags": [
+    "despicableme",
+    "minions",
+    "animation",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": null,
+  "gemini_meta": false,
+  "hook_source": null,
+  "hook_style": null,
+  "title_candidates": null,
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.1,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.4,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 2.6,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-despicableme4",
+  "stock": true,
+  "stock_topic": "backup-despicableme4",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): auto_qc: 1 frame(s) failed empty-dark/logo/text detectors",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+      "music": "sw_elapeidafunk.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): auto_qc: 1 frame(s) failed empty-dark/logo/text detectors",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+      "music": "sw_elapeidafunk.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): auto_qc: 1 frame(s) failed empty-dark/logo/text detectors",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/despicableme4_trailer_h264.mp4",
+      "music": "sw_bateaublanc.mp3"
+    }
+  ],
+  "last_error": "pipeline/QA failed (exit 1): auto_qc: 1 frame(s) failed empty-dark/logo/text detectors"
+}

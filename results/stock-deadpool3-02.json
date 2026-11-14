@@ -1,0 +1,197 @@
+{
+  "id": "stock-deadpool3-02",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 854x480 source -> 2160x3840), QA ok (retry: sources fallback)",
+  "at": "2026-11-14 13:07 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43569864896",
+  "slot": null,
+  "title": "The moment Logan realized his world was gone #deadpool #wolverine #marvel",
+  "hook": "Deadpool tried saving a broken Logan",
+  "description": "Deadpool tried saving a broken Logan. Deadpool attempts to recruit a washed-up Wolverine whose entire world has fallen apart. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#deadpool #wolverine #marvel #shorts #edit",
+  "tags": [
+    "deadpool",
+    "wolverine",
+    "marvel",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Deadpool dragged Wolverine into this",
+    "title": "Deadpool dragged Wolverine into this | the MCU's messiest team-up | #edit",
+    "description": "Deadpool dragged Wolverine into this. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #deadpool",
+    "tags": [
+      "deadpool",
+      "wolverine",
+      "marvel",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "The moment Logan realized his world was gone",
+      "click_score": 95.0
+    },
+    {
+      "title": "POV: You try recruiting a broken Logan",
+      "click_score": 92.0
+    },
+    {
+      "title": "Deadpool pulled a gun and Logan didn't care",
+      "click_score": 90.0
+    },
+    {
+      "title": "Wolverine's aura in this scene is unreal",
+      "click_score": 88.0
+    },
+    {
+      "title": "Nobody noticed how broken Wolverine was here",
+      "click_score": 85.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 50.1,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "s": 19.7,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "s": 101.8,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.7,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 60.4,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-deadpool3",
+  "stock": true,
+  "stock_topic": "backup-deadpool3",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "gemini QC reject: Canvas uses a blurred stretched video background instead of solid black.; The opening shot of Wolverine and Deadpool walking past the stranded boat in the desert is repeated identically at the end (0:23-0:24).",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4",
+      "music": "sw_closeeyes.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4",
+      "music": "sw_moonwalktokiodriftphonkh.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-deadpool3-02.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": null,
+  "energy": false,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/deadpool3_trailer_h264.mp4",
+  "music": "sw_moonwalktokiodriftphonkh.mp3",
+  "music_credit": "Song: Moonwalk - Moonwalk - Tokio Drift (Phonk Hip-Hop Beat) (http://creativecommons.org/licenses/by/3.0/)",
+  "description_final": "Deadpool tried saving a broken Logan. Deadpool attempts to recruit a washed-up Wolverine whose entire world has fallen apart. From the official Deadpool & Wolverine trailer. Edit by Skywalker.\nSource: official trailer.\n#deadpool #wolverine #marvel #shorts #edit\n\nMusic:\nSong: Moonwalk - Moonwalk - Tokio Drift (Phonk Hip-Hop Beat) (http://creativecommons.org/licenses/by/3.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.2,
+      "audio": true
+    },
+    "lufs": -14.7,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -17.6,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all quality standards: it is a clean, music-only edit with a strong hook, correct layout, and no distracting elements."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
