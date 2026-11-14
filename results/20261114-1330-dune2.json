@@ -1,0 +1,193 @@
+{
+  "id": "20261114-1330-dune2",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 854x480 source -> 2160x3840), QA ok (retry: alt music/scenes, non-hard relax) (assigned from stock-dune2-01)",
+  "at": "2026-11-14 12:51 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43568611404",
+  "slot": "2026-11-14T13:30:00+05:30",
+  "title": "Paul Atreides was never meant to survive #dune #paulatreides #scifi",
+  "hook": "Paul Atreides returns for revenge",
+  "description": "Paul Atreides returns for revenge. Paul Atreides grapples with the weight of his survival and the inevitable path of vengeance on Arrakis. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#dune #paulatreides #scifi #shorts #edit",
+  "tags": [
+    "dune",
+    "paulatreides",
+    "scifi",
+    "duneparttwo",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Paul Atreides became something else",
+    "title": "Paul Atreides became something else | the desert answers | #edit",
+    "description": "Paul Atreides became something else. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #dune",
+    "tags": [
+      "dune",
+      "duneparttwo",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "curiosity gap",
+  "title_candidates": [
+    {
+      "title": "Paul Atreides was never meant to survive",
+      "click_score": 92.0
+    },
+    {
+      "title": "The moment Paul Atreides embraced his fate",
+      "click_score": 88.0
+    },
+    {
+      "title": "Chani realizes the truth about Paul",
+      "click_score": 85.0
+    },
+    {
+      "title": "Paul Atreides aura in this scene is unreal",
+      "click_score": 82.0
+    },
+    {
+      "title": "Nobody noticed this shift in Paul",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 5.5,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 4.3,
+      "ok": true
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 4.7,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.8,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-dune2",
+  "stock": true,
+  "stock_topic": "backup-dune2",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): auto_qc: 1 near-duplicate shot pair(s) in the output",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "pipeline/QA failed (exit 1): auto_qc: 1 near-duplicate shot pair(s) in the output",
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4",
+      "music": "sw_metamorphosis.mp3"
+    },
+    {
+      "attempt": 3,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4",
+      "music": "sw_aura1hourauramusicplayli.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-dune2-01.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.429,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4",
+  "music": "sw_aura1hourauramusicplayli.mp3",
+  "music_credit": "Song: d - AURA ♾️ 1 HOUR AURA MUSIC PLAYLIST 2025 🔥 EMPIRE PHONK (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "description_final": "Paul Atreides returns for revenge. Paul Atreides grapples with the weight of his survival and the inevitable path of vengeance on Arrakis. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#dune #paulatreides #scifi #shorts #edit\n\nMusic:\nSong: d - AURA ♾️ 1 HOUR AURA MUSIC PLAYLIST 2025 🔥 EMPIRE PHONK (https://creativecommons.org/publicdomain/mark/1.0/)",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 22.4,
+      "audio": true
+    },
+    "lufs": -13.9,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -13.3,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 10.0,
+        "title": 10.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all quality standards: it is a clean, song-only edit with no dialogue, properly formatted with the requested hook in a white bar, and features high-quality, uncropped footage."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  },
+  "stock_id": "stock-dune2-01",
+  "assigned_from_stock": true
+}
