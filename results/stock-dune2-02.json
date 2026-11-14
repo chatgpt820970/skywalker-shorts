@@ -1,0 +1,170 @@
+{
+  "id": "stock-dune2-02",
+  "status": "done",
+  "detail": "rendered 2160x3840 (lanczos 854x480 source -> 2160x3840), QA ok",
+  "at": "2026-11-14 13:05 IST",
+  "run_url": "https://github.com/chatgpt820970/skywalker-shorts/actions/runs/43570753883",
+  "slot": null,
+  "title": "Paul Atreides enters the battlefield #dune #paulatreides #scifi",
+  "hook": "The Atreides legacy rises again",
+  "description": "The Atreides legacy rises again. As the Atreides name returns to haunt the Empire, the brutal power of the Fremen and the Harkonnen collide for control of Arrakis. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#dune #paulatreides #scifi #shorts #edit",
+  "tags": [
+    "dune",
+    "paulatreides",
+    "scifi",
+    "duneparttwo",
+    "edit",
+    "shorts",
+    "trending"
+  ],
+  "queue_meta": {
+    "hook": "Paul Atreides became something else",
+    "title": "Paul Atreides became something else | the desert answers | #edit",
+    "description": "Paul Atreides became something else. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#edit #shorts #dune",
+    "tags": [
+      "dune",
+      "duneparttwo",
+      "edit",
+      "shorts",
+      "trending"
+    ]
+  },
+  "gemini_meta": true,
+  "hook_source": "gemini",
+  "hook_style": "cold-open statement",
+  "title_candidates": [
+    {
+      "title": "Paul Atreides enters the battlefield",
+      "click_score": 92.0
+    },
+    {
+      "title": "Princess Irulan senses the coming war",
+      "click_score": 88.0
+    },
+    {
+      "title": "The moment Arrakis shifted forever",
+      "click_score": 85.0
+    },
+    {
+      "title": "Feyd-Rautha is pure chaos on screen",
+      "click_score": 82.0
+    },
+    {
+      "title": "Paul Atreides prepares for his destiny",
+      "click_score": 79.0
+    }
+  ],
+  "gemini_calls": [
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.5-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.8-flash",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-flash-latest",
+      "key": "key1",
+      "err": "HTTP 429"
+    },
+    {
+      "purpose": "scenes",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 3.6,
+      "ok": true
+    },
+    {
+      "purpose": "hook",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 42.3,
+      "ok": true
+    },
+    {
+      "purpose": "qc",
+      "model": "gemini-3.1-flash-lite",
+      "key": "key1",
+      "s": 49.9,
+      "ok": true
+    }
+  ],
+  "backup_item": "backup-dune2",
+  "stock": true,
+  "stock_topic": "backup-dune2",
+  "spare": true,
+  "auto_retries": 0,
+  "max_auto_retries": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4",
+      "music": "sw_murderinmymind.mp3"
+    }
+  ],
+  "last_error": null,
+  "release_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/tag/backup-stock",
+  "asset_url": "https://github.com/chatgpt820970/skywalker-shorts/releases/download/backup-stock/stock-dune2-02.mp4",
+  "qa": {
+    "no_crop": true,
+    "caption": true,
+    "audio": true,
+    "no_shake": true,
+    "no_logo": true
+  },
+  "drop_t": 2.505,
+  "energy": true,
+  "source": "gh:https://github.com/chatgpt820970/skywalker-shorts/releases/download/sources/dune2_trailer_h264.mp4",
+  "music": "sw_murderinmymind.mp3",
+  "music_credit": "Song: Kordhell - MURDER IN MY MIND",
+  "description_final": "The Atreides legacy rises again. As the Atreides name returns to haunt the Empire, the brutal power of the Fremen and the Harkonnen collide for control of Arrakis. From the official Dune: Part Two trailer. Edit by Skywalker.\nSource: official trailer.\n#dune #paulatreides #scifi #shorts #edit\n\nMusic:\nSong: Kordhell - MURDER IN MY MIND",
+  "no_publish": false,
+  "gate": {
+    "ok": true,
+    "failures": [],
+    "probe": {
+      "w": 2160,
+      "h": 3840,
+      "dur": 24.4,
+      "audio": true
+    },
+    "lufs": -14.0,
+    "audio_check": {
+      "mode": "music_only",
+      "isolated": false,
+      "speech_segments": 0,
+      "act2_song_dbfs": -15.2,
+      "voice_dbfs": -99.0,
+      "song_switches": 1
+    },
+    "subtitle_cues": 0,
+    "gemini_qc": {
+      "pass": true,
+      "scores": {
+        "hook": 9.0,
+        "title": 9.0,
+        "speech_clarity": 10.0,
+        "shake": 10.0,
+        "crop": 10.0,
+        "length": 10.0,
+        "layout": 10.0,
+        "clean_footage": 10.0,
+        "captions": 10.0,
+        "post_worthy": 10.0
+      },
+      "reasons": [
+        "The video meets all criteria: it is a clean, music-only edit with a proper hook, correct layout, and no leftover trailer audio or dialogue."
+      ],
+      "low": [],
+      "watched_video": true
+    }
+  }
+}
